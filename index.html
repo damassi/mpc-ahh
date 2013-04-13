@@ -40,22 +40,7 @@
         <iframe id="nav-container" allowtransparency="true" style="display:none;" frameborder="0"></iframe>
         <script type="text/javascript">
         
-        function get_short_url(long_url, login, api_key, func)
-        {
-            $.getJSON(
-                "http://api.bitly.com/v3/shorten?callback=?", 
-                { 
-                    "format": "json",
-                    "apiKey": api_key,
-                    "login": login,
-                    "longUrl": long_url
-                },
-                function(response)
-                {
-                    func(response.data.url);
-                }
-            );
-        }  
+
         var AhhGlobal = (function() {
             // The assigned Ahh ID for this experience.  Appears as the number in the global navigation.
             var ahhid = 38,
@@ -119,19 +104,11 @@
 
         function shareOnTwitter() {
 
-            var login = "johnnathanielcohoon";
-            var api_key = "R_e86a307cb3b53fabc0cae779a6168f15";
-            var long_url = document.URL;
+            var url = 'https://twitter.com/share';
+            url += '?url=' + encodeURIComponent("http://bit.ly/114I2v8");
+            url += '&text=' + 'My "Ahh-inspiring" idea may become the next Ahh.com. Submit an "Ahh" idea of your own.';
 
-            get_short_url(long_url, login, api_key, function(short_url) {
-
-                var url = 'https://twitter.com/share';
-                url += '?url=' + encodeURIComponent(short_url);
-                url += '&text=' + 'My "Ahh-inspiring" idea may become the next Ahh.com. Submit an "Ahh" idea of your own.';
-
-                window.open(url, 'share', 'width=900,height=600');
-
-            });            
+            window.open(url, 'share', 'width=900,height=600');
 
         }
 
