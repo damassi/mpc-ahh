@@ -44,7 +44,10 @@
         <!-- Begin global navigation embed v1.6 -->
         <iframe id="nav-container" allowtransparency="true" style="display:none;" frameborder="0"></iframe>
         <script type="text/javascript">
-        
+ 
+        /mobile/i.test(navigator.userAgent) && setTimeout(function () {
+            window.scrollTo(0, 1);
+        }, 300);       
 
         var AhhGlobal = (function() {
             // The assigned Ahh ID for this experience.  Appears as the number in the global navigation.
@@ -75,8 +78,6 @@
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ahhembed, s);
         }());
-
-        setTimeout(function(){ ahh.embed.showPageNav(false);} ,300);
 
         var twitter = document.getElementById('twitter');
         var facebook = document.getElementById('facebook');
