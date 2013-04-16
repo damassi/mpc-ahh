@@ -121,12 +121,7 @@
         }
 
         function shareOnFacebook() {
-            var url = 'http://www.facebook.com/sharer.php';
-            url += '?s=100';
-            url += '&p[url]=' + encodeURIComponent(document.location.href);
-            url += '&p[title]=' + "Own an AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH.com";
-            url += '&p[summary]=' + 'My AHH-inspiring idea may become the next ahh.com. Submit an AHH idea of your own.';
-            url += '&p[images][0]=' + document.location.href + '/statics/main/content/social.jpg';
+            var url = 'http://www.facebook.com/sharer.php&u=http://www.ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.com';
 
             window.open(url, 'share', 'width=900,height=600');
         }
