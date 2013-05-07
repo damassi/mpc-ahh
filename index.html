@@ -42,6 +42,52 @@
 
         <iframe class="form" src="https://cocacola.promo.eprize.com/ahhgiver?uaid=UA-39021710-45&affiliate_id=38" frameborder="0" border="0"></iframe>
 
+        <!-- UGC pages javascript -->
+        <!-- Listens for a message from ePrize iFrame -->
+        <script>
+            (function() {
+                function scrollUpListener(event) {
+                    if (event.origin !== 'https://cocacola.promo.eprize.com') {
+                        console.log('unexpected origin domain: '+ event.origin);
+                        return;
+                    }
+
+                    console.log(event.data);
+                    if (event.data == 'scrollup') {
+                        window.scrollTo(0,0);
+                    }
+                }
+
+                if (window.addEventListener) {
+                    addEventListener('message', scrollUpListener, false);
+                } else {
+                    attachEvent('onmessage', scrollUpListener);
+                }
+            }());
+        </script>
+        <!-- UGC pages javascript end -->
+
+
+        <!-- ePrize page javascript that resides within the iFrame -->
+        <!-- Only an example as site_id is dynamically set per request -->
+        <script>
+            (function() {
+                var site_id = 38;
+
+                if (site_id < 2) {
+                    return;
+                }
+
+                var ahh = 'a';
+                for (var i = 0; i < site_id; i++) {
+                    ahh += 'h';
+                }
+
+                var hostname = 'http://www.'+ ahh +'.com';
+                top.postMessage('scrollup', hostname);
+            }());
+        </script>
+        <!-- ePrize page javascript end -->
         <!-- Begin global navigation embed v1.6 -->
         <iframe id="nav-container" allowtransparency="true" style="display:none;" frameborder="0"></iframe>
         <script type="text/javascript">
