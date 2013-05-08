@@ -53,11 +53,11 @@
             (function() {
                 function scrollUpListener(event) {
                     if (event.origin !== 'https://cocacola.promo.eprize.com') {
-                        console.log('unexpected origin domain: '+ event.origin);
+                        //console.log('unexpected origin domain: '+ event.origin);
                         return;
                     }
 
-                    console.log(event.data);
+                    //console.log(event.data);
                     if (event.data == 'scrollup') {
                         window.scrollTo(0,0);
                     }
