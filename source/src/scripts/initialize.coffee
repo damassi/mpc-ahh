@@ -1,5 +1,6 @@
 
 AppController = require './AppController.coffee'
 
-new AppController()
+$ ->
+   new AppController()
 

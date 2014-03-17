@@ -1,6 +1,6 @@
 
 ReactTestUtils = React.addons.TestUtils
-LandingView = require( '../../src/scripts/views/landing/LandingView.coffee')
+LandingView = require( '../../src/scripts/views/LandingView.coffee')
 
 describe 'Landing View', ->
 
