@@ -4,6 +4,4 @@
 
 HelloMessage = React.createClass
    render: ->
-      `
-         <div>{'Hello ' + this.props.name}</div>
-      `
+      `<div>{'Hello ' + this.props.name}</div>`
