@@ -1,6 +1,11 @@
 ###*
   @jsx React.DOM
+
+  Sonic application bootstrapper
+  @author Christopher Pappas <chris@wintr.us>
+  @date   2.6.14
 ###
+
 
 HelloMessage = React.createBackboneClass
    changeOptions: 'change:name'
