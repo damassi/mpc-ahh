@@ -16,6 +16,7 @@
 handleify = require 'handleify'
 coffeeify = require 'coffeeify'
 uglifyify = require 'uglifyify'
+reactify  = require 'reactify'
 
 
 module.exports = (grunt) ->
@@ -69,11 +70,11 @@ module.exports = (grunt) ->
       'browserify':
 
          dev:
-            src: ["#{sources}/scripts/initialize.coffee"]
+            src: ["#{sources}/scripts/init.coffee"]
             dest: "#{output}/assets/scripts/app.js"
 
             options:
-               transform: [handleify, coffeeify]
+               transform: [handleify, coffeeify, reactify]
                debug: true
 
          test:
@@ -89,7 +90,7 @@ module.exports = (grunt) ->
             dest: "<%= browserify.dev.dest %>"
 
             options:
-               transform: [handleify, coffeeify, uglifyify]
+               transform: [handleify, coffeeify, reactify, uglifyify]
                debug: false
 
 
@@ -126,6 +127,7 @@ module.exports = (grunt) ->
                "#{vendor}/lodash.js"
                "#{vendor}/backbone.js"
                "#{vendor}/greensock.js"
+               "#{vendor}/react-with-addons.js"
             ]
 
             dest: "#{output}/assets/scripts/vendor.js"

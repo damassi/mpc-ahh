@@ -1,0 +1,197 @@
+/* /////////////////////////////////////////////////////
+
+PROJECT NAME
+matt@wintr.us @ WINTR
+
+///////////////////////////////////////////////////// */
+/* Compass Imports
+--------------------------------------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+html {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* Variables
+--------------------------------------------- */
+/* Sprites
+--------------------------------------------- */
+/* Imports
+--------------------------------------------- */
+/*! HiDPI v1 | MIT License | git.io/hidpi */
+/* /////////////////////////////////////////////////////
+
+BASE STYLES
+Only single elements. No classes or ids.
+
+///////////////////////////////////////////////////// */
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-size: 16px;
+  line-height: 20px;
+  color: #666666;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+/* /////////////////////////////////////////////////////
+
+GRID SYSTEM
+
+///////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////
+
+UTILS
+General CSS utilities and SASS mixins
+
+///////////////////////////////////////////////////// */
+.no-flicker {
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.hide-text {
+  border: 0;
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+  background-color: transparent;
+}
+
+/* Responsive Mixins
+   see: http://jakearchibald.github.com/sass-ie
+------------------------------------------------ */
+.no-mobile {
+  display: none;
+}
+@media screen and (min-width: 480px) {
+  .no-mobile {
+    display: block;
+  }
+}
+
+.mobile-only {
+  display: block;
+}
+@media screen and (min-width: 480px) {
+  .mobile-only {
+    display: none;
+  }
+}
+
+/* /////////////////////////////////////////////////////
+
+GOOD COMPASS MIXINS TO KNOW ABOUT
+
+image-width($image)
+image-height($image)
+image-url($image)
+
+replace-text($img, $x, $y)
+hide-text() 
+  @import "compass/typography/text/replacement";
+  
+inline-block
+  @import "compass/css3/inline-block";
+
+opacity($opacity)
+  @import "compass/css3/opacity"
+
+///////////////////////////////////////////////////// */
+/* /////////////////////////////////////////////////////
+
+MODULES
+// Use class names for all modules
+// Use class names for all non-semantic children (divs, spans, etc). 
+// Child class names prefixed by module name (ex: news-item-title)
+// Keep nesting to a minimum
+// Put a comment description before each module
+
+///////////////////////////////////////////////////// */
+/* News Item
+--------------------------------------------- */
+/* /////////////////////////////////////////////////////
+
+PAGES
+// Scope page using body class
+
+///////////////////////////////////////////////////// */
+/* Home page
+--------------------------------------------- */
+/* /////////////////////////////////////////////////////
+
+GLOBAL LAYOUT
+
+///////////////////////////////////////////////////// */
+.wrapper {
+  width: 960px;
+  margin: 0 auto;
+}
+
+/*# sourceMappingURL=app.css.map */

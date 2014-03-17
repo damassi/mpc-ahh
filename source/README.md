@@ -9,12 +9,6 @@ Build Plan
 - https://docs.google.com/document/d/1PDPadEdhYkLveBNzajHdiT33ZOMToEaDWQkzLDj0Oy8/edit
 
 
-Development Strategy
---------------------
-- Source control is handled via the Gitflow pattern:
- - Installation: https://github.com/nvie/gitflow/wiki/Mac-OS-X
- - http://nvie.com/posts/a-successful-git-branching-model/
-
 
 Project Setup
 -------------
@@ -32,9 +26,15 @@ Project Setup
  - Installation: https://github.com/nvie/gitflow/wiki/Mac-OS-X
 
 
+Development Strategy
+--------------------
+- Source control is handled via the Gitflow pattern:
+ - Installation: https://github.com/nvie/gitflow/wiki/Mac-OS-X
+ - http://nvie.com/posts/a-successful-git-branching-model/
+
+
 Development Tasks
 -----------------
-
 - For development: `grunt dev` then navigate to `http://localhost:3001` (or IP address).
 - For deploy: `grunt build`
 
