@@ -41,7 +41,7 @@ module.exports = (grunt) ->
    test     = "#{basePath}/test"
 
    # Browser port during development
-   port     = 3001
+   port     = 3000
 
 
 
