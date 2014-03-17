@@ -314,8 +314,12 @@ module.exports = (grunt) ->
             tasks: ['sass:dev']
 
          test:
-           files: [ 'test/**/*.*' ]
-           tasks: [ 'test' ]
+            options:
+               livereload: true
+               spawn: false
+
+            files: [ 'test/**/*.*' ]
+            tasks: [ 'test' ]
 
          vendor:
             files: "#{vendor}/**/*.js"
@@ -379,7 +383,7 @@ module.exports = (grunt) ->
       'browserify:dev'
       'browserify:test'
       'concat:vendor'
-      'mocha'
+      #'mocha'
    ]
 
 
