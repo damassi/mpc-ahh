@@ -1,0 +1,36 @@
+<h2>MPC AHH Prototype</h2>
+
+<p>
+	<button id='start-btn'>iOS users, click here first</button>
+</p>
+
+<div>
+	<table id='sequencer'>
+
+		<tr>
+			{{#repeat beats}}
+				<th></th>
+			{{/repeat}}
+		</tr>
+
+		{{#repeat numSounds}}
+			<tr data-sound='{{{@index}}}'>
+				{{#repeat beats}}
+					<td data-beat='{{{@index}}}'></td>
+				{{/repeat}}
+			<tr>
+		{{/repeat}}
+
+	</table>
+
+	<table id='pad'>
+		<tr>
+			<td>1</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>4</td>
+		</tr>
+	</table>
+</div>
