@@ -31,8 +31,8 @@ $break-small: 480px;
 --------------------------------------------- */
 
 // USE WITH RETINA SPRITES MIXIN
-// $sprites: sprite-map("sprites/*.png", $spacing: 2px);            
-// $sprites2x: sprite-map("sprites_x2/*.png", $spacing: 4px);   
+// $sprites: sprite-map("sprites/*.png", $spacing: 2px);
+// $sprites2x: sprite-map("sprites_x2/*.png", $spacing: 4px);
 
 
 /* Imports
@@ -43,8 +43,6 @@ $break-small: 480px;
 @import "base";
 @import "grid";
 @import "utils";
-@import "modules";
-@import "pages";
 
 
 
