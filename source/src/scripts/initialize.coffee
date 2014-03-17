@@ -1,5 +1,5 @@
 
-HomeView = require './views/home/HomeView.coffee'
+AppController = require './AppController.coffee'
 
-$ ->
-   new HomeView()
+new AppController()
+

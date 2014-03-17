@@ -128,6 +128,7 @@ module.exports = (grunt) ->
                "#{vendor}/backbone.js"
                "#{vendor}/greensock.js"
                "#{vendor}/react-with-addons.js"
+               "#{vendor}/react.backbone.js"
             ]
 
             dest: "#{output}/assets/scripts/vendor.js"

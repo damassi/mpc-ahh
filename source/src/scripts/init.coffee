@@ -2,14 +2,13 @@
   @jsx React.DOM
 ###
 
-HelloMessage = React.createClass
-   onClick: (event) ->
-      console.log 'hey you'
+HelloMessage = require './views/landing/LandingView.coffee'
 
-   render: ->
-      `<div className='test' onMouseOver={this.onClick}>{'Hello ' + this.props.name}</div>`
+user = new Backbone.Model({ name: 'Chris' })
 
-React.renderComponent(
-   `<HelloMessage name='Hey Dude' />,
-   document.getElementById('wrapper')`
+setTimeout ->
+   user.set 'name', 'BOBBBB'
+, 2000
+
+React.renderComponent( HelloMessage({ model: user}), document.getElementById('wrapper')
 )
