@@ -11,7 +11,6 @@ describe 'Landing View', ->
    afterEach =>
       @view.remove()
 
-      if @appController then @appController.remove()
 
 
    it 'Should render', =>
