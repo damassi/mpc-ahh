@@ -1,27 +1,44 @@
 ###*
-  MPC application bootstrapper
+  @jsx React.DOM
+
+  Main MPC application controller / root element, which cascades down state
 
   @author Christopher Pappas <chris@wintr.us>
   @date   3.17.14
 ###
 
-AppRouter   = require './routers/AppRouter.coffee'
-AppModel    = require './models/AppModel.coffee'
+
 LandingView = require './views/LandingView.coffee'
 CreateView  = require './views/CreateView.coffee'
 
 
-AppController = Backbone.View.extend
+AppController = React.createBackboneClass
 
 
-   initialize: ->
-      @appModel = new AppModel()
+   changeOptions: 'change:view'
 
-      @appRouter = new AppRouter
-         appController: @
-         appModel: @appModel
 
-      Backbone.history.start()
+   componentWillMount: ->
+      console.log @getModel()
+
+      setTimeout =>
+         console.log 'changing view'
+
+         @model.set 'view', 'landingView'
+      , 3000
+
+
+
+   render: ->
+
+      View = switch @getModel().get('view')
+         when 'landingView' then LandingView
+         when 'createView'  then CreateView
+
+      `(
+         View()
+      )`
+
 
 
 
@@ -30,14 +47,12 @@ AppController = Backbone.View.extend
 
 
    renderLandingView: ->
-      console.log 'starting application'
-      React.renderComponent( LandingView(), document.getElementById 'wrapper' )
+      #React.renderComponent( LandingView(), document.getElementById 'wrapper' )
 
 
 
    renderCreateView: ->
-      console.log 'init create'
-      React.renderComponent( CreateView(), document.getElementById 'wrapper' )
+      #React.renderComponent( CreateView(), document.getElementById 'wrapper' )
 
 
 

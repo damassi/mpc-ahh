@@ -10,7 +10,7 @@ AppRouter = Backbone.Router.extend
 
 
    routes:
-      '':            'startRoute'
+      '':            'landingRoute'
       'create':      'createRoute'
 
 
@@ -19,13 +19,13 @@ AppRouter = Backbone.Router.extend
 
 
 
-   startRoute: ->
-      @appController.renderLandingView()
+   landingRoute: ->
+      @appModel.set 'view', 'landingView'
 
 
 
    createRoute: ->
-      @appController.renderCreateView()
+      @appModel.set 'view', 'createView'
 
 
 

@@ -7,13 +7,33 @@
   @date   3.17.14
 ###
 
+ViewMixin = require './mixins/ViewMixin.coffee'
+
 
 LandingView = React.createBackboneClass
 
+   mixins: [ViewMixin]
+
+   viewName: 'landingView'
+
+
+   componentWillMount: (options) ->
+      console.log 'mounting'
+
+      console.log @getViewName()
+
+
+
+   componentWillUnmount: (options) ->
+      console.log 'unmounting....'
+
+
 
    render: ->
-      return `(
-         <div className='landing-view' onClick={this.onClick}>START</div>
+      `(
+         <div className='landing-view' onClick={this.onClick}>
+            START
+         </div>
       )`
 
 

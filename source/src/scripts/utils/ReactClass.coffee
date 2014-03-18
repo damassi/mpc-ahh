@@ -22,7 +22,13 @@ Component = React.createBackboneClass
    getInitialState: ->
 
 
+   # Initialize
    componentWillMount: ->
+
+
+   # Remove
+   componentWillUnmount: ->
+
 
 
    componentDidUpdate: ->
