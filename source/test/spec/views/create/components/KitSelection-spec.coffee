@@ -80,7 +80,7 @@ describe 'Kit Selection', ->
 
 
 
-   it 'Should update the AppModel when arrow methods are called and kit is changed', =>
+   it 'Should update the AppModel a kit is changed', =>
 
       appModel = @view.appModel
 
