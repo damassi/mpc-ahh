@@ -71,27 +71,28 @@ describe 'Kit Selection', ->
       $rightBtn = @view.$el.find '.btn-right'
 
 
-      @view.should.call('nextKit').when =>
+      @view.should.call('onLeftBtnClick').when =>
          $leftBtn.trigger 'click'
 
 
-      @view.should.call('previousKit').when =>
+      @view.should.call('onRightBtnClick').when =>
          $leftBtn.trigger 'click'
 
 
 
    it 'Should update the AppModel when arrow methods are called and kit is changed', =>
 
-      $leftBtn = @view.$el.find '.btn-left'
-      $rightBtn = @view.$el.find '.btn-right'
-
       appModel = @view.appModel
 
-      appModel.should.trigger('change:kitModel').when ->
-         $leftBtn.click()
+      appModel.should.trigger('change:kitModel').when =>
+         @view.onLeftBtnClick()
 
-      appModel.should.trigger('change:kitModel').when ->
-         $rightBtn.click()
+      appModel.should.trigger('change:kitModel').when =>
+         @view.onRightBtnClick()
+
+
+
+
 
 
 
