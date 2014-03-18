@@ -35,7 +35,8 @@
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-imagemin": "~0.5.0",
     "reactify": "^0.10.0",
-    "envify": "^1.2.1"
+    "envify": "^1.2.1",
+    "chai-backbone": "^0.9.2"
   },
   "repository": {
     "type": "git",
