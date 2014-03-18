@@ -1,17 +1,17 @@
 ###*
- * Beats per minute view for handling tempo
+ * Individual sequencer tracks
  *
  * @author Christopher Pappas <chris@wintr.us>
  * @date   3.18.14
 ###
 
 View     = require '../../../supers/View.coffee'
-template = require './templates/bpm-template.hbs'
+template = require './templates/sound-square-template.hbs'
 
 
-class BPMIndicator extends View
+class SoundSquare extends View
 
    template: template
 
 
-module.exports = BPMIndicator
+module.exports = SoundSquare
