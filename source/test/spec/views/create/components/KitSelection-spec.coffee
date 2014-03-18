@@ -1,4 +1,5 @@
-KitSelection = require  '../../../../../src/scripts/views/create/components/KitSelection.coffee'
+KitSelection  = require  '../../../../../src/scripts/views/create/components/KitSelection.coffee'
+AppModel      = require '../../../../../src/scripts/models/AppModel.coffee'
 KitModel      = require '../../../../../src/scripts/models/KitModel.coffee'
 KitCollection = require '../../../../../src/scripts/models/KitCollection.coffee'
 
@@ -14,9 +15,8 @@ describe 'Kit Selection', ->
 
 
       @view = new KitSelection
+         appModel: new AppModel()
          collection: new KitCollection models
-
-      console.log @view.collection
 
 
    afterEach =>
@@ -77,3 +77,26 @@ describe 'Kit Selection', ->
 
       @view.should.call('previousKit').when =>
          $leftBtn.trigger 'click'
+
+
+
+   it 'Should update the AppModel when arrow methods are called and kit is changed', =>
+
+      $leftBtn = @view.$el.find '.btn-left'
+      $rightBtn = @view.$el.find '.btn-right'
+
+      appModel = @view.appModel
+
+      appModel.should.trigger('change:kitModel').when ->
+         $leftBtn.click()
+
+      appModel.should.trigger('change:kitModel').when ->
+         $rightBtn.click()
+
+
+
+
+
+
+
+

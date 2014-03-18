@@ -11,6 +11,7 @@ AppRouter = Backbone.Model.extend
 
    defaults:
       'view': null
+      'kitModel':  null
 
 
 module.exports = AppRouter
