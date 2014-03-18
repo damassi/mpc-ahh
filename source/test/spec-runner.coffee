@@ -1,7 +1,7 @@
 
 # Views
-require './spec/views/LandingView-spec.coffee'
-require './spec/views/ShareView-spec.coffee'
+require './spec/views/landing/LandingView-spec.coffee'
+require './spec/views/share/ShareView-spec.coffee'
 
 # Create
 require './spec/views/create/CreateView-spec.coffee'
