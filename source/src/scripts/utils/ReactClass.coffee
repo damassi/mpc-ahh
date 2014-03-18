@@ -16,6 +16,10 @@ Component = React.createBackboneClass
    changeOptions: 'change'
 
 
+   # REACT METHODS
+   # --------------------------------------------------------------------------------
+
+
    getDefaultProps: ->
 
 
@@ -35,6 +39,13 @@ Component = React.createBackboneClass
 
 
    render: ->
+
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+
 
 
 module.exports = Component

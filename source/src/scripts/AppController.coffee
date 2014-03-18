@@ -8,45 +8,53 @@
 ###
 
 
-LandingView = require './views/LandingView.coffee'
-CreateView  = require './views/CreateView.coffee'
-ShareView   = require './views/ShareView.coffee'
+AppModel    = require './models/AppModel.coffee'
+AppRouter   = require './routers/AppRouter.coffee'
+LandingView = require './views/landing/LandingView.coffee'
+CreateView  = require './views/create/CreateView.coffee'
+ShareView   = require './views/share/ShareView.coffee'
 
 
-AppController = React.createBackboneClass
+class AppController extends Backbone.View
 
 
-   # Props to listen to for state changes
-   changeOptions: 'change:view'
+   initialize: (options) ->
+
+      @appModel = new AppModel
+
+      @landingView = new LandingView
+      @createView  = new CreateView
+      @shareView   = new ShareView
+
+      @appRouter = new AppRouter
+         appController: @
+         appModel: @appModel
+
+      Backbone.history.start()
 
 
 
-   # REACT METHODS
-   # --------------------------------------------------------------------------------
+   addEventListeners: ->
 
+      @listenTo @appModel, 'change:view', @onViewChange
 
-   # Initialization
-   componentDidMount: ->
-
-
-
-   # Rerenders the view whenever theres a change to the `view` state
-   render: ->
-      appModel = @getModel()
-
-      View = switch appModel.get('view')
-         when 'landingView' then LandingView
-         when 'createView'  then CreateView
-         when 'shareView'   then ShareView
-
-      View({
-         model: appModel
-      })
 
 
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+   onViewChange: (model) ->
+      previousView = model._previousAttributes.view
+      currentView  = model.changed.view
+
+      if previousView
+         previousView.hide()
+
+
+      currentView.render().show()
+
 
 
 
