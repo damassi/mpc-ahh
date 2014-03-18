@@ -2,5 +2,29 @@ LandingView = require  '../../src/scripts/views/landing/LandingView.coffee'
 
 describe 'Landing View', ->
 
-   it 'Should Render', ->
+
+   beforeEach =>
+      @view = new LandingView
+      @view.render()
+
+
+   afterEach =>
+      @view.remove()
+
+
+   it 'Should Render', =>
+      expect(@view.el).to.exist
+
+
+
+   it 'Should redirect to create page on click', (done) =>
+      $startBtn = @view.$el.find '.start-btn'
+
+      $startBtn.on 'click', (event) =>
+         $btn = $(event.currentTarget)
+
+         expect($btn.attr 'href').to.equal '#/create'
+         done()
+
+      $startBtn.click()
 

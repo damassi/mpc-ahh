@@ -33,6 +33,7 @@ class AppController extends Backbone.View
 
       @addEventListeners()
       @render()
+
       Backbone.history.start()
 
 
