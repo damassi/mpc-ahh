@@ -1,2 +1,2 @@
-require './spec/LandingView-spec.coffee'
-require './spec/CreateView-spec.coffee'
+require './spec/views/LandingView-spec.coffee'
+require './spec/views/CreateView-spec.coffee'
