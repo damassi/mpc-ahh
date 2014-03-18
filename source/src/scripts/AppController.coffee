@@ -24,7 +24,7 @@ AppController = React.createBackboneClass
       setTimeout =>
          console.log 'changing view'
 
-         @model.set 'view', 'landingView'
+         @getModel().set 'view', 'landingView'
       , 3000
 
 
@@ -35,9 +35,7 @@ AppController = React.createBackboneClass
          when 'landingView' then LandingView
          when 'createView'  then CreateView
 
-      `(
-         View()
-      )`
+      View()
 
 
 
