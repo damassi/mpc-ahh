@@ -1,10 +1,8 @@
 ###*
-  @jsx React.DOM
-
-  Main MPC application controller / root element, which cascades down state
-
-  @author Christopher Pappas <chris@wintr.us>
-  @date   3.17.14
+ * Primary application controller
+ *
+ * @author Christopher Pappas <chris@wintr.us>
+ * @date   3.17.14
 ###
 
 
@@ -16,6 +14,9 @@ ShareView   = require './views/share/ShareView.coffee'
 
 
 class AppController extends Backbone.View
+
+
+   className: 'wrapper'
 
 
    initialize: (options) ->
@@ -30,12 +31,20 @@ class AppController extends Backbone.View
          appController: @
          appModel: @appModel
 
+      @addEventListeners()
+      @render()
       Backbone.history.start()
 
 
 
-   addEventListeners: ->
+   render: ->
+      @$body = $('body')
 
+      @$body.append @el
+
+
+
+   addEventListeners: ->
       @listenTo @appModel, 'change:view', @onViewChange
 
 
@@ -49,11 +58,13 @@ class AppController extends Backbone.View
       previousView = model._previousAttributes.view
       currentView  = model.changed.view
 
-      if previousView
-         previousView.hide()
+      if previousView then previousView.hide
+         remove: true
 
 
-      currentView.render().show()
+      @$el.append currentView.render().el
+
+      currentView.show()
 
 
 

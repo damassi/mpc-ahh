@@ -1,8 +1,8 @@
 ###*
-  MPC Application Router
-
-  @author Christopher Pappas <chris@wintr.us>
-  @date   3.17.14
+ * MPC Application router
+ *
+ * @author Christopher Pappas <chris@wintr.us>
+ * @date   3.17.14
 ###
 
 

@@ -1,8 +1,8 @@
 ###*
- * View superclass containing shared functionality
+ * MPC Application bootstrapper
  *
  * @author Christopher Pappas <chris@wintr.us>
- * @date   2.17.14
+ * @date   3.17.14
 ###
 
 

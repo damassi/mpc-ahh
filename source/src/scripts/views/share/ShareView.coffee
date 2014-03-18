@@ -7,10 +7,13 @@
   @date   3.17.14
 ###
 
-View = require '../../supers/View.coffee'
+View     = require '../../supers/View.coffee'
+template = require './share-template.hbs'
 
 
 class ShareView extends View
+
+   template: template
 
 
 
