@@ -1,7 +1,7 @@
 LandingView = require  '../../../src/scripts/views/landing/LandingView.coffee'
 
-describe 'Landing View', ->
 
+describe 'Landing View', ->
 
    beforeEach =>
       @view = new LandingView
@@ -12,7 +12,7 @@ describe 'Landing View', ->
       @view.remove()
 
 
-   it 'Should Render', =>
+   it 'Should render', =>
       expect(@view.el).to.exist
 
 
