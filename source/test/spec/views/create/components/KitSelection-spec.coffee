@@ -1,0 +1,1 @@
+KitSelection = require  '../../../../../src/scripts/views/create/components/KitSelection.coffee'

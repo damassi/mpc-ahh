@@ -1,0 +1,1 @@
+SequencerTrack = require  '../../../../../../src/scripts/views/create/components/sequencer/SequencerTrack.coffee'

@@ -1,4 +1,4 @@
-CreateView = require  '../../../src/scripts/views/create/CreateView.coffee'
+CreateView = require  '../../../../src/scripts/views/create/CreateView.coffee'
 
 
 describe 'Create View', ->
