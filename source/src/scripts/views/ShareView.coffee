@@ -17,9 +17,14 @@ ShareView = React.createBackboneClass
    mixins: [ViewMixin]
 
 
-   # View identity for handling route changes
-   viewName: 'landingView'
 
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+
+   # REACT METHODS
+   # --------------------------------------------------------------------------------
 
 
    # Renders the view to the dom when state changes

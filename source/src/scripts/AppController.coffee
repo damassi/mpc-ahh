@@ -20,6 +20,11 @@ AppController = React.createBackboneClass
    changeOptions: 'change:view'
 
 
+
+   # REACT METHODS
+   # --------------------------------------------------------------------------------
+
+
    # Initialization
    componentDidMount: ->
 
@@ -38,11 +43,6 @@ AppController = React.createBackboneClass
          model: appModel
       })
 
-
-
-
-   # PUBLIC METHODS
-   # --------------------------------------------------------------------------------
 
 
    # EVENT HANDLERS

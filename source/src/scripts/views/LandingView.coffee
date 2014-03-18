@@ -19,11 +19,19 @@ LandingView = React.createBackboneClass
    mixins: [ViewMixin]
 
 
-   # View identity for handling route changes
-   # @type {String}
 
-   viewName: 'landingView'
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
 
+
+   onClick: ->
+      window.location.hash = '#/create'
+
+
+
+
+   # REACT METHODS
+   # --------------------------------------------------------------------------------
 
 
    # Renders the view to the dom when state changes
@@ -35,10 +43,6 @@ LandingView = React.createBackboneClass
             START
          </div>
       )`
-
-
-   onClick: ->
-      window.location.hash = '#/create'
 
 
 module.exports = LandingView

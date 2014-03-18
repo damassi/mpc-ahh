@@ -7,18 +7,35 @@
   @date   3.17.14
 ###
 
+ViewMixin = require './mixins/ViewMixin.coffee'
+
 
 CreateView = React.createBackboneClass
+
+
+   # View superclass mixin for shared functionality
+   mixins: [ViewMixin]
+
+
+
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+   onClick: ->
+      window.location.hash = '#/share'
+
+
+
+   # REACT METHODS
+   # --------------------------------------------------------------------------------
 
 
    render: ->
       return `(
          <div className='create-view' onClick={this.onClick}>CREATE BEAT</div>
       )`
-
-
-   onClick: ->
-      window.location.hash = '#/share'
 
 
 module.exports = CreateView
