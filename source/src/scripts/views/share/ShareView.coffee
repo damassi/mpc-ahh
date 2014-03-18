@@ -6,7 +6,7 @@
 ###
 
 View     = require '../../supers/View.coffee'
-template = require './share-template.hbs'
+template = require './templates/share-template.hbs'
 
 
 class ShareView extends View

@@ -6,7 +6,7 @@
 ###
 
 View = require '../../supers/View.coffee'
-template = require './landing-template.hbs'
+template = require './templates/landing-template.hbs'
 
 
 class LandingView extends View

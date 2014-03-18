@@ -6,7 +6,7 @@
 ###
 
 View     = require '../../supers/View.coffee'
-template = require './create-template.hbs'
+template = require './templates/create-template.hbs'
 
 
 class CreateView extends View
