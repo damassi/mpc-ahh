@@ -19,4 +19,4 @@ require './spec/models/SoundCollection-spec.coffee'
 require './spec/models/SoundModel-spec.coffee'
 
 # Controllers
-
+require './spec/AppController-spec.coffee'

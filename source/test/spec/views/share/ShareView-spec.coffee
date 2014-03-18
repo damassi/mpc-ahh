@@ -1,4 +1,4 @@
-ShareView = require  '../../../src/scripts/views/share/ShareView.coffee'
+ShareView = require  '../../../../src/scripts/views/share/ShareView.coffee'
 
 
 describe 'Share View', ->
