@@ -12,6 +12,7 @@ AppRouter = Backbone.Router.extend
    routes:
       '':            'landingRoute'
       'create':      'createRoute'
+      'share':       'shareRoute'
 
 
    initialize: (options) ->
@@ -26,6 +27,11 @@ AppRouter = Backbone.Router.extend
 
    createRoute: ->
       @appModel.set 'view', 'createView'
+
+
+
+   shareRoute: ->
+      @appModel.set 'view', 'shareView'
 
 
 

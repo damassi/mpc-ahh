@@ -1,7 +1,7 @@
 ###*
   @jsx React.DOM
 
-  Landing view with start button
+  View for sharing / displaying final beat / animation
 
   @author Christopher Pappas <chris@wintr.us>
   @date   3.17.14
@@ -10,18 +10,14 @@
 ViewMixin = require './mixins/ViewMixin.coffee'
 
 
-LandingView = React.createBackboneClass
+ShareView = React.createBackboneClass
 
 
    # View superclass mixin for shared functionality
-   # @type {MixIn}
-
    mixins: [ViewMixin]
 
 
    # View identity for handling route changes
-   # @type {String}
-
    viewName: 'landingView'
 
 
@@ -31,14 +27,10 @@ LandingView = React.createBackboneClass
 
    render: ->
       `(
-         <div className='landing-view' onClick={this.onClick}>
-            START
+         <div className='share'>
+            Share view
          </div>
       )`
 
 
-   onClick: ->
-      window.location.hash = '#/create'
-
-
-module.exports = LandingView
+module.exports = ShareView

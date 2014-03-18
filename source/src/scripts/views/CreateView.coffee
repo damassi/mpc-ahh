@@ -18,7 +18,7 @@ CreateView = React.createBackboneClass
 
 
    onClick: ->
-      console.log 'creating beat'
+      window.location.hash = '#/share'
 
 
 module.exports = CreateView

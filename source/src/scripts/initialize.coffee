@@ -8,8 +8,8 @@
 ###
 
 
-AppRouter     = require './routers/AppRouter.coffee'
 AppModel      = require './models/AppModel.coffee'
+AppRouter     = require './routers/AppRouter.coffee'
 AppController = require './AppController.coffee'
 
 
