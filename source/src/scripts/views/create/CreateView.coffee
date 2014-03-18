@@ -1,10 +1,8 @@
 ###*
-  @jsx React.DOM
-
-  Primary app view which allows the user to create tracks
-
-  @author Christopher Pappas <chris@wintr.us>
-  @date   3.17.14
+ * Create view which the user can build beats within
+ *
+ * @author Christopher Pappas <chris@wintr.us>
+ * @date   3.17.14
 ###
 
 View     = require '../../supers/View.coffee'

@@ -74,7 +74,11 @@ module.exports = (grunt) ->
             dest: "#{output}/assets/scripts/app.js"
 
             options:
-               transform: [handleify, coffeeify, reactify]
+               transform: [
+                  handleify
+                  coffeeify
+                  #reactify
+               ]
                debug: true
 
          test:
@@ -90,7 +94,12 @@ module.exports = (grunt) ->
             dest: "<%= browserify.dev.dest %>"
 
             options:
-               transform: [handleify, coffeeify, reactify, uglifyify]
+               transform: [
+                  handleify
+                  coffeeify
+                  #reactify
+                  uglifyify
+               ]
                debug: false
 
 

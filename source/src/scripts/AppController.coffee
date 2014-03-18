@@ -40,7 +40,6 @@ class AppController extends Backbone.View
 
    render: ->
       @$body = $('body')
-
       @$body.append @el
 
 

@@ -10,7 +10,6 @@ AppRouter = Backbone.Model.extend
 
 
    defaults:
-      'initialized': false
       'view': null
 
 
