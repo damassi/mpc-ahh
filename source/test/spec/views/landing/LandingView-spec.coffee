@@ -1,5 +1,5 @@
-LandingView = require  '../../../../src/scripts/views/landing/LandingView.coffee'
-
+AppController = require  '../../../../src/scripts/AppController.coffee'
+LandingView   = require  '../../../../src/scripts/views/landing/LandingView.coffee'
 
 describe 'Landing View', ->
 
@@ -10,6 +10,8 @@ describe 'Landing View', ->
 
    afterEach =>
       @view.remove()
+
+      if @appController then @appController.remove()
 
 
    it 'Should render', =>
@@ -27,4 +29,9 @@ describe 'Landing View', ->
          done()
 
       $startBtn.click()
+
+
+
+
+
 

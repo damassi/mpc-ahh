@@ -1,6 +1,10 @@
 
 # Views
 require './spec/views/landing/LandingView-spec.coffee'
+
+
+return
+
 require './spec/views/share/ShareView-spec.coffee'
 
 # Create

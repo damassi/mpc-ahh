@@ -10,10 +10,17 @@
       <div id="mocha"></div>
       <script src="../../node_modules/mocha/mocha.js" type="text/javascript" charset="utf-8"></script>
       <script src="../../node_modules/chai/chai.js" type="text/javascript" charset="utf-8"></script>
+      <script src="../../node_modules/chai-changes/chai-changes.js" type="text/javascript" charset="utf-8"></script>
+      <script src="../../node_modules/sinon/lib/sinon.js" type="text/javascript" charset="utf-8"></script>
+<!--
+
+ -->
+      <script src="../../node_modules/sinon-chai/lib/sinon-chai.js" type="text/javascript" charset="utf-8"></script>
       <script src="../../node_modules/chai-backbone/chai-backbone.js" type="text/javascript" charset="utf-8"></script>
       <script type="text/javascript" charset="utf-8">
           mocha.ui('bdd');
           expect = chai.expect;
+          should = chai.should();
       </script>
 
       <div id='wrapper'></div>

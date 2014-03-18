@@ -10,3 +10,4 @@ AppController = require './AppController.coffee'
 
 $ ->
    appController = new AppController()
+   appController.render()

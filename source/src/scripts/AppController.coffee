@@ -24,28 +24,44 @@ class AppController extends Backbone.View
       @appModel = new AppModel
 
       @landingView = new LandingView
-      @createView  = new CreateView
       @shareView   = new ShareView
+      @createView  = new CreateView
 
       @appRouter = new AppRouter
          appController: @
          appModel: @appModel
 
       @addEventListeners()
-      @render()
 
-      Backbone.history.start()
 
 
 
    render: ->
       @$body = $('body')
       @$body.append @el
+      Backbone.history.start()
+
+
+
+
+   remove: ->
+      @landingView.remove()
+      @shareView.remove()
+      @createView.remove()
+
+      @removeEventListeners()
+
 
 
 
    addEventListeners: ->
       @listenTo @appModel, 'change:view', @onViewChange
+
+
+
+
+   removeEventListeners: ->
+      @stopListening()
 
 
 
