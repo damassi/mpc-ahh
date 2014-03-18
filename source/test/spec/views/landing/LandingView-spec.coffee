@@ -11,6 +11,8 @@ describe 'Landing View', ->
    afterEach =>
       @view.remove()
 
+      if @appController then @appController.remove()
+
 
 
    it 'Should render', =>
@@ -19,6 +21,7 @@ describe 'Landing View', ->
 
 
    it 'Should redirect to create page on click', (done) =>
+
       $startBtn = @view.$el.find '.start-btn'
 
       $startBtn.on 'click', (event) =>
@@ -28,6 +31,19 @@ describe 'Landing View', ->
          done()
 
       $startBtn.click()
+
+
+
+   it 'Should route to the Create page on click', =>
+
+      @appController = new AppController()
+      router = @appController.appRouter
+
+      $startBtn = @view.$el.find '.start-btn'
+      href = $startBtn.attr 'href'
+
+      href.should.route.to router, 'createRoute'
+
 
 
 

@@ -6,7 +6,7 @@
  * @date   3.18.14
 ###
 
-View     = require '../../../supers/View.coffee'
+View     = require '../../../../supers/View.coffee'
 template = require './templates/sound-type-template.hbs'
 
 

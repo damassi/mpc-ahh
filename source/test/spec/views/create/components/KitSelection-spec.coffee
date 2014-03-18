@@ -23,6 +23,13 @@ describe 'Kit Selection', ->
       @view.remove()
 
 
+
+   it 'Should render', =>
+
+      @view.$el.should.exist
+
+
+
    it 'Should have a label', =>
 
       $label = @view.$el.find '.label-kit'
@@ -55,3 +62,18 @@ describe 'Kit Selection', ->
       else
          throw new Error()
          done()
+
+
+
+   it 'Should call appropriate arrow methods when clicked', =>
+
+      $leftBtn = @view.$el.find '.btn-left'
+      $rightBtn = @view.$el.find '.btn-right'
+
+
+      @view.should.call('nextKit').when =>
+         $leftBtn.trigger 'click'
+
+
+      @view.should.call('previousKit').when =>
+         $leftBtn.trigger 'click'

@@ -1,1 +1,0 @@
-SoundType = require  '../../../../../src/scripts/views/create/components/SoundType.coffee'

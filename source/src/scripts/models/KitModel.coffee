@@ -5,7 +5,13 @@
  * @date   3.18.14
 ###
 
+
 class KitModel extends Backbone.Model
+
+
+   defaults:
+      'label': null
+      'path':  null
 
 
 module.exports = KitModel
