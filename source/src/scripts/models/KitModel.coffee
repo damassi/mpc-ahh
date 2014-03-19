@@ -19,10 +19,16 @@ class KitModel extends Backbone.Model
       # @type {InstrumentCollection}
       'instruments':   null
 
+      # @type {InstrumentModel}
+      'currentInstrument': null
 
-   initialize: (options) ->
-      this.parse = true
 
+
+   # Format the response so that instruments gets processed
+   # by backbone via the InstrumentCollection.  Additionally,
+   # pass in the path so that absolute URL's can be used
+   # to reference sound data
+   # @param {Object} response
 
    parse: (response) ->
       _.each response.instruments, (instrument) ->

@@ -74,6 +74,11 @@
           "label": "Snare",
           "src": "SN_1.mp3",
           "icon": "icon-snare"
+        },
+        {
+          "label": "Snare",
+          "src": "SN_1.mp3",
+          "icon": "icon-snare"
         }
       ]
     }
