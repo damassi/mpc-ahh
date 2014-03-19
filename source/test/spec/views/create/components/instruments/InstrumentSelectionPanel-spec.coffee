@@ -53,7 +53,7 @@ describe 'Instrument Selection Panel', ->
    it 'Should rebuild view when the kitModel changes', =>
 
       kitModel = @view.appModel.get 'kitModel'
-      length = kitModel.instruments.toJSON().length
+      length = kitModel.get('instruments').toJSON().length
 
       $instruments = @view.$el.find('.container-instruments').find('.instrument')
       $instruments.length.should.be.equal(length)
@@ -61,7 +61,7 @@ describe 'Instrument Selection Panel', ->
       @view.appModel.set 'kitModel', @kitCollection.at 1
 
       kitModel = @view.appModel.get 'kitModel'
-      length = kitModel.instruments.toJSON().length
+      length = kitModel.get('instruments').toJSON().length
 
       $instruments = @view.$el.find('.container-instruments').find('.instrument')
       $instruments.length.should.be.equal(length)
@@ -86,6 +86,7 @@ describe 'Instrument Selection Panel', ->
 
 
    it 'Should update the selected state if the user is interfacing with the sequence', =>
+
       $instruments = @view.$el.find('.container-instruments').find('.instrument')
       $instrumentOne = $($instruments[0])
       $instrumentTwo = $($instruments[1])

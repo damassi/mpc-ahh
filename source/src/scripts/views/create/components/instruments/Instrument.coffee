@@ -12,6 +12,8 @@ template = require './templates/instrument-template.hbs'
 
 class Instrument extends View
 
+   className: 'instrument'
+
    template: template
 
 

@@ -85,10 +85,11 @@ View = Backbone.View.extend
 
 
 
-   # Noop which is called on remove
+   # Removes all registered listeners
    # @param {Object} options
 
    removeEventListeners: ->
+      @stopListening()
 
 
 

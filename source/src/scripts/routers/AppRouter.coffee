@@ -109,6 +109,7 @@ class AppRouter extends Backbone.Router
       @appModel.set 'kitModel', @kitCollection.at(0)
 
       view = new InstrumentSelectionPanel
+         kitCollection: @kitCollection
          appModel: @appModel
 
       @appModel.set 'view', view

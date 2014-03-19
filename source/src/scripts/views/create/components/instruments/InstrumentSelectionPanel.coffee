@@ -5,8 +5,9 @@
  * @date   3.18.14
 ###
 
-Instrument  = require './Instrument.coffee'
+AppEvent    = require '../../../../events/AppEvent.coffee'
 View        = require '../../../../supers/View.coffee'
+Instrument  = require './Instrument.coffee'
 template    = require './templates/instrument-panel-template.hbs'
 
 
@@ -19,13 +20,19 @@ class InstrumentSelectionPanel extends View
    template: template
 
 
-   # A ref to the application model
+   # Ref to the application model
    # @type {AppModel}
 
    appModel: null
 
 
-   # A local ref to the currently selected kit
+   # Ref to kit collection
+   # @type {KitModel}
+
+   kitCollection: null
+
+
+   # Ref to the currently selected kit
    # @type {KitModel}
 
    kitModel: null
@@ -35,6 +42,14 @@ class InstrumentSelectionPanel extends View
    # @type {Array}
 
    instrumentViews: null
+
+
+   index: 0
+
+
+
+   events:
+      'click': 'onClick'
 
 
 
@@ -55,17 +70,57 @@ class InstrumentSelectionPanel extends View
 
       @$container = @$el.find '.container-instruments'
 
+      @renderInstruments()
+
+      @
+
+
+
+   renderInstruments: ->
       @instrumentViews = []
 
       @kitModel.get('instruments').each (model) =>
-         instrument = new Instrument
-            model: model
+         instrument = new Instrument { model: model }
 
          @$container.append instrument.render().el
-
          @instrumentViews.push instrument
 
-      @
+
+
+   addEventListeners: ->
+      console.log 'here?'
+      @listenTo @kitModel, AppEvent.CHANGE_KIT, @onKitChange
+
+
+
+
+   removeEventListeners: ->
+      @stopListening()
+
+
+
+
+   # EVENT LISTENERS
+   # --------------------------------------------------------------------------------
+
+
+   onKitChange: (model) ->
+      console.log 'change'
+      _.each @instrumentViews, (instrument) ->
+         instrument.remove()
+
+      @renderInstruments()
+
+
+
+   onClick: (event) ->
+      @index = @index + 1
+
+      @appModel.set 'kitModel', @kitCollection.at(@index)
+
+      console.log @appModel.get('kitModel').get 'label'
+
+
 
 
 
