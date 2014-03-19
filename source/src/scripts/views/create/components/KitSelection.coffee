@@ -13,11 +13,15 @@ template = require './templates/kit-selection-template.hbs'
 class KitSelection extends View
 
 
+   # Ref to the main AppModel
    # @type {AppModel}
+
    appModel: null
 
 
+   # Ref to the KitCollection for updating sounds
    # @type {KitCollection}
+
    kitCollection: null
 
 
@@ -27,7 +31,9 @@ class KitSelection extends View
    kitModel: null
 
 
+   # View template
    # @type {Function}
+
    template: template
 
 
@@ -38,11 +44,10 @@ class KitSelection extends View
 
 
 
-   initialize: (options) ->
-      super options
 
-
-
+   # Render the view and update the kit if not already
+   # set via a previous session
+   # @param {Object} options
 
    render: (options) ->
       super options
@@ -58,6 +63,10 @@ class KitSelection extends View
 
 
 
+
+   # Add event listeners for handing changes related to
+   # switching drum kits
+
    addEventListeners: ->
       @listenTo @appModel, AppEvent.CHANGE_KIT, @onChangeKit
 
@@ -69,12 +78,17 @@ class KitSelection extends View
 
 
 
+   # Handler for left button clicks.  Updates the collection and
+   # sets a new kitModel on the main AppModel
+
    onLeftBtnClick: (event) ->
       @appModel.set 'kitModel', @kitCollection.previousKit()
 
 
 
 
+   # Handler for left button clicks.  Updates the collection and
+   # sets a new kitModel on the main AppModel
 
    onRightBtnClick: (event) ->
       @appModel.set 'kitModel', @kitCollection.nextKit()
@@ -82,6 +96,8 @@ class KitSelection extends View
 
 
 
+   # Handler for kit change events.  Updates the label on the
+   # kit selector
 
    onChangeKit: (model) ->
       @kitModel = model.changed.kitModel
