@@ -13,7 +13,7 @@ template = require './templates/landing-template.hbs'
 
 class LandingView extends View
 
-   # @type {Function}
+
    template: template
 
 

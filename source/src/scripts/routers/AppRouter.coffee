@@ -8,6 +8,11 @@
 PubSub   = require '../utils/PubSub'
 PubEvent = require '../events/PubEvent.coffee'
 
+# TODO: The below items are only included for testing component
+# modularity.  They, and their routes, should be removed in production
+
+KitSelection = require '../views/create/components/KitSelection.coffee'
+
 
 class AppRouter extends Backbone.Router
 
@@ -16,6 +21,9 @@ class AppRouter extends Backbone.Router
       '':             'landingRoute'
       'create':       'createRoute'
       'share':        'shareRoute'
+
+      # Component test routes
+      'kit-selection': 'kitSelectionRoute'
 
 
    initialize: (options) ->
@@ -44,6 +52,18 @@ class AppRouter extends Backbone.Router
 
    shareRoute: ->
       @appModel.set 'view', @appController.shareView
+
+
+
+
+   # COMPONENT TEST ROUTES
+   # --------------------------------------------------------------------------------
+
+
+   kitSelectionRoute: ->
+      view = new KitSelection
+
+      @appModel.set 'view', view
 
 
 

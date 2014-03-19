@@ -36,16 +36,20 @@ class AppController extends Backbone.View
 
 
 
+   # Renders the AppController to the DOM and kicks
+   # off backbones history
+
    render: ->
-      @$body = $('body')
+      @$body = $ 'body'
       @$body.append @el
 
-      Backbone.history.start({
+      Backbone.history.start
          pushState: false
-      })
 
 
 
+   # Destroys all current and pre-rendered views and
+   # undelegates event listeners
 
    remove: ->
       @landingView.remove()
@@ -57,11 +61,16 @@ class AppController extends Backbone.View
 
 
 
+   # Adds AppController-related event listeners and begins
+   # listening to view changes
+
    addEventListeners: ->
       @listenTo @appModel, 'change:view', @onViewChange
 
 
 
+
+   # Removes AppController-related event listeners
 
    removeEventListeners: ->
       @stopListening()
@@ -72,6 +81,10 @@ class AppController extends Backbone.View
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
 
+
+
+   # Handler for showing / hiding / disposing of primary views
+   # @param {AppModel} model
 
    onViewChange: (model) ->
       previousView = model._previousAttributes.view
