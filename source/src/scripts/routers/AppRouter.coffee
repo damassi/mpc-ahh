@@ -5,8 +5,9 @@
  * @date   3.17.14
 ###
 
-PubSub   = require '../utils/PubSub'
-PubEvent = require '../events/PubEvent.coffee'
+AppConfig   = require '../config/AppConfig.coffee'
+PubSub      = require '../utils/PubSub'
+PubEvent    = require '../events/PubEvent.coffee'
 
 # TODO: The below items are only included for testing component
 # modularity.  They, and their routes, should be removed in production
@@ -14,8 +15,8 @@ PubEvent = require '../events/PubEvent.coffee'
 KitSelection  = require '../views/create/components/KitSelection.coffee'
 KitCollection = require '../models/KitCollection.coffee'
 KitModel      = require '../models/KitModel.coffee'
-
 BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
+InstrumentSelectionPanel = require '../views/create/components/instruments/InstrumentSelectionPanel.coffee'
 
 
 class AppRouter extends Backbone.Router
@@ -29,6 +30,7 @@ class AppRouter extends Backbone.Router
       # Component test routes
       'kit-selection': 'kitSelectionRoute'
       'bpm-indicator': 'bpmIndicatorRoute'
+      'instrument-selector': 'instrumentSelectorRoute'
 
 
 
@@ -92,6 +94,25 @@ class AppRouter extends Backbone.Router
       view.render()
 
       @appModel.set 'view', view
+
+
+
+
+   instrumentSelectorRoute: ->
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
+      view = new InstrumentSelectionPanel
+         appModel: @appModel
+
+      @appModel.set 'view', view
+
 
 
 

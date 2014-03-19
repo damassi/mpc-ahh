@@ -402,7 +402,7 @@ module.exports = (grunt) ->
       'browserify:dev'
       'browserify:test'
       'concat:vendor'
-      'mocha'
+      #'mocha'
    ]
 
 
