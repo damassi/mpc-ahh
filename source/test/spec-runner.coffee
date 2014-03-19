@@ -1,13 +1,12 @@
-# Models
 
 describe 'Models', =>
+
    require './spec/models/KitCollection-spec.coffee'
    require './spec/models/KitModel-spec.coffee'
 
 
 describe 'Views', =>
 
-   # Views
    require './spec/views/landing/LandingView-spec.coffee'
    require './spec/views/create/components/KitSelection-spec.coffee'
    require './spec/views/create/components/BPMIndicator-spec.coffee'
@@ -24,7 +23,7 @@ require './spec/views/create/CreateView-spec.coffee'
 
 require './spec/views/create/components/sequencer/Sequencer-spec.coffee'
 require './spec/views/create/components/sequencer/SequencerTrack-spec.coffee'
-require './spec/views/create/components/sequencer/SoundSquare-spec.coffee'
+require './spec/views/create/components/sequencer/SequencerSquare-spec.coffee'
 
 
 

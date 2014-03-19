@@ -15,8 +15,13 @@ PubEvent    = require '../events/PubEvent.coffee'
 KitSelection  = require '../views/create/components/KitSelection.coffee'
 KitCollection = require '../models/KitCollection.coffee'
 KitModel      = require '../models/KitModel.coffee'
+
 BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
 InstrumentSelectionPanel = require '../views/create/components/instruments/InstrumentSelectionPanel.coffee'
+
+SequencerSquare = require '../views/create/components/sequencer/SequencerSquare.coffee'
+SequencerTrack  = require '../views/create/components/sequencer/SequencerTrack.coffee'
+Sequencer       = require '../views/create/components/sequencer/Sequencer.coffee'
 
 
 class AppRouter extends Backbone.Router
@@ -28,9 +33,12 @@ class AppRouter extends Backbone.Router
       'share':        'shareRoute'
 
       # Component test routes
-      'kit-selection': 'kitSelectionRoute'
-      'bpm-indicator': 'bpmIndicatorRoute'
-      'instrument-selector': 'instrumentSelectorRoute'
+      'kit-selection':        'kitSelectionRoute'
+      'bpm-indicator':        'bpmIndicatorRoute'
+      'instrument-selector':  'instrumentSelectorRoute'
+      'sequencer-square':     'sequencerSquareRoute'
+      'sequencer-track':      'sequencerTrackRoute'
+      'sequencer':            'sequencerRoute'
 
 
 
@@ -112,6 +120,23 @@ class AppRouter extends Backbone.Router
          kitCollection: @kitCollection
          appModel: @appModel
 
+      @appModel.set 'view', view
+
+
+
+
+   sequencerSquareRoute: ->
+
+      @appModel.set 'view', view
+
+
+
+   sequencerTrackRoute: ->
+      @appModel.set 'view', view
+
+
+
+   sequencerRoute: ->
       @appModel.set 'view', view
 
 

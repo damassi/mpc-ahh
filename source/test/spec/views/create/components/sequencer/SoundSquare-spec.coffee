@@ -1,1 +1,0 @@
-SoundSquare = require  '../../../../../../src/scripts/views/create/components/sequencer/SoundSquare.coffee'
