@@ -5,18 +5,30 @@
  * @date   3.17.14
 ###
 
+PubSub   = require '../utils/PubSub'
+PubEvent = require '../events/PubEvent.coffee'
 
-AppRouter = Backbone.Router.extend
+
+class AppRouter extends Backbone.Router
 
 
    routes:
-      '':            'landingRoute'
-      'create':      'createRoute'
-      'share':       'shareRoute'
+      '':             'landingRoute'
+      'create':       'createRoute'
+      'share':        'shareRoute'
 
 
    initialize: (options) ->
       {@appController, @appModel} = options
+
+      PubSub.on PubEvent.ROUTE, @onRouteChange
+
+
+
+   onRouteChange: (params) =>
+      {route} = params
+
+      @navigate route, { trigger: true }
 
 
 

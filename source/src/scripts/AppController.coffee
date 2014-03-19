@@ -39,7 +39,10 @@ class AppController extends Backbone.View
    render: ->
       @$body = $('body')
       @$body.append @el
-      Backbone.history.start()
+
+      Backbone.history.start({
+         pushState: false
+      })
 
 
 

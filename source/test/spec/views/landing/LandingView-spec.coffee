@@ -22,27 +22,16 @@ describe 'Landing View', ->
 
    it 'Should redirect to create page on click', (done) =>
 
+      @appController = new AppController()
+      router = @appController.appRouter
       $startBtn = @view.$el.find '.start-btn'
 
       $startBtn.on 'click', (event) =>
-         $btn = $(event.currentTarget)
-
-         expect($btn.attr 'href').to.equal '#/create'
+         'create'.should.route.to router, 'createRoute'
          done()
 
       $startBtn.click()
 
-
-
-   it 'Should route to the Create page on click', =>
-
-      @appController = new AppController()
-      router = @appController.appRouter
-
-      $startBtn = @view.$el.find '.start-btn'
-      href = $startBtn.attr 'href'
-
-      href.should.route.to router, 'createRoute'
 
 
 
