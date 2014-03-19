@@ -45,6 +45,10 @@ class Instrument extends View
 
 
 
+   # Handler for click events.  Updates the current instrument model, which
+   # InstrumentSelectionPanel listens to, and adds a selected state
+   # @param {Event}
+
    onClick: (event) ->
       @kitModel.set 'currentInstrument', @model
       @$el.addClass 'selected'

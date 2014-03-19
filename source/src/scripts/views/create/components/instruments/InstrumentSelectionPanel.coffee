@@ -44,8 +44,10 @@ class InstrumentSelectionPanel extends View
    instrumentViews: null
 
 
+
    events:
       'click .test': 'onTestClick'
+
 
 
    # Initializes the instrument selector and sets a local ref
