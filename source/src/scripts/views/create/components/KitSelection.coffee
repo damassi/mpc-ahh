@@ -49,12 +49,9 @@ class KitSelection extends View
 
       @$kitLabel = @$el.find '.label-kit'
 
-      # Set the appModel if arriving for the first time
       if @appModel.get('kitModel') is null
-         @appModel.set
-            'kitModel': @kitCollection.at(0)
+         @appModel.set 'kitModel', @kitCollection.at(0)
 
-      # Update the button text with the current kit
       @$kitLabel.text @appModel.get('kitModel').get 'label'
 
       @
