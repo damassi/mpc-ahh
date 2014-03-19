@@ -32,7 +32,7 @@ class BPMIndicator extends View
    # decreasing BPM on press / touch
    # @type {Number}
 
-   intervalUpdateTime: 1
+   intervalUpdateTime: 70
 
 
 
@@ -56,6 +56,7 @@ class BPMIndicator extends View
       'touchstart .btn-decrease': 'onDecreaseBtnDown'
       'touchend   .btn-increase': 'onBtnUp'
       'touchend   .btn-decrease': 'onBtnUp'
+
 
 
 
@@ -165,7 +166,7 @@ class BPMIndicator extends View
    # Handler for kit change events.  Updates the label on the
    # kit selector
 
-   onBPMKit: (model) ->
+   onBPMChange: (model) ->
       @$bpmLabel.text model.changed.bpm
 
 
