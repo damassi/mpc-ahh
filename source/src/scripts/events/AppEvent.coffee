@@ -9,6 +9,7 @@
 AppEvent =
 
    CHANGE_KIT: 'change:kitModel'
+   CHANGE_BPM: 'change:bpm'
 
 
 module.exports = AppEvent
