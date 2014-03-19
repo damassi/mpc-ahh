@@ -5,7 +5,17 @@
  * @date   3.18.14
 ###
 
-class SoundModel extends Backbone.Model
+class InstrumentModel extends Backbone.Model
 
 
-module.exports = SoundModel
+   defaults:
+      icon:    null
+      label:   null
+      src:     null
+
+
+   parse: (response) ->
+      response
+
+
+module.exports = InstrumentModel

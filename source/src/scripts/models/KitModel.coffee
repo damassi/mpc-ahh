@@ -17,7 +17,7 @@ class KitModel extends Backbone.Model
       'folder':   null
 
       # @type {InstrumentCollection}
-      'sounds':   null
+      'instruments':   null
 
 
    initialize: (options) ->
@@ -25,10 +25,12 @@ class KitModel extends Backbone.Model
 
 
    parse: (response) ->
+      _.each response.instruments, (instrument) ->
+         instrument.src = response.path + '/' + instrument.src
+
       response.instruments = new InstrumentCollection response.instruments
 
-      console.log response
-      return response
+      response
 
 
 
