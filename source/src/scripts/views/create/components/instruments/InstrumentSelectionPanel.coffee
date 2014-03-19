@@ -44,6 +44,8 @@ class InstrumentSelectionPanel extends View
    instrumentViews: null
 
 
+   events:
+      'click .test': 'onTestClick'
 
 
    # Initializes the instrument selector and sets a local ref
@@ -79,7 +81,9 @@ class InstrumentSelectionPanel extends View
       @instrumentViews = []
 
       @kitModel.get('instruments').each (model) =>
-         instrument = new Instrument { model: model }
+         instrument = new Instrument
+            kitModel: @kitModel
+            model: model
 
          @$container.append instrument.render().el
          @instrumentViews.push instrument
@@ -91,7 +95,7 @@ class InstrumentSelectionPanel extends View
 
    addEventListeners: ->
       @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
-
+      @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
 
@@ -99,6 +103,7 @@ class InstrumentSelectionPanel extends View
 
    removeEventListeners: ->
       @stopListening()
+
 
 
 
@@ -113,12 +118,29 @@ class InstrumentSelectionPanel extends View
    # @param {KitModel} model
 
    onKitChange: (model) =>
+      @removeEventListeners()
+
       @kitModel = model.changed.kitModel
 
       _.each @instrumentViews, (instrument) ->
          instrument.remove()
 
       @renderInstruments()
+      @addEventListeners()
+
+
+
+
+   onInstrumentChange: (model) =>
+      instrument = model.changed.currentInstrument
+
+      console.log instrument.get 'label'
+
+
+
+   onTestClick: (event) ->
+      @appModel.set 'kitModel', @kitCollection.nextKit()
+
 
 
 

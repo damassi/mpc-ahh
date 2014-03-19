@@ -8,8 +8,9 @@
 
 AppEvent =
 
-   CHANGE_KIT: 'change:kitModel'
-   CHANGE_BPM: 'change:bpm'
+   CHANGE_KIT:        'change:kitModel'
+   CHANGE_BPM:        'change:bpm'
+   CHANGE_INSTRUMENT: 'change:currentInstrument'
 
 
 module.exports = AppEvent
