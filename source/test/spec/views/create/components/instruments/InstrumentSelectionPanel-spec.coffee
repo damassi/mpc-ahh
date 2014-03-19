@@ -58,7 +58,7 @@ describe 'Instrument Selection Panel', ->
       $instruments = @view.$el.find('.container-instruments').find('.instrument')
       $instruments.length.should.be.equal(length)
 
-      @view.appModel.set 'kitModel', @kitCollection.at 1
+      @view.appModel.set 'kitModel', @kitCollection.nextKit()
 
       kitModel = @view.appModel.get 'kitModel'
       length = kitModel.get('instruments').toJSON().length

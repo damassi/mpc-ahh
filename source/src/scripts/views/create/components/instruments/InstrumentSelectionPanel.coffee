@@ -44,13 +44,6 @@ class InstrumentSelectionPanel extends View
    instrumentViews: null
 
 
-   index: 0
-
-
-
-   events:
-      'click': 'onClick'
-
 
 
    # Initializes the instrument selector and sets a local ref
@@ -65,6 +58,9 @@ class InstrumentSelectionPanel extends View
 
 
 
+   # Renders the view as well as the associated kit instruments
+   # @param {Object} options
+
    render: (options) ->
       super options
 
@@ -75,6 +71,9 @@ class InstrumentSelectionPanel extends View
       @
 
 
+
+
+   # Renders each individual kit model into an Instrument
 
    renderInstruments: ->
       @instrumentViews = []
@@ -87,12 +86,16 @@ class InstrumentSelectionPanel extends View
 
 
 
+
+   # Adds event listeners related to kit changes
+
    addEventListeners: ->
-      console.log 'here?'
-      @listenTo @kitModel, AppEvent.CHANGE_KIT, @onKitChange
+      @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
 
 
 
+
+   # Removes event listeners
 
    removeEventListeners: ->
       @stopListening()
@@ -104,29 +107,18 @@ class InstrumentSelectionPanel extends View
    # --------------------------------------------------------------------------------
 
 
-   onKitChange: (model) ->
-      console.log 'change'
+
+   # Handler for kit change events.  Cleans up the view and re-renders
+   # the instruments to the DOM
+   # @param {KitModel} model
+
+   onKitChange: (model) =>
+      @kitModel = model.changed.kitModel
+
       _.each @instrumentViews, (instrument) ->
          instrument.remove()
 
       @renderInstruments()
-
-
-
-   onClick: (event) ->
-      @index = @index + 1
-
-      @appModel.set 'kitModel', @kitCollection.at(@index)
-
-      console.log @appModel.get('kitModel').get 'label'
-
-
-
-
-
-
-
-
 
 
 
