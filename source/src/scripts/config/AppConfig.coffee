@@ -8,7 +8,18 @@
 
 AppConfig =
 
+
+   # The BPM tempo
+   # @type {Number}
+
    BPM: 120
+
+
+   # The max BPM
+   # @type {Number}
+
+   BPM_MAX: 300
+
 
 
 module.exports = AppConfig
