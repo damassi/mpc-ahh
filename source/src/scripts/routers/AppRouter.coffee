@@ -12,6 +12,8 @@ PubEvent    = require '../events/PubEvent.coffee'
 # TODO: The below items are only included for testing component
 # modularity.  They, and their routes, should be removed in production
 
+TestsView     = require '../views/tests/TestsView.coffee'
+
 KitSelection  = require '../views/create/components/KitSelection.coffee'
 KitCollection = require '../models/KitCollection.coffee'
 KitModel      = require '../models/KitModel.coffee'
@@ -33,6 +35,7 @@ class AppRouter extends Backbone.Router
       'share':        'shareRoute'
 
       # Component test routes
+      'tests':                'tests'
       'kit-selection':        'kitSelectionRoute'
       'bpm-indicator':        'bpmIndicatorRoute'
       'instrument-selector':  'instrumentSelectorRoute'
@@ -76,6 +79,14 @@ class AppRouter extends Backbone.Router
 
    # COMPONENT TEST ROUTES
    # --------------------------------------------------------------------------------
+
+
+   tests: ->
+      view = new TestsView()
+
+      @appModel.set 'view', view
+
+
 
 
    kitSelectionRoute: ->
@@ -126,17 +137,22 @@ class AppRouter extends Backbone.Router
 
 
    sequencerSquareRoute: ->
+      view = new SequencerSquare()
 
       @appModel.set 'view', view
 
 
 
    sequencerTrackRoute: ->
+      view = new SequencerTrack()
+
       @appModel.set 'view', view
 
 
 
    sequencerRoute: ->
+      view = new Sequencer()
+
       @appModel.set 'view', view
 
 

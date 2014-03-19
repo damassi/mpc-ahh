@@ -6,7 +6,7 @@
 ###
 
 View     = require '../../../../supers/View.coffee'
-template = require './templates/sound-square-template.hbs'
+template = require './templates/sequencer-square-template.hbs'
 
 
 class SoundSquare extends View

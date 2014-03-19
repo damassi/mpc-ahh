@@ -10,22 +10,24 @@ describe 'Views', =>
    require './spec/views/landing/LandingView-spec.coffee'
    require './spec/views/create/components/KitSelection-spec.coffee'
    require './spec/views/create/components/BPMIndicator-spec.coffee'
-   require './spec/views/create/components/instruments/InstrumentSelectionPanel-spec.coffee'
-   require './spec/views/create/components/instruments/Instrument-spec.coffee'
 
-   require './spec/views/create/components/sequencer/SequencerSquare-spec.coffee'
-   require './spec/views/create/components/sequencer/SequencerTrack-spec.coffee'
-   require './spec/views/create/components/sequencer/Sequencer-spec.coffee'
+
+   describe 'Instrument Selector', =>
+
+      require './spec/views/create/components/instruments/InstrumentSelectionPanel-spec.coffee'
+      require './spec/views/create/components/instruments/Instrument-spec.coffee'
+
+
+   describe 'Sequencer', =>
+
+      require './spec/views/create/components/sequencer/SequencerSquare-spec.coffee'
+      require './spec/views/create/components/sequencer/SequencerTrack-spec.coffee'
+      require './spec/views/create/components/sequencer/Sequencer-spec.coffee'
 
 return
 
 require './spec/views/share/ShareView-spec.coffee'
-
-# Create
 require './spec/views/create/CreateView-spec.coffee'
-
-
-
 
 
 
