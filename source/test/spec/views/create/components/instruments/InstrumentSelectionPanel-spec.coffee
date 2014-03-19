@@ -1,10 +1,22 @@
 InstrumentSelectionPanel = require  '../../../../../../src/scripts/views/create/components/instruments/InstrumentSelectionPanel.coffee'
+AppConfig                = require  '../../../../../../src/scripts/config/AppConfig.coffee'
+KitCollection            = require  '../../../../../../src/scripts/models/KitCollection.coffee'
+soundData                = require  '../../../../../../test/fixtures/sound-data'
+
 
 
 describe 'Instrument Selection Panel', ->
 
 
    beforeEach =>
+
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
+
+      #console.log @kitCollection
       @view = new InstrumentSelectionPanel
       @view.render()
 

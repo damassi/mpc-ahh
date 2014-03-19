@@ -5,12 +5,12 @@
  * @date   3.18.14
 ###
 
-SoundModel = require './SoundModel.coffee'
+InstrumentModel = require './InstrumentModel.coffee'
 
 
-class SoundCollection extends Backbone.Collection
+class InstrumentCollection extends Backbone.Collection
 
-   model: SoundModel
+   model: InstrumentModel
 
 
-module.exports = SoundCollection
+module.exports = InstrumentCollection

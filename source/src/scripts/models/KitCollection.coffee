@@ -31,6 +31,19 @@ class KitCollection extends Backbone.Collection
 
 
 
+   parse: (response) ->
+      assetPath = response.config.assetPath
+      kits = response.kits
+
+      kits = _.map kits, (kit) ->
+         kit.path = assetPath + '/' + kit.folder
+         return kit
+
+      return kits
+
+
+
+
    # Cycles the current drum kit back
    # @return {KitModel}
 

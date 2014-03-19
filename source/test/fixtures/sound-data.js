@@ -8,7 +8,7 @@ module.exports = {
     {
       "label": "Hip Hop",
       "folder": "hip-hop",
-      "sounds": [
+      "instruments": [
         {
           "label": "Closed HiHat",
           "src": "HAT_2.mp3",
@@ -45,7 +45,7 @@ module.exports = {
     {
       "label": "Jazz",
       "folder": "jazz",
-      "sounds": [
+      "instruments": [
         {
           "label": "FX",
           "src": "FX_1.mp3",

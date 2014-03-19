@@ -38,6 +38,13 @@ AppConfig =
       @ASSETS.path + '/' + @ASSETS[assetType]
 
 
+   # Returns a normalized asset path for the TEST environment
+   # @param {String} assetType
+
+   returnTestAssetPath: (assetType) ->
+      '/test/html/' + @ASSETS.path + '/' + @ASSETS[assetType]
+
+
 
 module.exports = AppConfig
 

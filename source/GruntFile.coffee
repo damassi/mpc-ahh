@@ -172,12 +172,20 @@ module.exports = (grunt) ->
       'copy':
 
          assets:
-            files: [{
-               expand: true
-               cwd: "#{sources}/assets"
-               src: ['**']
-               dest: "#{output}/assets"
-            }]
+            files: [
+               {
+                  expand: true
+                  cwd: "#{sources}/assets"
+                  src: ['**']
+                  dest: "#{output}/assets"
+               },
+               {
+                  expand: true
+                  cwd: "#{sources}/assets"
+                  src: ['**']
+                  dest: "#{test}/html/assets"
+               }
+            ]
 
          html:
             files: [{
