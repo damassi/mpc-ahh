@@ -178,4 +178,8 @@ GLOBAL LAYOUT
   display: none;
 }
 
+.selected {
+  color: red;
+}
+
 /*# sourceMappingURL=app.css.map */

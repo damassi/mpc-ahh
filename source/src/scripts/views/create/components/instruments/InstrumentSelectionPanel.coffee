@@ -132,9 +132,9 @@ class InstrumentSelectionPanel extends View
 
 
    onInstrumentChange: (model) =>
-      instrument = model.changed.currentInstrument
+      @$container.find('.instrument').removeClass 'selected'
 
-      console.log instrument.get 'label'
+
 
 
 

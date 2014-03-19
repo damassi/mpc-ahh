@@ -47,6 +47,7 @@ class Instrument extends View
 
    onClick: (event) ->
       @kitModel.set 'currentInstrument', @model
+      @$el.addClass 'selected'
 
 
 

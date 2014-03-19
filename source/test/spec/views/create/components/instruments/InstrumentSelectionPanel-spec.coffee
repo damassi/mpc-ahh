@@ -71,32 +71,10 @@ describe 'Instrument Selection Panel', ->
    it 'Should listen for selections from Instrument instances and update the model', =>
 
       @view.kitModel.should.trigger('change:currentInstrument').when =>
-         $instruments = @view.$el.find('.container-instruments').find('.instrument')
-         $instrumentOne = $($instruments[0])
-         $instrumentTwo = $($instruments[1])
-
-         $instrumentOne.click()
-
-         @view.onInstrumentClick()
+         @view.instrumentViews[0].onClick()
 
          $selected = @view.$el.find('.container-instruments').find('.selected')
          $selected.length.should.equal 1
-
-
-
-
-   it 'Should update the selected state if the user is interfacing with the sequence', =>
-
-      $instruments = @view.$el.find('.container-instruments').find('.instrument')
-      $instrumentOne = $($instruments[0])
-      $instrumentTwo = $($instruments[1])
-
-      $instrumentOne.click()
-      $instrumentOne.hasClass('selected').should.be.true
-
-      $instrumentTwo.click()
-      $instrumentTwo.hasClass('selected').should.be.true
-      $instrumentOne.hasClass('selected').should.be.false
 
 
 
