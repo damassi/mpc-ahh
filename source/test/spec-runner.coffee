@@ -1,10 +1,18 @@
+# Models
 
-# Views
-require './spec/views/landing/LandingView-spec.coffee'
-require './spec/views/create/components/KitSelection-spec.coffee'
-require './spec/views/create/components/BPMIndicator-spec.coffee'
-require './spec/views/create/components/instruments/InstrumentSelectionPanel-spec.coffee'
-require './spec/views/create/components/instruments/Instrument-spec.coffee'
+describe 'Models', =>
+   require './spec/models/KitCollection-spec.coffee'
+   require './spec/models/KitModel-spec.coffee'
+
+
+describe 'Views', =>
+
+   # Views
+   require './spec/views/landing/LandingView-spec.coffee'
+   require './spec/views/create/components/KitSelection-spec.coffee'
+   require './spec/views/create/components/BPMIndicator-spec.coffee'
+   require './spec/views/create/components/instruments/InstrumentSelectionPanel-spec.coffee'
+   require './spec/views/create/components/instruments/Instrument-spec.coffee'
 
 return
 
@@ -19,8 +27,7 @@ require './spec/views/create/components/sequencer/SequencerTrack-spec.coffee'
 require './spec/views/create/components/sequencer/SoundSquare-spec.coffee'
 
 
-# Models
-require './spec/models/KitModel-spec.coffee'
+
 require './spec/models/SoundCollection-spec.coffee'
 require './spec/models/SoundModel-spec.coffee'
 

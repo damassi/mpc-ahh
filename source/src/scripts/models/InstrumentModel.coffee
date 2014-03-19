@@ -9,13 +9,9 @@ class InstrumentModel extends Backbone.Model
 
 
    defaults:
-      icon:    null
-      label:   null
-      src:     null
-
-
-   parse: (response) ->
-      response
+      'icon':    null
+      'label':   null
+      'src':     null
 
 
 module.exports = InstrumentModel
