@@ -20,12 +20,10 @@ class BPMIndicator extends View
    appModel: null
 
 
-
    # View template
    # @type {Function}
 
    template: template
-
 
 
    # The setInterval update interval for increasing and
@@ -35,12 +33,10 @@ class BPMIndicator extends View
    intervalUpdateTime: 70
 
 
-
    # The setInterval updater
    # @type {SetInterval}
 
    updateInterval: null
-
 
 
    # The amount to increase the BPM by on each tick
