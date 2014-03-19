@@ -7,12 +7,12 @@
 ###
 
 View     = require '../../../../supers/View.coffee'
-template = require './templates/sound-type-template.hbs'
+template = require './templates/instrument-template.hbs'
 
 
-class SoundType extends View
+class Instrument extends View
 
    template: template
 
 
-module.exports = SoundType
+module.exports = Instrument

@@ -6,12 +6,12 @@
 ###
 
 View     = require '../../../../supers/View.coffee'
-template = require './templates/sound-panel-template.hbs'
+template = require './templates/instrument-panel-template.hbs'
 
 
-class SoundSelectionPanel extends View
+class InstrumentSelectionPanel extends View
 
    template: template
 
 
-module.exports = SoundSelectionPanel
+module.exports = InstrumentSelectionPanel
