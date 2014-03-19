@@ -5,10 +5,16 @@ describe 'Instrument Selection Panel', ->
 
 
    beforeEach =>
-      @view = new SoundSelectionPanel
+      @view = new InstrumentSelectionPanel
+      @view.render()
+
+
+   afterEach =>
+      @view.remove()
 
 
    it 'Should render', =>
+      @view.should.exist
 
 
    it 'Should refer to the current KitModel when instantiating sounds', =>

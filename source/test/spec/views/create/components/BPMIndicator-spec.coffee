@@ -35,6 +35,7 @@ describe 'BPM Indicator', ->
    it 'Should auto-advance the bpm via setInterval on press', (done) =>
 
       @view.bpmIncreaseAmount = 50
+      @view.intervalUpdateTime = 1
       appModel = @view.appModel
       appModel.set 'bpm', 1
 

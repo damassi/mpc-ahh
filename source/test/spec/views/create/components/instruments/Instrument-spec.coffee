@@ -5,7 +5,7 @@ describe 'Instrument', ->
 
 
    beforeEach =>
-      @view = new SoundType
+      @view = new Instrument
 
 
    it 'Should render', =>
