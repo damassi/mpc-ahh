@@ -15,6 +15,9 @@ KitSelection  = require '../views/create/components/KitSelection.coffee'
 KitCollection = require '../models/KitCollection.coffee'
 KitModel      = require '../models/KitModel.coffee'
 
+BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
+
+
 class AppRouter extends Backbone.Router
 
 
@@ -25,6 +28,8 @@ class AppRouter extends Backbone.Router
 
       # Component test routes
       'kit-selection': 'kitSelectionRoute'
+      'bpm-indicator': 'bpmIndicatorRoute'
+
 
 
    initialize: (options) ->
@@ -57,12 +62,13 @@ class AppRouter extends Backbone.Router
 
 
 
+
+
    # COMPONENT TEST ROUTES
    # --------------------------------------------------------------------------------
 
 
    kitSelectionRoute: ->
-
       models = []
 
       _(4).times (index) ->
@@ -74,7 +80,16 @@ class AppRouter extends Backbone.Router
             appModel: @appModel
          }
 
-      console.log view.kitCollection
+      @appModel.set 'view', view
+
+
+
+
+   bpmIndicatorRoute: ->
+      view = new BPMIndicator
+         appModel: @appModel
+
+      view.render()
 
       @appModel.set 'view', view
 

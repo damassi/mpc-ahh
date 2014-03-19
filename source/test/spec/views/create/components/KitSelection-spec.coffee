@@ -28,6 +28,7 @@ describe 'Kit Selection', ->
 
 
    it 'Should render', =>
+
       @view.$el.should.exist
 
 
