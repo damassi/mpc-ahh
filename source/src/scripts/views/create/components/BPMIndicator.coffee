@@ -5,8 +5,10 @@
  * @date   3.18.14
 ###
 
-View     = require '../../../supers/View.coffee'
-template = require './templates/bpm-template.hbs'
+AppConfig = require '../../../config/AppConfig.coffee'
+AppEvent  = require '../../../events/AppEvent.coffee'
+View      = require '../../../supers/View.coffee'
+template  = require './templates/bpm-template.hbs'
 
 
 class BPMIndicator extends View
@@ -18,17 +20,42 @@ class BPMIndicator extends View
    appModel: null
 
 
+
    # View template
    # @type {Function}
 
    template: template
 
 
-   # the setInterval update interval for increasing and
+
+   # The setInterval update interval for increasing and
    # decreasing BPM on press / touch
    # @type {Number}
 
-   intervalUpdateTime: 10
+   intervalUpdateTime: 1
+
+
+
+   # The setInterval updater
+   # @type {SetInterval}
+
+   updateInterval: null
+
+
+
+   # The amount to increase the BPM by on each tick
+   # @type {Number}
+
+   bpmIncreaseAmount: 1
+
+
+
+
+   events:
+      'touchstart .btn-increase': 'onIncreaseBtnDown'
+      'touchstart .btn-decrease': 'onDecreaseBtnDown'
+      'touchend   .btn-increase': 'onBtnUp'
+      'touchend   .btn-decrease': 'onBtnUp'
 
 
 
@@ -39,7 +66,9 @@ class BPMIndicator extends View
    render: (options) ->
       super options
 
-      @$bpmLabel = @$el.find '.label-bpm'
+      @$bpmLabel   = @$el.find '.label-bpm'
+      @increaseBtn = @$el.find '.btn-increase'
+      @decreaseBtn = @$el.find '.btn-decrease'
 
       @$bpmLabel.text @appModel.get('bpm')
 
@@ -64,7 +93,12 @@ class BPMIndicator extends View
          bpm = @appModel.get 'bpm'
 
          if bpm < AppConfig.BPM_MAX
-            @appModel.set 'bpm', bpm + 1
+            bpm += @bpmIncreaseAmount
+
+         else
+            bpm = AppConfig.BPM_MAX
+
+         @appModel.set 'bpm', bpm
 
       , @intervalUpdateTime
 
@@ -75,13 +109,16 @@ class BPMIndicator extends View
    # when the user releases the mouse
 
    decreaseBPM: ->
-
-
       @updateInterval = setInterval =>
          bpm = @appModel.get 'bpm'
 
          if bpm > 0
-            @appModel.set 'bpm', bpm - 1
+            bpm -= @bpmIncreaseAmount
+
+         else
+            bpm = 0
+
+         @appModel.set 'bpm', bpm
 
       , @intervalUpdateTime
 
@@ -120,6 +157,7 @@ class BPMIndicator extends View
 
    onBtnUp: (event) ->
       clearInterval @updateInterval
+      @updateInterval = null
 
 
 

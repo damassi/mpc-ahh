@@ -1,5 +1,7 @@
-BPMIndicator = require  '../../../../../src/scripts/views/create/components/BPMIndicator.coffee'
+BPMIndicator = require '../../../../../src/scripts/views/create/components/BPMIndicator.coffee'
 AppModel     = require '../../../../../src/scripts/models/AppModel.coffee'
+AppEvent     = require '../../../../../src/scripts/events/AppEvent.coffee'
+AppConfig    = require '../../../../../src/scripts/config/AppConfig.coffee'
 
 describe 'BPM Indicator', ->
 
@@ -12,6 +14,7 @@ describe 'BPM Indicator', ->
 
 
    afterEach =>
+      if @view.updateInterval then clearInterval @view.updateInterval
       @view.remove()
 
 
@@ -25,52 +28,32 @@ describe 'BPM Indicator', ->
    it 'Should display the current BPM in the label', =>
 
       $label = @view.$el.find '.label-bpm'
-      $label.text().should.equal @view.appModel.get 'bpm'
-
-
-
-   it 'Should update the BPM on + and - button clicks', =>
-
-      $label = @view.$el.find '.label-bpm'
-      appModel = @view.appModel
-
-      appModel.should.trigger('change:bpm').when =>
-         @view.onIncreaseBtnClick()
-
-      appModel.should.trigger('change:bpm').when =>
-         @view.onDecreaseBtnClick()
+      $label.text().should.equal String(@view.appModel.get('bpm'))
 
 
 
    it 'Should auto-advance the bpm via setInterval on press', (done) =>
 
-      $increaseBtn = @view.$el.find '.btn-increase'
-
+      @view.bpmIncreaseAmount = 50
       appModel = @view.appModel
       appModel.set 'bpm', 1
 
-      inverval = setInterval =>
+      setTimeout =>
          bpm = appModel.get 'bpm'
 
-         if bpm is 120
-            $increseBtn.mouseup()
-            clearInterval interval
+         if bpm >= 120
+            @view.onBtnUp()
             done()
-      , 10
+      , 100
 
-      $increseBtn.mousedown()
-
+      @view.onIncreaseBtnDown()
 
 
 
    it 'Should clear the interval on release', =>
 
-      $increaseBtn = @view.$el.find '.btn-increase'
-      $increaseBtn.mousedown()
-
+      @view.onIncreaseBtnDown()
       @view.updateInterval.should.exist
-
-      $increaseBtn.mouseup()
-
-      @view.updateInterval.should.be.null
+      @view.onBtnUp()
+      expect(@view.updateInterval).to.be.null
 
