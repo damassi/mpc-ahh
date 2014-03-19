@@ -11,8 +11,9 @@ PubEvent = require '../events/PubEvent.coffee'
 # TODO: The below items are only included for testing component
 # modularity.  They, and their routes, should be removed in production
 
-KitSelection = require '../views/create/components/KitSelection.coffee'
-
+KitSelection  = require '../views/create/components/KitSelection.coffee'
+KitCollection = require '../models/KitCollection.coffee'
+KitModel      = require '../models/KitModel.coffee'
 
 class AppRouter extends Backbone.Router
 
@@ -61,7 +62,19 @@ class AppRouter extends Backbone.Router
 
 
    kitSelectionRoute: ->
+
+      models = []
+
+      _(4).times (index) ->
+         models.push new KitModel {label: "kit #{index}"}
+
       view = new KitSelection
+         appModel: @appModel
+         kitCollection: new KitCollection models, {
+            appModel: @appModel
+         }
+
+      console.log view.kitCollection
 
       @appModel.set 'view', view
 
