@@ -9,6 +9,16 @@
 AppConfig =
 
 
+   # The path to application assets
+   # @type {Number}
+
+   ASSETS:
+      path:   '/assets'
+      audio:  'audio'
+      data:   'data'
+      images: 'images'
+
+
    # The BPM tempo
    # @type {Number}
 
@@ -19,6 +29,13 @@ AppConfig =
    # @type {Number}
 
    BPM_MAX: 300
+
+
+   # Returns a normalized asset path for application assets
+   # @param {String} assetType
+
+   returnAssetPath: (assetType) ->
+      @ASSETS.path + '/' + @ASSETS[assetType]
 
 
 

@@ -5,13 +5,22 @@
  * @date   3.18.14
 ###
 
-KitModel = require './KitModel.coffee'
+AppConfig = require '../config/AppConfig.coffee'
+KitModel  = require './KitModel.coffee'
 
 
 class KitCollection extends Backbone.Collection
 
 
+   # Url to data for fetch
+   # @type {String}
+
+   url: "#{AppConfig.returnAssetPath('data')}/sound-data.json"
+
+
+   # Individual drumkit audio sets
    # @type {KitModel}
+
    model: KitModel
 
 
