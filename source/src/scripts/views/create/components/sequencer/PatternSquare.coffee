@@ -16,6 +16,7 @@ class PatternSquare extends View
 
    className: 'pattern-square'
 
+   tagName: 'td'
 
    template: template
 

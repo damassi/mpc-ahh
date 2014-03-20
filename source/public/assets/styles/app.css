@@ -164,6 +164,56 @@ opacity($opacity)
   @import "compass/css3/opacity"
 
 ///////////////////////////////////////////////////// */
+tr, td, th {
+  border: 1px solid black;
+  padding: 20px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+th.step {
+  background: red;
+}
+
+button {
+  font-size: 15px;
+}
+
+.active {
+  background: black;
+  color: white;
+}
+
+#sequencer {
+  float: left;
+}
+
+#pad {
+  float: left;
+}
+#pad td {
+  padding: 37px;
+}
+
+.velocity-low {
+  background: #95c5bf;
+}
+
+.velocity-medium {
+  background: #5fc843;
+}
+
+.velocity-high {
+  background: #c87843;
+}
+
 /* /////////////////////////////////////////////////////
 
 GLOBAL LAYOUT
