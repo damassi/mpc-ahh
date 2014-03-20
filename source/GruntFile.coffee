@@ -136,9 +136,7 @@ module.exports = (grunt) ->
                "#{vendor}/lodash.js"
                "#{vendor}/backbone.js"
                "#{vendor}/greensock.js"
-               #"#{vendor}/react-with-addons.js"
-               #"#{vendor}/react.backbone.js"
-               #"#{vendor}/backbone-react-component.js"
+               "#{vendor}/backbone-relational.js"
 
             ]
 

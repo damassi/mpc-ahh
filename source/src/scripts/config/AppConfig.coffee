@@ -31,6 +31,12 @@ AppConfig =
    BPM_MAX: 300
 
 
+   # The max varient on each pattern square (off, low, medium, high)
+   # @type {Number}
+
+   VELOCITY_MAX: 3
+
+
    # Returns a normalized asset path for application assets
    # @param {String} assetType
 
