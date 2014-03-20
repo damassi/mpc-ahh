@@ -39,8 +39,8 @@ class AppRouter extends Backbone.Router
       'kit-selection':        'kitSelectionRoute'
       'bpm-indicator':        'bpmIndicatorRoute'
       'instrument-selector':  'instrumentSelectorRoute'
-      'sequencer-square':     'sequencerSquareRoute'
-      'sequencer-track':      'sequencerTrackRoute'
+      'pattern-square':       'patternSquareRoute'
+      'pattern-track':        'patternTrackRoute'
       'sequencer':            'sequencerRoute'
 
 
@@ -136,15 +136,15 @@ class AppRouter extends Backbone.Router
 
 
 
-   sequencerSquareRoute: ->
-      view = new SequencerSquare()
+   patternSquareRoute: ->
+      view = new PatternSquare()
 
       @appModel.set 'view', view
 
 
 
-   sequencerTrackRoute: ->
-      view = new SequencerTrack()
+   patternTrackRoute: ->
+      view = new PatternTrack()
 
       @appModel.set 'view', view
 
