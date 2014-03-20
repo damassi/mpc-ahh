@@ -6,12 +6,12 @@
 ###
 
 View     = require '../../../../supers/View.coffee'
-template = require './templates/sequencer-track-template.hbs'
+template = require './templates/pattern-track-template.hbs'
 
 
-class SequencerTrack extends View
+class PatternTrack extends View
 
    template: template
 
 
-module.exports = SequencerTrack
+module.exports = PatternTrack

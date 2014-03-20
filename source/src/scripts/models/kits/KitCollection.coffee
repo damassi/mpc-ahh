@@ -5,7 +5,7 @@
  * @date   3.18.14
 ###
 
-AppConfig = require '../config/AppConfig.coffee'
+AppConfig = require '../../config/AppConfig.coffee'
 KitModel  = require './KitModel.coffee'
 
 

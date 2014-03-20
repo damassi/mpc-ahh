@@ -20,8 +20,8 @@ describe 'Views', =>
 
    describe 'Sequencer', =>
 
-      require './spec/views/create/components/sequencer/SequencerSquare-spec.coffee'
-      require './spec/views/create/components/sequencer/SequencerTrack-spec.coffee'
+      require './spec/views/create/components/sequencer/PatternSquare-spec.coffee'
+      require './spec/views/create/components/sequencer/PatternTrack-spec.coffee'
       require './spec/views/create/components/sequencer/Sequencer-spec.coffee'
 
 return

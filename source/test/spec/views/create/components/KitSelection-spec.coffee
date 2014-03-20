@@ -1,7 +1,7 @@
 KitSelection  = require  '../../../../../src/scripts/views/create/components/KitSelection.coffee'
 AppModel      = require '../../../../../src/scripts/models/AppModel.coffee'
-KitModel      = require '../../../../../src/scripts/models/KitModel.coffee'
-KitCollection = require '../../../../../src/scripts/models/KitCollection.coffee'
+KitModel      = require '../../../../../src/scripts/models/kits/KitModel.coffee'
+KitCollection = require '../../../../../src/scripts/models/kits/KitCollection.coffee'
 
 
 describe 'Kit Selection', ->

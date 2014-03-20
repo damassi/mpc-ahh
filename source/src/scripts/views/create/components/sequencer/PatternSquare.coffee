@@ -6,12 +6,12 @@
 ###
 
 View     = require '../../../../supers/View.coffee'
-template = require './templates/sequencer-square-template.hbs'
+template = require './templates/pattern-square-template.hbs'
 
 
-class SequencerSquare extends View
+class PatternSquare extends View
 
    template: template
 
 
-module.exports = SequencerSquare
+module.exports = PatternSquare

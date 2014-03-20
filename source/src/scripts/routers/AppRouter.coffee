@@ -15,14 +15,14 @@ PubEvent    = require '../events/PubEvent.coffee'
 TestsView     = require '../views/tests/TestsView.coffee'
 
 KitSelection  = require '../views/create/components/KitSelection.coffee'
-KitCollection = require '../models/KitCollection.coffee'
-KitModel      = require '../models/KitModel.coffee'
+KitCollection = require '../models/kits/KitCollection.coffee'
+KitModel      = require '../models/kits/KitModel.coffee'
 
 BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
 InstrumentSelectionPanel = require '../views/create/components/instruments/InstrumentSelectionPanel.coffee'
 
-SequencerSquare = require '../views/create/components/sequencer/SequencerSquare.coffee'
-SequencerTrack  = require '../views/create/components/sequencer/SequencerTrack.coffee'
+PatternSquare = require '../views/create/components/sequencer/PatternSquare.coffee'
+PatternTrack  = require '../views/create/components/sequencer/PatternTrack.coffee'
 Sequencer       = require '../views/create/components/sequencer/Sequencer.coffee'
 
 

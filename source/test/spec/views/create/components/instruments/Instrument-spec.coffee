@@ -1,5 +1,5 @@
 Instrument = require  '../../../../../../src/scripts/views/create/components/instruments/Instrument.coffee'
-KitModel   = require  '../../../../../../src/scripts/models/KitModel.coffee'
+KitModel   = require  '../../../../../../src/scripts/models/kits/KitModel.coffee'
 
 
 describe 'Instrument', ->

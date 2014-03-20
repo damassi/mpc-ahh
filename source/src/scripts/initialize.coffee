@@ -9,7 +9,7 @@ Touch         = require './utils/Touch'
 AppController = require './AppController.coffee'
 
 AppConfig = require './config/AppConfig.coffee'
-KitCollection = require './models/KitCollection.coffee'
+KitCollection = require './models/kits/KitCollection.coffee'
 
 $ ->
 

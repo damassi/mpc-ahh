@@ -1,5 +1,5 @@
 AppConfig     = require '../../../src/scripts/config/AppConfig.coffee'
-KitCollection = require '../../../src/scripts/models/KitCollection.coffee'
+KitCollection = require '../../../src/scripts/models/kits/KitCollection.coffee'
 
 describe 'Kit Collection', ->
 
