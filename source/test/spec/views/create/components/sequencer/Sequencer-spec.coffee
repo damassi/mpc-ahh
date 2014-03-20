@@ -4,6 +4,7 @@ PatternSquareModel = require '../../../../../../src/scripts/models/sequencer/Pat
 PatternSquareCollection = require '../../../../../../src/scripts/models/sequencer/PatternSquareCollection.coffee'
 PatternTrackModel = require '../../../../../../src/scripts/models/sequencer/PatternTrackModel.coffee'
 PatternTrackCollection = require '../../../../../../src/scripts/models/sequencer/PatternTrackCollection.coffee'
+helpers = require '../../../../../../src/scripts/helpers/handlebars-helpers'
 
 
 describe 'Sequencer', ->
@@ -33,29 +34,39 @@ describe 'Sequencer', ->
 
 
    afterEach =>
+      @view.pause()
       @view.remove()
+
 
 
    it 'Should render', =>
       @view.$el.should.exist
 
 
+
    it 'Should render out each pattern track', =>
       @view.$el.find('.pattern-track').length.should.equal 6
 
 
+
    it 'Should create a bpm interval', =>
-      @view.bpmInterval.should.not.be null
+      expect(@view.bpmInterval).to.not.be null
+
 
 
    it 'Should listen for play / pause changes on the AppModel', =>
       @view.appModel.should.trigger('change:playing').when =>
-         @view.togglePlay()
+         @view.pause()
+
+      @view.appModel.should.trigger('change:playing').when =>
+         @view.play()
+
 
 
    it 'Should listen for bpm changes', =>
       @view.appModel.set('bpm', 200)
-      @bpmInterval.should.equal 200
+      expect(@view.updateIntervalTime).to.equal 200
+
 
 
    it 'Should be mutable', =>

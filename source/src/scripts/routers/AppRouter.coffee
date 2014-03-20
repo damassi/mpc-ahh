@@ -182,8 +182,6 @@ class AppRouter extends Backbone.Router
          appModel: @appModel
          patternTrackCollection: ptCollection
 
-      console.log ptCollection
-
       @appModel.set 'view', view
 
 

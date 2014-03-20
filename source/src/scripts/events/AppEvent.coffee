@@ -8,9 +8,10 @@
 
 AppEvent =
 
-   CHANGE_KIT:        'change:kitModel'
    CHANGE_BPM:        'change:bpm'
    CHANGE_INSTRUMENT: 'change:currentInstrument'
+   CHANGE_KIT:        'change:kitModel'
+   CHANGE_PLAYING:    'change:playing'
    CHANGE_VELOCITY:   'change:velocity'
 
 
