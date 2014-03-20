@@ -179,7 +179,8 @@ class AppRouter extends Backbone.Router
       ptCollection = new PatterTrackCollection trackModels
 
       view = new Sequencer
-         collection: ptCollection
+         appModel: @appModel
+         patternTrackCollection: ptCollection
 
       console.log ptCollection
 

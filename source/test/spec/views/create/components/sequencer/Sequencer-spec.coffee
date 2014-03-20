@@ -1,13 +1,33 @@
 AppModel = require '../../../../../../src/scripts/models/AppModel.coffee'
 Sequencer = require '../../../../../../src/scripts/views/create/components/sequencer/Sequencer.coffee'
+PatternSquareModel = require '../../../../../../src/scripts/models/sequencer/PatternSquareModel.coffee'
+PatternSquareCollection = require '../../../../../../src/scripts/models/sequencer/PatternSquareCollection.coffee'
+PatternTrackModel = require '../../../../../../src/scripts/models/sequencer/PatternTrackModel.coffee'
+PatternTrackCollection = require '../../../../../../src/scripts/models/sequencer/PatternTrackCollection.coffee'
 
 
 describe 'Sequencer', ->
 
 
    beforeEach =>
+      tracks = []
+      trackModels = []
+      squareCollections = []
+
+      _(6).times =>
+         squares = []
+
+         _(8).times =>
+            squares.push new PatternSquareModel()
+
+         trackModels.push new PatternTrackModel
+            patternSquares: new PatternSquareCollection squares
+
+      ptCollection = new PatterTrackCollection trackModels
+
       @view = new Sequencer
          appModel: new AppModel()
+         patternTrackCollection: ptCollection
 
       @view.render()
 
