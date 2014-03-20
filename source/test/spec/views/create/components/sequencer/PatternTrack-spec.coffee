@@ -15,8 +15,8 @@ describe 'Pattern Track', ->
          squares.push new PatternSquareModel()
 
       @view = new PatternTrack
-         collection: new PatternSquareCollection squares
-         model: new PatternTrackModel()
+         patternSquareCollection: new PatternSquareCollection squares
+         patternTrackModel: new PatternTrackModel()
 
       @view.render()
 
@@ -34,25 +34,25 @@ describe 'Pattern Track', ->
 
 
    it 'Should listen for changes to the pattern squares', =>
-      @view.collection.should.trigger('change:velocity').when =>
+      @view.patternSquareCollection.should.trigger('change:velocity').when =>
          @view.patternSquareViews[0].onClick()
 
 
    it 'Should be mutable', =>
-      @view.model.should.trigger('change:mute').when =>
+      @view.patternTrackModel.should.trigger('change:mute').when =>
          @view.mute()
 
-      @view.model.should.trigger('change:mute').when =>
+      @view.patternTrackModel.should.trigger('change:mute').when =>
          @view.unmute()
 
 
    it 'Should add visual notification that track is muted', (done) =>
-      @view.model.once 'change:mute', (model) =>
+      @view.patternTrackModel.once 'change:mute', (model) =>
          @view.$el.hasClass('mute').should.be.true
 
       @view.mute()
 
-      @view.model.once 'change:mute', =>
+      @view.patternTrackModel.once 'change:mute', =>
          @view.$el.hasClass('mute').should.be.false
          done()
 

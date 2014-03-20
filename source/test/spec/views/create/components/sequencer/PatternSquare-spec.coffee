@@ -7,7 +7,7 @@ describe 'Pattern Square', ->
 
    beforeEach =>
       @view = new PatternSquare
-         model: new PatternSquareModel()
+         patternSquareModel: new PatternSquareModel()
 
       @view.render()
 
@@ -25,19 +25,19 @@ describe 'Pattern Square', ->
    it 'Should cycle through velocity volumes', =>
 
       @view.onClick()
-      @view.model.get('velocity').should.equal 1
+      @view.patternSquareModel.get('velocity').should.equal 1
       @view.$el.hasClass('velocity-low').should.be.true
 
       @view.onClick()
-      @view.model.get('velocity').should.equal 2
+      @view.patternSquareModel.get('velocity').should.equal 2
       @view.$el.hasClass('velocity-medium').should.be.true
 
       @view.onClick()
-      @view.model.get('velocity').should.equal 3
+      @view.patternSquareModel.get('velocity').should.equal 3
       @view.$el.hasClass('velocity-high').should.be.true
 
       @view.onClick()
-      @view.model.get('velocity').should.equal 0
+      @view.patternSquareModel.get('velocity').should.equal 0
       @view.$el.hasClass('velocity-high').should.be.false
 
 
@@ -45,7 +45,7 @@ describe 'Pattern Square', ->
    it 'Should toggle off', =>
 
       @view.disable()
-      @view.model.get('velocity').should.equal 0
+      @view.patternSquareModel.get('velocity').should.equal 0
 
 
 
@@ -58,7 +58,7 @@ describe 'Pattern Square', ->
 
       @view.disable()
       @view.enable()
-      @view.model.get('velocity').should.equal 1
+      @view.patternSquareModel.get('velocity').should.equal 1
 
 
 

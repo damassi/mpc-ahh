@@ -14,6 +14,8 @@ PubEvent    = require '../events/PubEvent.coffee'
 
 TestsView     = require '../views/tests/TestsView.coffee'
 
+View = require '../supers/View.coffee'
+
 KitSelection  = require '../views/create/components/KitSelection.coffee'
 KitCollection = require '../models/kits/KitCollection.coffee'
 KitModel      = require '../models/kits/KitModel.coffee'
@@ -46,6 +48,7 @@ class AppRouter extends Backbone.Router
       'pattern-square':       'patternSquareRoute'
       'pattern-track':        'patternTrackRoute'
       'sequencer':            'sequencerRoute'
+      'full-sequencer':       'fullSequencerRoute'
 
 
 
@@ -101,9 +104,8 @@ class AppRouter extends Backbone.Router
 
       view = new KitSelection
          appModel: @appModel
-         kitCollection: new KitCollection models, {
+         kitCollection: new KitCollection models,
             appModel: @appModel
-         }
 
       @appModel.set 'view', view
 
@@ -183,6 +185,79 @@ class AppRouter extends Backbone.Router
          patternTrackCollection: ptCollection
 
       @appModel.set 'view', view
+
+
+
+   fullSequencerRoute: ->
+
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
+      kitSelection = =>
+         models = []
+
+         _(4).times (index) ->
+            models.push new KitModel {label: "kit #{index}"}
+
+         view = new KitSelection
+            appModel: @appModel
+            kitCollection: @kitCollection
+
+         view
+
+      bpm = =>
+         view = new BPMIndicator
+            appModel: @appModel
+
+         view
+
+
+      instrumentSelection = =>
+
+
+         @appModel.set 'kitModel', @kitCollection.at(0)
+
+         view = new InstrumentSelectionPanel
+            kitCollection: @kitCollection
+            appModel: @appModel
+
+         view
+
+      sequencer = =>
+         tracks = []
+         trackModels = []
+         squareCollections = []
+
+         _(6).times =>
+            squares = []
+
+            _(8).times =>
+               squares.push new PatternSquareModel()
+
+            trackModels.push new PatternTrackModel
+               patternSquares: new PatternSquareCollection squares
+
+         ptCollection = new PatterTrackCollection trackModels
+
+         view = new Sequencer
+            appModel: @appModel
+            patternTrackCollection: ptCollection
+
+         view
+
+      fullSequencerView = new View()
+
+      fullSequencerView.$el.append kitSelection().render().el
+      fullSequencerView.$el.append bpm().render().el
+      fullSequencerView.$el.append instrumentSelection().render().el
+      fullSequencerView.$el.append sequencer().render().el
+
+      @appModel.set 'view', fullSequencerView
+
 
 
 
