@@ -11,7 +11,6 @@ PatternTrackModel  = require './PatternTrackModel.coffee'
 
 class PatternTrackCollection extends Backbone.Collection
 
-
    model: PatternTrackModel
 
 

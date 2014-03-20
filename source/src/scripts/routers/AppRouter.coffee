@@ -173,13 +173,15 @@ class AppRouter extends Backbone.Router
          _(8).times =>
             squares.push new PatternSquareModel()
 
-         trackModels.push new PatterTrackModel()
-         squareCollections.push new PatternSquareCollection squares
+         trackModels.push new PatternTrackModel
+            patternSquares: new PatternSquareCollection squares
 
       ptCollection = new PatterTrackCollection trackModels
 
-
       view = new Sequencer
+         collection: ptCollection
+
+      console.log ptCollection
 
       @appModel.set 'view', view
 

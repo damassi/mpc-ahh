@@ -12,5 +12,8 @@ class PatternTrackModel extends Backbone.Model
       'active':     null
       'mute':       null
 
+      # @type {PatternSquareCollection}
+      'squares':    null
+
 
 module.exports = PatternTrackModel
