@@ -9,6 +9,8 @@ describe 'Pattern Square', ->
       @view = new PatternSquare
          model: new PatternSquareModel()
 
+      @view.render()
+
 
    afterEach =>
       @view.remove()
@@ -24,15 +26,19 @@ describe 'Pattern Square', ->
 
       @view.onClick()
       @view.model.get('velocity').should.equal 1
+      @view.$el.hasClass('velocity-low').should.be.true
 
       @view.onClick()
       @view.model.get('velocity').should.equal 2
+      @view.$el.hasClass('velocity-medium').should.be.true
 
       @view.onClick()
       @view.model.get('velocity').should.equal 3
+      @view.$el.hasClass('velocity-high').should.be.true
 
       @view.onClick()
       @view.model.get('velocity').should.equal 0
+      @view.$el.hasClass('velocity-high').should.be.false
 
 
 

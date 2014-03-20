@@ -11,6 +11,7 @@ AppEvent =
    CHANGE_KIT:        'change:kitModel'
    CHANGE_BPM:        'change:bpm'
    CHANGE_INSTRUMENT: 'change:currentInstrument'
+   CHANGE_VELOCITY:   'change:velocity'
 
 
 module.exports = AppEvent
