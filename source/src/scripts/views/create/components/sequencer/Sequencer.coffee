@@ -14,6 +14,7 @@ template     = require './templates/sequencer-template.hbs'
 
 class Sequencer extends View
 
+
    className: 'sequencer-container'
    template: template
    patternTrackViews: null
@@ -22,6 +23,10 @@ class Sequencer extends View
    updateIntervalTime: 200
    currCellId: -1
    numCells: 7
+
+
+   appModel: null
+   patternTrackCollection: null
 
 
    render: (options) ->
@@ -55,8 +60,8 @@ class Sequencer extends View
       @patternTrackCollection.each (model) =>
 
          patternTrack = new PatternTrack
-            collection: model.get 'patternSquares'
-            model: model
+            patternSquareCollection: model.get 'patternSquares'
+            patternTrackModel: model
 
          @patternTrackViews.push patternTrack
          @$sequencer.append patternTrack.render().el
@@ -98,6 +103,11 @@ class Sequencer extends View
    unmute: ->
        @appModel.set 'mute', false
 
+
+
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
 
 
 

@@ -142,7 +142,7 @@ class AppRouter extends Backbone.Router
 
    patternSquareRoute: ->
       view = new PatternSquare
-         model: new PatternSquareModel()
+         patternSquareModel: new PatternSquareModel()
 
       @appModel.set 'view', view
 
@@ -155,8 +155,8 @@ class AppRouter extends Backbone.Router
          squares.push new PatternSquareModel()
 
       view = new PatternTrack
-         collection: new PatternSquareCollection squares
-         model: new PatternTrackModel()
+         patternSquareCollection: new PatternSquareCollection squares
+         patternTrackModel: new PatternTrackModel()
 
       @appModel.set 'view', view
 

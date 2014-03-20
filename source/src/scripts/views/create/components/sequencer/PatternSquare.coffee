@@ -20,22 +20,25 @@ class PatternSquare extends View
 
    template: template
 
+   # @type {PatternSquareModel}
+   patternSquareModel: null
+
 
    events:
       'touchend': 'onClick'
 
 
    addEventListeners: ->
-      @listenTo @model, AppEvent.CHANGE_VELOCITY, @onVelocityChange
+      @listenTo @patternSquareModel, AppEvent.CHANGE_VELOCITY, @onVelocityChange
 
 
 
    enable: ->
-      @model.enable()
+      @patternSquareModel.enable()
 
 
    disable: ->
-      @model.disable()
+      @patternSquareModel.disable()
 
 
    flashOn: ->
@@ -53,7 +56,7 @@ class PatternSquare extends View
 
 
    onClick: (event) ->
-      @model.cycle()
+      @patternSquareModel.cycle()
 
 
 
