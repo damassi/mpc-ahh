@@ -5,7 +5,10 @@ describe 'Sequencer', ->
 
 
    beforeEach =>
-      @view = new Sequencer()
+      @view = new Sequencer
+         appModel: new AppModel()
+
+      @view.render()
 
 
    afterEach =>
@@ -13,18 +16,20 @@ describe 'Sequencer', ->
 
 
    it 'Should render', ->
+      @view.$el.should.exist
 
 
    it 'Should render out each pattern track', =>
-
-
-   it 'Should update each pattern track when the kit changes', =>
+      @view.$el.find('.track').length.should.equal 6
 
 
    it 'Should play', =>
+      @view.appModel.should.trigger('change:playing').when =>
+         @view.togglePlay()
 
 
    it 'Should notifiy each track where its playstate is', =>
+      #@view.patternTrackViews[0].
 
 
    it 'Should listen for tempo changes', =>
@@ -37,3 +42,6 @@ describe 'Sequencer', ->
 
 
    it 'Should be labeled properly', =>
+
+
+   it 'Should update each pattern track when the kit changes', =>

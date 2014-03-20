@@ -16,6 +16,7 @@ describe 'Pattern Track', ->
 
       @view = new PatternTrack
          collection: new PatternSquareCollection squares
+         model: new PatternTrackModel()
 
       @view.render()
 
@@ -37,7 +38,27 @@ describe 'Pattern Track', ->
          @view.patternSquareViews[0].onClick()
 
 
-   it 'Should dispatch changes back to the parent', =>
+   it 'Should be mutable', =>
+      @view.model.should.trigger('change:mute').when =>
+         @view.mute()
+
+      @view.model.should.trigger('change:mute').when =>
+         @view.unmute()
+
+
+   it 'Should add visual notification that track is muted', (done) =>
+      @view.model.once 'change:mute', (model) =>
+         @view.$el.hasClass('mute').should.be.true
+
+      @view.mute()
+
+      @view.model.once 'change:mute', =>
+         @view.$el.hasClass('mute').should.be.false
+         done()
+
+      @view.unmute()
+
+
 
 
    it 'Should update each PatternSquare model when the kit changes', =>

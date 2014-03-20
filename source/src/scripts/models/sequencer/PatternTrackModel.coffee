@@ -10,6 +10,7 @@ class PatternTrackModel extends Backbone.Model
    defaults:
       'volume':     null
       'active':     null
+      'mute':       null
 
 
 module.exports = PatternTrackModel

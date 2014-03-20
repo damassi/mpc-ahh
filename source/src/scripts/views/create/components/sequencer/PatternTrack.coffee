@@ -27,6 +27,13 @@ class PatternTrack extends View
       @
 
 
+
+   addEventListeners: ->
+      @listenTo @model, 'change:mute', @onMuteChange
+
+
+
+
    renderPatternSquares: ->
       @patternSquareViews = []
 
@@ -34,10 +41,34 @@ class PatternTrack extends View
          patternSquare = new PatternSquare
             model: model
 
-         console.log @$el
+         #console.log @$el
          @$el.append patternSquare.render().el
 
          @patternSquareViews.push patternSquare
+
+
+   mute: ->
+      @model.set 'mute', true
+
+
+
+   unmute: ->
+      @model.set 'mute', false
+
+
+
+   onMuteChange: (model) ->
+      mute = model.changed.mute
+
+      if mute
+         @$el.addClass 'mute'
+
+      else
+         @$el.removeClass 'mute'
+
+
+
+
 
 
 
