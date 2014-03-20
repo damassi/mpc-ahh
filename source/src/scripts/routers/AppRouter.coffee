@@ -23,6 +23,7 @@ InstrumentSelectionPanel = require '../views/create/components/instruments/Instr
 
 PatternSquare = require '../views/create/components/sequencer/PatternSquare.coffee'
 PatternSquareModel = require '../models/sequencer/PatternSquareModel.coffee'
+PatternSquareCollection = require '../models/sequencer/PatternSquareCollection.coffee'
 PatternTrack  = require '../views/create/components/sequencer/PatternTrack.coffee'
 Sequencer       = require '../views/create/components/sequencer/Sequencer.coffee'
 
@@ -146,7 +147,13 @@ class AppRouter extends Backbone.Router
 
 
    patternTrackRoute: ->
-      view = new PatternTrack()
+      squares = []
+
+      _(8).times =>
+         squares.push new PatternSquareModel()
+
+      view = new PatternTrack
+         collection: new PatternSquareCollection squares
 
       @appModel.set 'view', view
 

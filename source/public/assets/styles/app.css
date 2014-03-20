@@ -166,7 +166,6 @@ opacity($opacity)
 ///////////////////////////////////////////////////// */
 tr, td, th {
   border: 1px solid black;
-  padding: 20px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -202,16 +201,32 @@ button {
   padding: 37px;
 }
 
+.pattern-square {
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  vertical-align: middle;
+}
+
 .velocity-low {
   background: #95c5bf;
+}
+.velocity-low:before {
+  content: "1";
 }
 
 .velocity-medium {
   background: #5fc843;
 }
+.velocity-medium:before {
+  content: "2";
+}
 
 .velocity-high {
   background: #c87843;
+}
+.velocity-high:before {
+  content: "3";
 }
 
 /* /////////////////////////////////////////////////////

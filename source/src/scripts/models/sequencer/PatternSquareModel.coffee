@@ -50,9 +50,9 @@ class PatternSquareModel extends Backbone.Model
 
 
    onVelocityChange: (model) ->
-      velocity = model.changed.velocity
-      #console.log model._previousAttributes.velocity
       @set 'previousVelocity', model._previousAttributes.velocity
+
+      velocity = model.changed.velocity
 
       if velocity > 0
          @set 'active', true

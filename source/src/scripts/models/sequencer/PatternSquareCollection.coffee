@@ -1,0 +1,18 @@
+###*
+  A collection of individual pattern squares
+
+  @author Christopher Pappas <chris@wintr.us>
+  @date   3.17.14
+###
+
+AppConfig          = require '../../config/AppConfig.coffee'
+PatternSquareModel = require './PatternSquareModel.coffee'
+
+
+class PatternSquareCollection extends Backbone.Collection
+
+
+   model: PatternSquareModel
+
+
+module.exports = PatternSquareCollection
