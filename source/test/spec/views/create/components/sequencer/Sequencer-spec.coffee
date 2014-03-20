@@ -23,7 +23,7 @@ describe 'Sequencer', ->
          trackModels.push new PatternTrackModel
             patternSquares: new PatternSquareCollection squares
 
-      ptCollection = new PatterTrackCollection trackModels
+      ptCollection = new PatternTrackCollection trackModels
 
       @view = new Sequencer
          appModel: new AppModel()
