@@ -44,6 +44,7 @@ class PatternTrack extends View
 
 
 
+
    # Renders the view and renders out individual pattern squares
    # @param {Object} options
 

@@ -1,3 +1,4 @@
+AppModel = require '../../../../../../src/scripts/models/AppModel.coffee'
 Sequencer = require '../../../../../../src/scripts/views/create/components/sequencer/Sequencer.coffee'
 
 
@@ -15,12 +16,12 @@ describe 'Sequencer', ->
       @view.remove()
 
 
-   it 'Should render', ->
+   it 'Should render', =>
       @view.$el.should.exist
 
 
    it 'Should render out each pattern track', =>
-      @view.$el.find('.track').length.should.equal 6
+      @view.$el.find('.pattern-track').length.should.equal 6
 
 
    it 'Should play', =>
