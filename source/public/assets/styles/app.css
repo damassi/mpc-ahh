@@ -167,6 +167,9 @@ opacity($opacity)
 tr, td, th {
   border: 1px solid black;
   cursor: pointer;
+  min-width: 50px;
+  text-align: center;
+  vertical-align: middle;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
