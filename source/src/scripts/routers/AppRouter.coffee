@@ -22,6 +22,7 @@ BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
 InstrumentSelectionPanel = require '../views/create/components/instruments/InstrumentSelectionPanel.coffee'
 
 PatternSquare = require '../views/create/components/sequencer/PatternSquare.coffee'
+PatternTrackModel = require '../models/sequencer/PatternTrackModel.coffee'
 PatternSquareModel = require '../models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require '../models/sequencer/PatternSquareCollection.coffee'
 PatternTrack  = require '../views/create/components/sequencer/PatternTrack.coffee'
@@ -154,6 +155,7 @@ class AppRouter extends Backbone.Router
 
       view = new PatternTrack
          collection: new PatternSquareCollection squares
+         model: new PatternTrackModel()
 
       @appModel.set 'view', view
 

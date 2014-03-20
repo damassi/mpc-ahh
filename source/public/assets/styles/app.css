@@ -201,6 +201,10 @@ button {
   padding: 37px;
 }
 
+.mute td {
+  opacity: 0.3;
+}
+
 .pattern-square {
   width: 70px;
   height: 70px;

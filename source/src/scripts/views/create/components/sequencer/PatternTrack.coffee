@@ -15,8 +15,11 @@ class PatternTrack extends View
    className: 'pattern-track'
    tagName: 'tr'
    template: template
-
    patternSquareViews: null
+
+
+   events:
+      'touchend .btn-mute': 'onMuteBtnClick'
 
 
    render: (options) ->
@@ -41,10 +44,9 @@ class PatternTrack extends View
          patternSquare = new PatternSquare
             model: model
 
-         #console.log @$el
          @$el.append patternSquare.render().el
-
          @patternSquareViews.push patternSquare
+
 
 
    mute: ->
@@ -57,6 +59,12 @@ class PatternTrack extends View
 
 
 
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+
    onMuteChange: (model) ->
       mute = model.changed.mute
 
@@ -65,6 +73,17 @@ class PatternTrack extends View
 
       else
          @$el.removeClass 'mute'
+
+
+
+
+   onMuteBtnClick: (event) =>
+      if @model.get 'mute'
+         @unmute()
+
+      else
+         @mute()
+
 
 
 
