@@ -9,9 +9,9 @@ View     = require '../../../../supers/View.coffee'
 template = require './templates/sequencer-square-template.hbs'
 
 
-class SoundSquare extends View
+class SequencerSquare extends View
 
    template: template
 
 
-module.exports = SoundSquare
+module.exports = SequencerSquare
