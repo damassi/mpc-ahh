@@ -24,25 +24,27 @@ describe 'Sequencer', ->
       @view.$el.find('.pattern-track').length.should.equal 6
 
 
-   it 'Should play', =>
+   it 'Should create a bpm interval', =>
+      @view.bpmInterval.should.not.be null
+
+
+   it 'Should listen for play / pause changes on the AppModel', =>
       @view.appModel.should.trigger('change:playing').when =>
          @view.togglePlay()
 
 
-   it 'Should notifiy each track where its playstate is', =>
-      #@view.patternTrackViews[0].
-
-
-   it 'Should listen for tempo changes', =>
+   it 'Should listen for bpm changes', =>
+      @view.appModel.set('bpm', 200)
+      @bpmInterval.should.equal 200
 
 
    it 'Should be mutable', =>
+      @view.appModel.should.trigger('change:mute').when =>
+         @view.mute()
 
+      @view.appModel.should.trigger('change:mute').when =>
+         @view.unmute()
 
-   it 'Should be able to globally update its volume', =>
-
-
-   it 'Should be labeled properly', =>
 
 
    it 'Should update each pattern track when the kit changes', =>

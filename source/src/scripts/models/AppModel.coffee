@@ -14,7 +14,8 @@ AppRouter = Backbone.Model.extend
    defaults:
       'view':        null
       'kitModel':    null
-      'playing':     false
+      'playing':     null
+      'mute':        null
 
       # Settings
       'bpm':         AppConfig.BPM
