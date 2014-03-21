@@ -208,6 +208,10 @@ button {
   opacity: 0.3;
 }
 
+.focus {
+  color: purple;
+}
+
 .pattern-square {
   width: 70px;
   height: 70px;

@@ -49,7 +49,6 @@ class PatternTrack extends View
 
 
 
-
    events:
       'touchend .label-instrument': 'onLabelClick'
       'touchend .btn-mute':         'onMuteBtnClick'
@@ -79,6 +78,7 @@ class PatternTrack extends View
    addEventListeners: ->
       @kitModel = @appModel.get('kitModel')
 
+      @listenTo @model,    AppEvent.CHANGE_FOCUS,      @onFocusChange
       @listenTo @model,    AppEvent.CHANGE_MUTE,       @onMuteChange
       @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
@@ -134,6 +134,18 @@ class PatternTrack extends View
 
 
 
+   focus: ->
+      @$el.addClass 'focus'
+
+
+
+
+   unfocus: ->
+      if @$el.hasClass 'focus'
+         @$el.removeClass 'focus'
+
+
+
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
@@ -167,12 +179,23 @@ class PatternTrack extends View
 
 
 
+   # Handler for focus change events
+   # @param {InstrumentModel} model
+
+   onFocusChange: (model) ->
+      if model.changed.focus
+          @focus()
+      else
+          @unfocus()
+
+
 
    # Handler for mute button clicks
    # @param {InstrumentModel} model
 
    onLabelClick: (event) =>
-      @kitModel.set 'currentInstrument', @model
+      @model.set 'focus', ! @model.get('focus')
+
 
 
 

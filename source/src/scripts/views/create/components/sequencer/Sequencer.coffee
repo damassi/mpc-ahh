@@ -109,6 +109,8 @@ class Sequencer extends View
       @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayingChange
       @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
 
+      @listenTo @collection, AppEvent.CHANGE_FOCUS, @onChangeFocus
+
 
 
    # Renders out each individual track.
@@ -247,6 +249,14 @@ class Sequencer extends View
       @collection = model.changed.kitModel.get('instruments')
       @renderTracks()
 
+
+
+
+   # Handler for kit changes, as set from the KitSelector
+   # @param {InstrumentModel} model
+
+   onFocusChange: (model) =>
+      console.log model.changed.focus
 
 
 

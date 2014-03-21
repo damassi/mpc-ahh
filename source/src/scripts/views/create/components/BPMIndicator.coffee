@@ -106,6 +106,7 @@ class BPMIndicator extends View
 
          @currBPM = bpm
          @$bpmLabel.text @currBPM
+         #@appModel.set 'bpm', 60000 / @currBPM
 
       , @intervalUpdateTime
 
@@ -127,6 +128,7 @@ class BPMIndicator extends View
 
          @currBPM = bpm
          @$bpmLabel.text @currBPM
+         #@appModel.set 'bpm', 60000 / @currBPM
 
       , @intervalUpdateTime
 
