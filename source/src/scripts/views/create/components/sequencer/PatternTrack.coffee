@@ -104,6 +104,7 @@ class PatternTrack extends View
          @$el.append patternSquare.render().el
          @patternSquareViews.push patternSquare
 
+      # Set the squares on the Instrument model to track against state
       @model.set 'patternSquares', @collection
 
 

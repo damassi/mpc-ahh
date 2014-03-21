@@ -52,6 +52,9 @@ class PatternSquare extends View
 
       audioSrc = @patternSquareModel.get('instrument').get 'src'
 
+      # TODO: Test methods
+      if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
+
       @audioPlayback = new Howl
          volume: AppConfig.VOLUME_LEVELS.low
          urls: [audioSrc]
@@ -93,14 +96,6 @@ class PatternSquare extends View
 
    disable: ->
       @patternSquareModel.disable()
-
-
-
-
-   # Flash the audio playback
-
-   flashOn: ->
-      @$el.addClass 'flash'
 
 
 
@@ -161,8 +156,6 @@ class PatternSquare extends View
          when 2 then AppConfig.VOLUME_LEVELS.medium
          when 3 then AppConfig.VOLUME_LEVELS.high
          else ''
-
-      console.log volume
 
       @audioPlayback.volume( volume )
 

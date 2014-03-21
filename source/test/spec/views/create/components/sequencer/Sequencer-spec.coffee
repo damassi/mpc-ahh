@@ -42,7 +42,7 @@ describe 'Sequencer', ->
 
 
    it 'Should render out each pattern track', =>
-      @view.$el.find('.pattern-track').length.should.equal 6
+      @view.$el.find('.pattern-track').length.should.equal @kitCollection.at(0).get('instruments').length
 
 
 

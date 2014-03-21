@@ -20,9 +20,13 @@ describe 'Pattern Square', ->
 
 
    beforeEach =>
+
+      model = new PatternSquareModel
+         'instrument': @kitCollection.at(0).get('instruments').at(0)
+
       @view = new PatternSquare
          appModel: @appModel
-         patternSquareModel: new PatternSquareModel()
+         patternSquareModel: model
 
       @view.render()
 
@@ -74,12 +78,3 @@ describe 'Pattern Square', ->
       @view.disable()
       @view.enable()
       @view.patternSquareModel.get('velocity').should.equal 1
-
-
-
-   it 'Should should flash when playing', =>
-
-      @view.flashOn()
-      @view.$el.hasClass('flash').should.be.true
-      @view.flashOff()
-      @view.$el.hasClass('flash').should.be.false
