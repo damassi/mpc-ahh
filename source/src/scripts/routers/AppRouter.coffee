@@ -143,8 +143,16 @@ class AppRouter extends Backbone.Router
 
 
    patternSquareRoute: ->
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
       view = new PatternSquare
-         patternSquareModel: new PatternSquareModel()
+         patternSquareModel: @kitCollection.at(0).get('instruments').at(0)
+         #patternSquareModel: new PatternSquareModel()
 
       @appModel.set 'view', view
 
@@ -246,6 +254,9 @@ class AppRouter extends Backbone.Router
          view = new Sequencer
             appModel: @appModel
             patternTrackCollection: ptCollection
+
+
+         console.log @kitCollection.toJSON()
 
          view
 

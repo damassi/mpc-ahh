@@ -10,7 +10,6 @@ InstrumentModel = require './InstrumentModel.coffee'
 
 class InstrumentCollection extends Backbone.Collection
 
-
    model: InstrumentModel
 
 

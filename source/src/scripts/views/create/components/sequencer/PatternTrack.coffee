@@ -59,6 +59,8 @@ class PatternTrack extends View
    render: (options) ->
       super options
 
+      @$label = @$el.find '.label-instrument'
+
       @renderPatternSquares()
 
       @
@@ -86,6 +88,8 @@ class PatternTrack extends View
          patternSquare = new PatternSquare
             patternSquareModel: model
 
+         #console.log model.toJSON()
+         @$label.text model.get 'label'
          @$el.append patternSquare.render().el
          @patternSquareViews.push patternSquare
 

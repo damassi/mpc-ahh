@@ -50,6 +50,7 @@ class Sequencer extends View
 
    addEventListeners: ->
       @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayingChange
+      @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
 
 
 
@@ -125,6 +126,12 @@ class Sequencer extends View
 
 
    onMuteChange: (model) =>
+
+
+
+
+   onKitChange: (model) =>
+      console.log model
 
 
 
