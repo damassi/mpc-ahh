@@ -40,6 +40,7 @@ class Instrument extends View
 
 
 
+
    events:
       'touchend': 'onClick'
 

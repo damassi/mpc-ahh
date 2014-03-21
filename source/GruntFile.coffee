@@ -326,7 +326,7 @@ module.exports = (grunt) ->
             files: "#{sources}/scripts/**/*.{js,coffee,hbs}"
             tasks: [
                'browserify:dev',
-               'browserify:test'
+               #'browserify:test'
             ]
 
          styles:
