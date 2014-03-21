@@ -1,12 +1,27 @@
+AppConfig = require '../../../../../../src/scripts/config/AppConfig.coffee'
+AppModel = require  '../../../../../../src/scripts/models/AppModel.coffee'
+KitCollection = require  '../../../../../../src/scripts/models/kits/KitCollection.coffee'
 PatternSquareModel = require  '../../../../../../src/scripts/models/sequencer/PatternSquareModel.coffee'
 PatternSquare = require  '../../../../../../src/scripts/views/create/components/sequencer/PatternSquare.coffee'
 
 
 describe 'Pattern Square', ->
 
+   before =>
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
+
+      @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
 
    beforeEach =>
       @view = new PatternSquare
+         appModel: @appModel
          patternSquareModel: new PatternSquareModel()
 
       @view.render()

@@ -1,3 +1,4 @@
+AppConfig = require '../../../../../src/scripts/config/AppConfig.coffee'
 KitSelector  = require  '../../../../../src/scripts/views/create/components/KitSelector.coffee'
 AppModel      = require '../../../../../src/scripts/models/AppModel.coffee'
 KitModel      = require '../../../../../src/scripts/models/kits/KitModel.coffee'
@@ -7,16 +8,23 @@ KitCollection = require '../../../../../src/scripts/models/kits/KitCollection.co
 describe 'Kit Selection', ->
 
 
+   before =>
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
+
+      @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
+
    beforeEach =>
-      models = []
-
-      _(4).times (index) ->
-         models.push new KitModel {label: "kit #{index}"}
-
 
       @view = new KitSelector
-         appModel: new AppModel()
-         kitCollection: new KitCollection models
+         appModel: @appModel
+         kitCollection: @kitCollection
 
       @view.render()
 
@@ -37,8 +45,7 @@ describe 'Kit Selection', ->
    it 'Should have a label', =>
 
       $label = @view.$el.find '.label-kit'
-      $label.text @view.kitCollection.at(0).get 'label'
-      $label.text().should.equal 'kit 0'
+      $label.should.exist
 
 
 

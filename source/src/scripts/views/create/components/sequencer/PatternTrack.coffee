@@ -5,6 +5,7 @@
  * @date   3.18.14
 ###
 
+AppEvent                = require '../../../../events/AppEvent.coffee'
 PatternSquareCollection = require '../../../../models/sequencer/PatternSquareCollection.coffee'
 PatternSquareModel      = require '../../../../models/sequencer/PatternSquareModel.coffee'
 PatternSquare           = require './PatternSquare.coffee'
@@ -75,7 +76,10 @@ class PatternTrack extends View
    # pattern squares without re-rendering the views
 
    addEventListeners: ->
-      @listenTo @model, 'change:mute', @onMuteChange
+      kitModel = @appModel.get('kitModel')
+
+      @listenTo @model,   AppEvent.CHANGE_MUTE,       @onMuteChange
+      @listenTo kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
 
@@ -118,6 +122,16 @@ class PatternTrack extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   # Handler for changes to the currently selected instrument
+   # @param {InstrumentModel} model
+
+   onInstrumentChange: (model) ->
+      instrument = model.changed.currentInstrument
+
+      console.log instrument.toJSON()
 
 
 

@@ -65,8 +65,9 @@ class Sequencer extends View
       @collection.each (model) =>
 
          patternTrack = new PatternTrack
-            collection: model.get 'patternSquares'
+            appModel: @appModel
             model: model
+            collection: model.get 'patternSquares'
 
          @patternTrackViews.push patternTrack
          @$sequencer.append patternTrack.render().el

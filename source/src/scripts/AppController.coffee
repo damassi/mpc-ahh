@@ -24,6 +24,7 @@ class AppController extends View
       super options
 
       @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
 
       @landingView = new LandingView
       @shareView   = new ShareView

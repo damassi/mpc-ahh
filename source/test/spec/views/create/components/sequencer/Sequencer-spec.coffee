@@ -20,8 +20,11 @@ describe 'Sequencer', ->
          async: false
          url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
 
+      @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
       @view = new Sequencer
-         appModel: new AppModel()
+         appModel: @appModel
          collection: @kitCollection.at(0).get('instruments')
 
       @view.render()

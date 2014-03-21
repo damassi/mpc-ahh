@@ -56,8 +56,8 @@ class CreateView extends View
 
    renderInstrumentSelector: ->
       @instrumentSelector = new InstrumentSelectorPanel
-         kitCollection: @kitCollection
          appModel: @appModel
+         kitCollection: @kitCollection
 
       @$instrumentSelector.html @instrumentSelector.render().el
 

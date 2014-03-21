@@ -1,5 +1,6 @@
 
 AppConfig = require  '../../../../../../src/scripts/config/AppConfig.coffee'
+AppModel = require  '../../../../../../src/scripts/models/AppModel.coffee'
 KitCollection = require  '../../../../../../src/scripts/models/kits/KitCollection.coffee'
 PatternSquareModel = require  '../../../../../../src/scripts/models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require  '../../../../../../src/scripts/models/sequencer/PatternSquareCollection.coffee'
@@ -17,7 +18,11 @@ describe 'Pattern Track', ->
          async: false
          url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
 
+      @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
       @view = new PatternTrack
+         appModel: @appModel
          model: @kitCollection.at(0).get('instruments').at(0)
 
       @view.render()
