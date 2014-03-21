@@ -1,4 +1,4 @@
-InstrumentSelectionPanel = require  '../../../../../../src/scripts/views/create/components/instruments/InstrumentSelectionPanel.coffee'
+InstrumentSelectorPanel = require  '../../../../../../src/scripts/views/create/components/instruments/InstrumentSelectorPanel.coffee'
 AppConfig                = require  '../../../../../../src/scripts/config/AppConfig.coffee'
 AppModel                 = require  '../../../../../../src/scripts/models/AppModel.coffee'
 KitCollection            = require  '../../../../../../src/scripts/models/kits/KitCollection.coffee'
@@ -20,7 +20,7 @@ describe 'Instrument Selection Panel', ->
       @appModel = new AppModel()
       @appModel.set 'kitModel', @kitCollection.at(0)
 
-      @view = new InstrumentSelectionPanel
+      @view = new InstrumentSelectorPanel
          appModel: @appModel
 
       @view.render()

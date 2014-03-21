@@ -7,6 +7,8 @@
 
 
 Touch         = require './utils/Touch'
+AppConfig     = require './config/AppConfig.coffee'
+KitCollection = require './models/kits/KitCollection.coffee'
 AppController = require './AppController.coffee'
 helpers       = require './helpers/handlebars-helpers'
 
@@ -14,5 +16,14 @@ $ ->
 
    Touch.translateTouchEvents()
 
-   appController = new AppController()
+   kitCollection = new KitCollection
+      parse: true
+
+   kitCollection.fetch
+      async: false
+      url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
+   appController = new AppController
+      kitCollection: kitCollection
+
    appController.render()

@@ -11,7 +11,7 @@ Instrument  = require './Instrument.coffee'
 template    = require './templates/instrument-panel-template.hbs'
 
 
-class InstrumentSelectionPanel extends View
+class InstrumentSelectorPanel extends View
 
 
    # View template
@@ -43,10 +43,6 @@ class InstrumentSelectionPanel extends View
 
    instrumentViews: null
 
-
-
-   events:
-      'click .test': 'onTestClick'
 
 
 
@@ -147,4 +143,4 @@ class InstrumentSelectionPanel extends View
 
 
 
-module.exports = InstrumentSelectionPanel
+module.exports = InstrumentSelectorPanel

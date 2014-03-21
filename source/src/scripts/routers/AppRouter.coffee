@@ -16,12 +16,12 @@ TestsView     = require '../views/tests/TestsView.coffee'
 
 View = require '../supers/View.coffee'
 
-KitSelection  = require '../views/create/components/KitSelection.coffee'
+KitSelector  = require '../views/create/components/KitSelector.coffee'
 KitCollection = require '../models/kits/KitCollection.coffee'
 KitModel      = require '../models/kits/KitModel.coffee'
 
 BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
-InstrumentSelectionPanel = require '../views/create/components/instruments/InstrumentSelectionPanel.coffee'
+InstrumentSelectorPanel = require '../views/create/components/instruments/InstrumentSelectorPanel.coffee'
 
 InstrumentModel = '../models/sequencer/InstrumentModel.coffee'
 InstrumentCollection = '../models/sequencer/InstrumentCollection.coffee'
@@ -105,7 +105,7 @@ class AppRouter extends Backbone.Router
          async: false
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
-      view = new KitSelection
+      view = new KitSelector
          appModel: @appModel
          kitCollection: @kitCollection,
             appModel: @appModel
@@ -136,7 +136,7 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'kitModel', @kitCollection.at(0)
 
-      view = new InstrumentSelectionPanel
+      view = new InstrumentSelectorPanel
          kitCollection: @kitCollection
          appModel: @appModel
 
@@ -203,7 +203,7 @@ class AppRouter extends Backbone.Router
 
 
       kitSelection = =>
-         view = new KitSelection
+         view = new KitSelector
             appModel: @appModel
             kitCollection: @kitCollection
 
@@ -220,7 +220,7 @@ class AppRouter extends Backbone.Router
       instrumentSelection = =>
          @appModel.set 'kitModel', @kitCollection.at(0)
 
-         view = new InstrumentSelectionPanel
+         view = new InstrumentSelectorPanel
             kitCollection: @kitCollection
             appModel: @appModel
 

@@ -1,4 +1,4 @@
-KitSelection  = require  '../../../../../src/scripts/views/create/components/KitSelection.coffee'
+KitSelector  = require  '../../../../../src/scripts/views/create/components/KitSelector.coffee'
 AppModel      = require '../../../../../src/scripts/models/AppModel.coffee'
 KitModel      = require '../../../../../src/scripts/models/kits/KitModel.coffee'
 KitCollection = require '../../../../../src/scripts/models/kits/KitCollection.coffee'
@@ -14,7 +14,7 @@ describe 'Kit Selection', ->
          models.push new KitModel {label: "kit #{index}"}
 
 
-      @view = new KitSelection
+      @view = new KitSelector
          appModel: new AppModel()
          kitCollection: new KitCollection models
 

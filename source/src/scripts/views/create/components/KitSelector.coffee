@@ -10,7 +10,7 @@ View     = require '../../../supers/View.coffee'
 template = require './templates/kit-selection-template.hbs'
 
 
-class KitSelection extends View
+class KitSelector extends View
 
 
    # Ref to the main AppModel
@@ -114,4 +114,4 @@ class KitSelection extends View
 
 
 
-module.exports = KitSelection
+module.exports = KitSelector

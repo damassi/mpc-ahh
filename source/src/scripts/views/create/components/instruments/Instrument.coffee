@@ -46,7 +46,7 @@ class Instrument extends View
 
 
    # Handler for click events.  Updates the current instrument model, which
-   # InstrumentSelectionPanel listens to, and adds a selected state
+   # InstrumentSelectorPanel listens to, and adds a selected state
    # @param {Event}
 
    onClick: (event) ->

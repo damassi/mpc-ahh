@@ -11,21 +11,26 @@ AppRouter   = require './routers/AppRouter.coffee'
 LandingView = require './views/landing/LandingView.coffee'
 CreateView  = require './views/create/CreateView.coffee'
 ShareView   = require './views/share/ShareView.coffee'
+View        = require './supers/View.coffee'
 
 
-class AppController extends Backbone.View
+class AppController extends View
 
 
    className: 'wrapper'
 
 
    initialize: (options) ->
+      super options
 
       @appModel = new AppModel
 
       @landingView = new LandingView
       @shareView   = new ShareView
+
       @createView  = new CreateView
+         appModel: @appModel
+         kitCollection: @kitCollection
 
       @appRouter = new AppRouter
          appController: @

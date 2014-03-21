@@ -8,13 +8,13 @@ describe 'Models', =>
 describe 'Views', =>
 
    require './spec/views/landing/LandingView-spec.coffee'
-   require './spec/views/create/components/KitSelection-spec.coffee'
+   require './spec/views/create/components/KitSelector-spec.coffee'
    require './spec/views/create/components/BPMIndicator-spec.coffee'
 
 
    describe 'Instrument Selector', =>
 
-      require './spec/views/create/components/instruments/InstrumentSelectionPanel-spec.coffee'
+      require './spec/views/create/components/instruments/InstrumentSelectorPanel-spec.coffee'
       require './spec/views/create/components/instruments/Instrument-spec.coffee'
 
 
