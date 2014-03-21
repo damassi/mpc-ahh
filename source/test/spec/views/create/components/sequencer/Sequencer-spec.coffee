@@ -1,9 +1,11 @@
+AppConfig = require '../../../../../../src/scripts/config/AppConfig.coffee'
 AppModel = require '../../../../../../src/scripts/models/AppModel.coffee'
 Sequencer = require '../../../../../../src/scripts/views/create/components/sequencer/Sequencer.coffee'
+KitCollection = require '../../../../../../src/scripts/models/kits/KitCollection.coffee'
+InstrumentModel = require '../../../../../../src/scripts/models/sequencer/InstrumentModel.coffee'
+InstrumentCollection = require '../../../../../../src/scripts/models/sequencer/InstrumentCollection.coffee'
 PatternSquareModel = require '../../../../../../src/scripts/models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require '../../../../../../src/scripts/models/sequencer/PatternSquareCollection.coffee'
-PatternTrackModel = require '../../../../../../src/scripts/models/sequencer/PatternTrackModel.coffee'
-PatternTrackCollection = require '../../../../../../src/scripts/models/sequencer/PatternTrackCollection.coffee'
 helpers = require '../../../../../../src/scripts/helpers/handlebars-helpers'
 
 
@@ -11,24 +13,25 @@ describe 'Sequencer', ->
 
 
    beforeEach =>
-      tracks = []
-      trackModels = []
-      squareCollections = []
+      @kitCollection = new KitCollection
+         parse: true
 
-      _(6).times =>
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
+
+      # Push pattern squares into instrument models
+      @kitCollection.at(0).get('instruments').each (instrumentModel) =>
          squares = []
 
          _(8).times =>
             squares.push new PatternSquareModel()
 
-         trackModels.push new PatternTrackModel
-            patternSquares: new PatternSquareCollection squares
-
-      ptCollection = new PatternTrackCollection trackModels
+         instrumentModel.set 'patternSquares', new PatternSquareCollection squares
 
       @view = new Sequencer
          appModel: new AppModel()
-         collection: ptCollection
+         collection: @kitCollection.at(0).get('instruments')
 
       @view.render()
 

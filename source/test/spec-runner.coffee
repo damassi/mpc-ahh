@@ -1,7 +1,6 @@
 
 describe 'Models', =>
 
-   require './spec/models/PatternTrackModel-spec.coffee'
    require './spec/models/KitCollection-spec.coffee'
    require './spec/models/KitModel-spec.coffee'
 

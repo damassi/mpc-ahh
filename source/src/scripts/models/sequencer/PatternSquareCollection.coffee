@@ -7,7 +7,7 @@
 
 AppConfig          = require '../../config/AppConfig.coffee'
 PatternSquareModel = require './PatternSquareModel.coffee'
-InstrumentModel = require '../instruments//InstrumentModel.coffee'
+InstrumentModel = require '../sequencer/InstrumentModel.coffee'
 
 
 class PatternSquareCollection extends Backbone.Collection

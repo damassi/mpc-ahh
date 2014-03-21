@@ -41,7 +41,7 @@ class PatternTrack extends View
    collection: null
 
 
-   # @type {PatternTrackModel}
+   # @type {InstrumentModel}
    model: null
 
 
@@ -116,7 +116,7 @@ class PatternTrack extends View
 
 
    # Handler for mute model change events
-   # @param {PatternTrackModel} model
+   # @param {InstrumentModel} model
 
    onMuteChange: (model) ->
       mute = model.changed.mute
@@ -130,7 +130,7 @@ class PatternTrack extends View
 
 
    # Handler for mute button clicks
-   # @param {PatternTrackModel} model
+   # @param {InstrumentModel} model
 
    onMuteBtnClick: (event) =>
       if @model.get 'mute'

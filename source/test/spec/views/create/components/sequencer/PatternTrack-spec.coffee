@@ -1,9 +1,8 @@
 
 PatternSquareModel = require  '../../../../../../src/scripts/models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require  '../../../../../../src/scripts/models/sequencer/PatternSquareCollection.coffee'
-PatternTrackModel = require  '../../../../../../src/scripts/models/sequencer/PatternTrackModel.coffee'
 PatternTrack = require  '../../../../../../src/scripts/views/create/components/sequencer/PatternTrack.coffee'
-
+InstrumentModel = require  '../../../../../../src/scripts/models/sequencer/InstrumentModel.coffee'
 
 describe 'Pattern Track', ->
 
@@ -16,7 +15,7 @@ describe 'Pattern Track', ->
 
       @view = new PatternTrack
          collection: new PatternSquareCollection squares
-         model: new PatternTrackModel()
+         model: new InstrumentModel()
 
       @view.render()
 

@@ -23,9 +23,10 @@ KitModel      = require '../models/kits/KitModel.coffee'
 BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
 InstrumentSelectionPanel = require '../views/create/components/instruments/InstrumentSelectionPanel.coffee'
 
+InstrumentModel = '../models/sequencer/InstrumentModel.coffee'
+InstrumentCollection = '../models/sequencer/InstrumentCollection.coffee'
+
 PatternSquare = require '../views/create/components/sequencer/PatternSquare.coffee'
-PatternTrackModel = require '../models/sequencer/PatternTrackModel.coffee'
-PatterTrackCollection = require '../models/sequencer/PatternTrackCollection.coffee'
 PatternSquareModel = require '../models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require '../models/sequencer/PatternSquareCollection.coffee'
 PatternTrack  = require '../views/create/components/sequencer/PatternTrack.coffee'
@@ -97,14 +98,16 @@ class AppRouter extends Backbone.Router
 
 
    kitSelectionRoute: ->
-      models = []
+      @kitCollection = new KitCollection
+         parse: true
 
-      _(4).times (index) ->
-         models.push new KitModel {label: "kit #{index}"}
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
       view = new KitSelection
          appModel: @appModel
-         kitCollection: new KitCollection models,
+         kitCollection: @kitCollection,
             appModel: @appModel
 
       @appModel.set 'view', view
@@ -151,8 +154,7 @@ class AppRouter extends Backbone.Router
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
       view = new PatternSquare
-         patternSquareModel: @kitCollection.at(0).get('instruments').at(0)
-         #patternSquareModel: new PatternSquareModel()
+         patternSquareModel: new PatternSquareModel()
 
       @appModel.set 'view', view
 
@@ -188,24 +190,18 @@ class AppRouter extends Backbone.Router
          async: false
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
-      tracks = []
-      trackModels = []
-      squareCollections = []
-
-      _(6).times =>
+      # Push pattern squares into instrument models
+      @kitCollection.at(0).get('instruments').each (instrumentModel) =>
          squares = []
 
          _(8).times =>
             squares.push new PatternSquareModel()
 
-         trackModels.push new PatternTrackModel
-            patternSquares: new PatternSquareCollection squares
-
-      ptCollection = new PatterTrackCollection trackModels
+         instrumentModel.set 'patternSquares', new PatternSquareCollection squares
 
       view = new Sequencer
          appModel: @appModel
-         collection: ptCollection
+         collection: @kitCollection.at(0).get('instruments')
 
       @appModel.set 'view', view
 
@@ -220,6 +216,7 @@ class AppRouter extends Backbone.Router
          async: false
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
+
       kitSelection = =>
          models = []
 
@@ -231,6 +228,7 @@ class AppRouter extends Backbone.Router
             kitCollection: @kitCollection
 
          view
+
 
       bpm = =>
          view = new BPMIndicator
@@ -250,28 +248,20 @@ class AppRouter extends Backbone.Router
 
          view
 
-      sequencer = =>
-         tracks = []
-         trackModels = []
-         squareCollections = []
 
-         _(6).times =>
+      sequencer = =>
+
+         @kitCollection.at(0).get('instruments').each (instrumentModel) =>
             squares = []
 
             _(8).times =>
                squares.push new PatternSquareModel()
 
-            trackModels.push new PatternTrackModel
-               patternSquares: new PatternSquareCollection squares
-
-         ptCollection = new PatterTrackCollection trackModels
+            instrumentModel.set 'patternSquares', new PatternSquareCollection squares
 
          view = new Sequencer
             appModel: @appModel
-            collection: ptCollection
-
-
-         console.log @kitCollection.toJSON()
+            collection: @kitCollection.at(0).get('instruments')
 
          view
 

@@ -1,6 +1,6 @@
 AppConfig     = require '../../../src/scripts/config/AppConfig.coffee'
 KitModel      = require '../../../src/scripts/models/kits/KitModel.coffee'
-InstrumentCollection = require '../../../src/scripts/models/instruments/InstrumentCollection.coffee'
+InstrumentCollection = require '../../../src/scripts/models/sequencer/InstrumentCollection.coffee'
 
 describe 'Kit Model', ->
 

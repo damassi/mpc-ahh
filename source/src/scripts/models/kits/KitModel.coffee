@@ -5,7 +5,7 @@
  * @date   3.18.14
 ###
 
-InstrumentCollection = require '../instruments/InstrumentCollection.coffee'
+InstrumentCollection = require '../sequencer/InstrumentCollection.coffee'
 
 
 class KitModel extends Backbone.Model
