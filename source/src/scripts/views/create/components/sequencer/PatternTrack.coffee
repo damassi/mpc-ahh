@@ -119,6 +119,17 @@ class PatternTrack extends View
 
 
 
+   select: ->
+      @$el.addClass 'selected'
+
+
+
+   deselect: ->
+      if @$el.hasClass 'selected'
+         @$el.removeClass 'selected'
+
+
+
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
@@ -126,12 +137,16 @@ class PatternTrack extends View
 
 
    # Handler for changes to the currently selected instrument
-   # @param {InstrumentModel} model
+   # @param {InstrumentModel} instrumentModel
 
-   onInstrumentChange: (model) ->
-      instrument = model.changed.currentInstrument
+   onInstrumentChange: (instrumentModel) =>
+      instrument = instrumentModel.changed.currentInstrument
 
-      console.log instrument.toJSON()
+      if instrument.cid is @model.cid
+         @select()
+
+      else @deselect()
+
 
 
 
