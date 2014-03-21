@@ -187,52 +187,13 @@ class Sequencer extends View
    # Plays audio of each track currently enabled and on
 
    playAudio: ->
-
       @collection.each (instrument) =>
-         patternSquares = instrument.get 'patternSquares'
 
-         patternSquares.each (patternSquare, index) =>
+         instrument.get('patternSquares').each (patternSquare, index) =>
 
             if @currBeatCellId is index
                if patternSquare.get 'active'
                   patternSquare.set 'trigger', true
-                  console.log patternSquare.get('trigger'), 'should be trigger!'
-
-               else
-                  #patternSquare.set 'trigger', false
-
-
-      return
-
-      @collection.toJSON().forEach (sound, index) =>
-         {soundId, src} = sound
-
-         return
-         beat = sound.beats[@currBeatCellId]
-
-         $tr = $("#sequencer tr[data-sound=#{index+1}]")
-         $td = $tr.find("[data-beat=#{@currBeatCellId+1}]");
-
-         return
-
-         if beat.active
-            console.log 'beat is active!'
-            @$activeSquare = $td
-
-            TweenMax.to $td, .2,
-               backgroundColor: Math.random() * 0xFF0000
-               ease: Back.easeIn
-               scale: .5
-               onComplete: ->
-                  TweenMax.to $td, .2,
-                     backgroundColor: "#000000"
-                     scale: 1
-                     ease: Back.easeOut
-
-
-
-            #createjs.Sound.play(soundId)
-            new Howl({ urls: [src] }).play()
 
 
 

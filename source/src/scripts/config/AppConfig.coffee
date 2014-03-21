@@ -37,6 +37,15 @@ AppConfig =
    VELOCITY_MAX: 3
 
 
+   # Volume levels for pattern playback as well as for overall tracks
+   # @type {Object}
+
+   VOLUME_LEVELS:
+      low:    .2
+      medium: .5
+      high:    1
+
+
    # Returns a normalized asset path for application assets
    # @param {String} assetType
 
