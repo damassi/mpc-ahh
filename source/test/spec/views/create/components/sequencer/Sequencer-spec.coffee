@@ -28,7 +28,7 @@ describe 'Sequencer', ->
 
       @view = new Sequencer
          appModel: new AppModel()
-         patternTrackCollection: ptCollection
+         collection: ptCollection
 
       @view.render()
 

@@ -26,7 +26,9 @@ class Sequencer extends View
 
 
    appModel: null
-   patternTrackCollection: null
+
+
+   collection: null
 
 
    render: (options) ->
@@ -58,11 +60,11 @@ class Sequencer extends View
    renderTracks: =>
       @patternTrackViews = []
 
-      @patternTrackCollection.each (model) =>
+      @collection.each (model) =>
 
          patternTrack = new PatternTrack
-            patternSquareCollection: model.get 'patternSquares'
-            patternTrackModel: model
+            collection: model.get 'patternSquares'
+            model: model
 
          @patternTrackViews.push patternTrack
          @$sequencer.append patternTrack.render().el
@@ -131,7 +133,7 @@ class Sequencer extends View
 
 
    onKitChange: (model) =>
-      console.log model
+      #console.log model
 
 
 

@@ -38,11 +38,11 @@ class PatternTrack extends View
 
 
    # @type {PatternSquareCollection}
-   patternSquareCollection: null
+   collection: null
 
 
    # @type {PatternTrackModel}
-   patternTrackModel: null
+   model: null
 
 
 
@@ -73,7 +73,7 @@ class PatternTrack extends View
    # pattern squares without re-rendering the views
 
    addEventListeners: ->
-      @listenTo @patternTrackModel, 'change:mute', @onMuteChange
+      @listenTo @model, 'change:mute', @onMuteChange
 
 
 
@@ -84,7 +84,7 @@ class PatternTrack extends View
    renderPatternSquares: ->
       @patternSquareViews = []
 
-      @patternSquareCollection.each (model) =>
+      @collection.each (model) =>
          patternSquare = new PatternSquare
             patternSquareModel: model
 
@@ -98,14 +98,14 @@ class PatternTrack extends View
    # Mute the entire track
 
    mute: ->
-      @patternTrackModel.set 'mute', true
+      @model.set 'mute', true
 
 
 
    # Unmute the entire track
 
    unmute: ->
-      @patternTrackModel.set 'mute', false
+      @model.set 'mute', false
 
 
 
@@ -133,7 +133,7 @@ class PatternTrack extends View
    # @param {PatternTrackModel} model
 
    onMuteBtnClick: (event) =>
-      if @patternTrackModel.get 'mute'
+      if @model.get 'mute'
          @unmute()
 
       else @mute()

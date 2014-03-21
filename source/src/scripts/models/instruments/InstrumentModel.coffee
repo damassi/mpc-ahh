@@ -16,53 +16,12 @@ class InstrumentModel extends Backbone.Model
       'label':   null
       'src':     null
 
-      'velocity':         0
-      'previousVelocity': 0
-      'active':           false
+      'volume':     null
+      'active':     null
+      'mute':       null
 
-
-   initialize: (options) ->
-      super options
-
-      @on 'change:velocity', @onVelocityChange
-
-
-
-   cycle: ->
-      velocity = @get 'velocity'
-
-      if velocity < AppConfig.VELOCITY_MAX
-         velocity++
-
-      else
-         velocity = 0
-
-      # Update with new value
-      @set 'velocity', velocity
-
-
-
-   enable: ->
-      @set 'velocity', 1
-
-
-
-
-   disable: ->
-      @set 'velocity', 0
-
-
-
-   onVelocityChange: (model) ->
-      @set 'previousVelocity', model._previousAttributes.velocity
-
-      velocity = model.changed.velocity
-
-      if velocity > 0
-         @set 'active', true
-
-      else if velocity is 0
-         @set 'active', false
+      # @type {PatternSquareCollection}
+      'patternSquares':    null
 
 
 module.exports = InstrumentModel
