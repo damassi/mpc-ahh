@@ -14,4 +14,15 @@ class CreateView extends View
    template: template
 
 
+   initialize: (options) ->
+      super options
+
+
+   render: (options) ->
+      super options
+
+
+      @
+
+
 module.exports = CreateView
