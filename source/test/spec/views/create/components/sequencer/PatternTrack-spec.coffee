@@ -1,4 +1,6 @@
 
+AppConfig = require  '../../../../../../src/scripts/config/AppConfig.coffee'
+KitCollection = require  '../../../../../../src/scripts/models/kits/KitCollection.coffee'
 PatternSquareModel = require  '../../../../../../src/scripts/models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require  '../../../../../../src/scripts/models/sequencer/PatternSquareCollection.coffee'
 PatternTrack = require  '../../../../../../src/scripts/views/create/components/sequencer/PatternTrack.coffee'
@@ -8,14 +10,15 @@ describe 'Pattern Track', ->
 
 
    beforeEach =>
-      squares = []
+      @kitCollection = new KitCollection
+         parse: true
 
-      _(8).times =>
-         squares.push new PatternSquareModel()
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
 
       @view = new PatternTrack
-         collection: new PatternSquareCollection squares
-         model: new InstrumentModel()
+         model: @kitCollection.at(0).get('instruments').at(0)
 
       @view.render()
 

@@ -20,15 +20,6 @@ describe 'Sequencer', ->
          async: false
          url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
 
-      # Push pattern squares into instrument models
-      @kitCollection.at(0).get('instruments').each (instrumentModel) =>
-         squares = []
-
-         _(8).times =>
-            squares.push new PatternSquareModel()
-
-         instrumentModel.set 'patternSquares', new PatternSquareCollection squares
-
       @view = new Sequencer
          appModel: new AppModel()
          collection: @kitCollection.at(0).get('instruments')
