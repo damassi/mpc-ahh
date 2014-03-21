@@ -133,7 +133,9 @@ class Sequencer extends View
 
 
    onKitChange: (model) =>
-      #console.log model
+      console.log model.changed.kitModel.get('instruments')
+      @collection = model.changed.kitModel.get('instruments')
+      @renderTracks()
 
 
 

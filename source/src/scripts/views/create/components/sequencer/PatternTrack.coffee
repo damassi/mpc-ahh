@@ -5,9 +5,11 @@
  * @date   3.18.14
 ###
 
-PatternSquare  = require './PatternSquare.coffee'
-View           = require '../../../../supers/View.coffee'
-template       = require './templates/pattern-track-template.hbs'
+PatternSquareCollection = require '../../../../models/sequencer/PatternSquareCollection.coffee'
+PatternSquareModel      = require '../../../../models/sequencer/PatternSquareModel.coffee'
+PatternSquare           = require './PatternSquare.coffee'
+View                    = require '../../../../supers/View.coffee'
+template                = require './templates/pattern-track-template.hbs'
 
 
 class PatternTrack extends View
@@ -83,6 +85,11 @@ class PatternTrack extends View
 
    renderPatternSquares: ->
       @patternSquareViews = []
+
+      @collection = new PatternSquareCollection
+
+      _(8).times =>
+         @collection.add new PatternSquareModel()
 
       @collection.each (model) =>
          patternSquare = new PatternSquare

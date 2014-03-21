@@ -168,13 +168,7 @@ class AppRouter extends Backbone.Router
          async: false
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
-      squares = []
-
-      _(8).times =>
-         squares.push new PatternSquareModel()
-
       view = new PatternTrack
-         collection: new PatternSquareCollection squares
          model: @kitCollection.at(0).get('instruments').at(0)
 
       @appModel.set 'view', view
@@ -189,15 +183,6 @@ class AppRouter extends Backbone.Router
       @kitCollection.fetch
          async: false
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
-
-      # Push pattern squares into instrument models
-      @kitCollection.at(0).get('instruments').each (instrumentModel) =>
-         squares = []
-
-         _(8).times =>
-            squares.push new PatternSquareModel()
-
-         instrumentModel.set 'patternSquares', new PatternSquareCollection squares
 
       view = new Sequencer
          appModel: @appModel
@@ -218,11 +203,6 @@ class AppRouter extends Backbone.Router
 
 
       kitSelection = =>
-         models = []
-
-         _(4).times (index) ->
-            models.push new KitModel {label: "kit #{index}"}
-
          view = new KitSelection
             appModel: @appModel
             kitCollection: @kitCollection
@@ -238,8 +218,6 @@ class AppRouter extends Backbone.Router
 
 
       instrumentSelection = =>
-
-
          @appModel.set 'kitModel', @kitCollection.at(0)
 
          view = new InstrumentSelectionPanel
@@ -250,15 +228,6 @@ class AppRouter extends Backbone.Router
 
 
       sequencer = =>
-
-         @kitCollection.at(0).get('instruments').each (instrumentModel) =>
-            squares = []
-
-            _(8).times =>
-               squares.push new PatternSquareModel()
-
-            instrumentModel.set 'patternSquares', new PatternSquareCollection squares
-
          view = new Sequencer
             appModel: @appModel
             collection: @kitCollection.at(0).get('instruments')
