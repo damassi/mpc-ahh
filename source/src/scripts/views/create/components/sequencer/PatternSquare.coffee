@@ -110,6 +110,15 @@ class PatternSquare extends View
    play: ->
       @audioPlayback.play()
 
+      TweenMax.to @$el, .2,
+         ease: Back.easeIn
+         scale: .5
+
+         onComplete: =>
+            TweenMax.to @$el, .2,
+               scale: 1
+               ease: Back.easeOut
+
 
 
 

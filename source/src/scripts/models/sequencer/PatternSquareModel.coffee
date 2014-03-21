@@ -37,7 +37,6 @@ class PatternSquareModel extends Backbone.Model
       else
          velocity = 0
 
-      # Update with new value
       @set 'velocity', velocity
 
 
