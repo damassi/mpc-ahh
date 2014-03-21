@@ -5,6 +5,7 @@
   @date   3.17.14
 ###
 
+AppEvent  = require '../../events/AppEvent.coffee'
 AppConfig = require '../../config/AppConfig.coffee'
 
 
@@ -12,15 +13,18 @@ class PatternSquareModel extends Backbone.Model
 
 
    defaults:
-      'velocity':         0
-      'previousVelocity': 0
       'active':           false
+      'instrument':       null
+      'previousVelocity': 0
+      'trigger':          null
+      'velocity':         0
+
 
 
    initialize: (options) ->
       super options
 
-      @on 'change:velocity', @onVelocityChange
+      @on AppEvent.CHANGE_VELOCITY, @onVelocityChange
 
 
 

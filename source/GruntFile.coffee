@@ -137,6 +137,7 @@ module.exports = (grunt) ->
                "#{vendor}/backbone.js"
                "#{vendor}/greensock.js"
                "#{vendor}/backbone-relational.js"
+               "#{vendor}/howler.js"
 
             ]
 

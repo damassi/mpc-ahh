@@ -28,8 +28,28 @@ class PatternSquare extends View
       'touchend': 'onClick'
 
 
+   render: (options) ->
+      super options
+
+      audioSrc = @patternSquareModel.get('instrument').get 'src'
+
+      @howl = new Howl
+         urls: [audioSrc]
+         onend: @onSoundEnd
+
+      @
+
+
    addEventListeners: ->
       @listenTo @patternSquareModel, AppEvent.CHANGE_VELOCITY, @onVelocityChange
+      @listenTo @patternSquareModel, AppEvent.CHANGE_ACTIVE,   @onActiveChange
+      @listenTo @patternSquareModel, AppEvent.CHANGE_TRIGGER,  @onTriggerChange
+
+
+
+   remove: ->
+      @howl.unload()
+      super()
 
 
 
@@ -37,8 +57,10 @@ class PatternSquare extends View
       @patternSquareModel.enable()
 
 
+
    disable: ->
       @patternSquareModel.disable()
+
 
 
    flashOn: ->
@@ -51,12 +73,19 @@ class PatternSquare extends View
 
 
 
+   play: ->
+      @howl.play()
+
+
+
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
 
 
+
    onClick: (event) ->
       @patternSquareModel.cycle()
+
 
 
 
@@ -73,6 +102,24 @@ class PatternSquare extends View
 
       @$el.addClass velocityClass
 
+
+
+
+   onActiveChange: (model) ->
+      console.log model
+      console.log model.changed.active
+
+
+
+
+   onTriggerChange: (model) =>
+      if model.changed.trigger is true
+         @play()
+
+
+
+   onSoundEnd: =>
+      @patternSquareModel.set 'trigger', false
 
 
 

@@ -70,6 +70,12 @@ class Sequencer extends View
    collection: null
 
 
+   # An array of all sounds extracted from the current InstrumentCollection
+   # @type {Array}
+
+   soundArray: null
+
+
 
    # Renders the view
    # @param {Object}
@@ -117,8 +123,8 @@ class Sequencer extends View
 
          patternTrack = new PatternTrack
             appModel: @appModel
-            model: model
             collection: model.get 'patternSquares'
+            model: model
 
          @patternTrackViews.push patternTrack
          @$sequencer.append patternTrack.render().el
@@ -132,6 +138,8 @@ class Sequencer extends View
       @$thStepper.removeClass 'step'
       @currBeatCellId = if @currBeatCellId < @numCells then @currBeatCellId += 1 else @currBeatCellId = 0
       $(@$thStepper[@currBeatCellId]).addClass 'step'
+
+      @playAudio()
 
 
 
@@ -175,20 +183,40 @@ class Sequencer extends View
 
 
 
+
    # Plays audio of each track currently enabled and on
 
    playAudio: ->
+
+      @collection.each (instrument) =>
+         patternSquares = instrument.get 'patternSquares'
+
+         patternSquares.each (patternSquare, index) =>
+
+            if @currBeatCellId is index
+               if patternSquare.get 'active'
+                  patternSquare.set 'trigger', true
+                  console.log patternSquare.get('trigger'), 'should be trigger!'
+
+               else
+                  #patternSquare.set 'trigger', false
+
+
       return
 
-      @soundArray.forEach (sound, index) =>
+      @collection.toJSON().forEach (sound, index) =>
          {soundId, src} = sound
 
+         return
          beat = sound.beats[@currBeatCellId]
 
          $tr = $("#sequencer tr[data-sound=#{index+1}]")
          $td = $tr.find("[data-beat=#{@currBeatCellId+1}]");
 
+         return
+
          if beat.active
+            console.log 'beat is active!'
             @$activeSquare = $td
 
             TweenMax.to $td, .2,

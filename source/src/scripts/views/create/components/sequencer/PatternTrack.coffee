@@ -94,7 +94,7 @@ class PatternTrack extends View
       @collection = new PatternSquareCollection
 
       _(8).times =>
-         @collection.add new PatternSquareModel()
+         @collection.add new PatternSquareModel { instrument: @model }
 
       @collection.each (model) =>
          patternSquare = new PatternSquare
@@ -103,6 +103,8 @@ class PatternTrack extends View
          @$label.text model.get 'label'
          @$el.append patternSquare.render().el
          @patternSquareViews.push patternSquare
+
+      @model.set 'patternSquares', @collection
 
 
 
