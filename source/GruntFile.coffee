@@ -97,7 +97,6 @@ module.exports = (grunt) ->
                transform: [
                   handleify
                   coffeeify
-                  #reactify
                   uglifyify
                ]
                debug: false
@@ -327,7 +326,7 @@ module.exports = (grunt) ->
             files: "#{sources}/scripts/**/*.{js,coffee,hbs}"
             tasks: [
                'browserify:dev',
-               #'browserify:test'
+               'browserify:test'
             ]
 
          styles:
@@ -335,12 +334,8 @@ module.exports = (grunt) ->
             tasks: ['sass:dev']
 
          test:
-            options:
-               livereload: true
-               spawn: false
-
             files: [ 'test/**/*.*' ]
-            tasks: [ 'test' ]
+            tasks: [ 'browserify:test' ]
 
          vendor:
             files: "#{vendor}/**/*.js"

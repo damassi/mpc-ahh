@@ -75,4 +75,11 @@ describe 'Sequencer', ->
 
 
 
+   it 'Should listen for InstrumentTrackModel focus events', =>
+      @view.collection.should.trigger('change:focus').when =>
+         @view.patternTrackViews[0].onLabelClick()
+
+
+
+
    it 'Should update each pattern track when the kit changes', =>

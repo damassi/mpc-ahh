@@ -70,11 +70,6 @@ class Sequencer extends View
    collection: null
 
 
-   # An array of all sounds extracted from the current InstrumentCollection
-   # @type {Array}
-
-   soundArray: null
-
 
 
    # Renders the view
@@ -109,7 +104,7 @@ class Sequencer extends View
       @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayingChange
       @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
 
-      @listenTo @collection, AppEvent.CHANGE_FOCUS, @onChangeFocus
+      @listenTo @collection, AppEvent.CHANGE_FOCUS, @onFocusChange
 
 
 
@@ -190,13 +185,37 @@ class Sequencer extends View
    # Plays audio of each track currently enabled and on
 
    playAudio: ->
+      focusedInstrument =  @collection.findWhere { focus: true }
+
+      # Check if there's a focused track and only
+      # play audio from there
+
+      if focusedInstrument
+         focusedInstrument.get('patternSquares').each (patternSquare, index) =>
+            @playPatternSquareAudio( patternSquare, index )
+
+         return
+
+
+      # If nothing is focused, then check against
+      # the entire matrix
+
       @collection.each (instrument) =>
-
          instrument.get('patternSquares').each (patternSquare, index) =>
+            @playPatternSquareAudio( patternSquare, index )
 
-            if @currBeatCellId is index
-               if patternSquare.get 'active'
-                  patternSquare.set 'trigger', true
+
+
+
+   # Plays the audio on an individual PatterSquare if tempo index
+   # is the same as the index within the collection
+   # @param {PatternSquare} patternSquare
+   # @param {Number} index
+
+   playPatternSquareAudio: (patternSquare, index) ->
+      if @currBeatCellId is index
+         if patternSquare.get 'active'
+            patternSquare.set 'trigger', true
 
 
 
@@ -252,11 +271,16 @@ class Sequencer extends View
 
 
 
-   # Handler for kit changes, as set from the KitSelector
+   # Handler for focus change events.  Iterates over all of the models within
+   # the InstrumentCollection and toggles their focus to off if the changed
+   # model's focus is set to true.
    # @param {InstrumentModel} model
 
    onFocusChange: (model) =>
-      console.log model.changed.focus
+      @collection.each (instrumentModel) =>
+         if model.changed.focus is true
+            if model.cid isnt instrumentModel.cid
+               instrumentModel.set 'focus', false
 
 
 

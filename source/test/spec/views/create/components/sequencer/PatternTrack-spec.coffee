@@ -66,6 +66,11 @@ describe 'Pattern Track', ->
       @view.unmute()
 
 
+   it 'Should be able to focus and unfocus', =>
+      @view.model.should.trigger('change:focus').when =>
+         @view.onLabelClick()
+
+
 
 
    it 'Should update each PatternSquare model when the kit changes', =>
