@@ -51,7 +51,8 @@ class PatternTrack extends View
 
 
    events:
-      'touchend .btn-mute': 'onMuteBtnClick'
+      'touchend .label-instrument': 'onLabelClick'
+      'touchend .btn-mute':         'onMuteBtnClick'
 
 
 
@@ -76,10 +77,10 @@ class PatternTrack extends View
    # pattern squares without re-rendering the views
 
    addEventListeners: ->
-      kitModel = @appModel.get('kitModel')
+      @kitModel = @appModel.get('kitModel')
 
-      @listenTo @model,   AppEvent.CHANGE_MUTE,       @onMuteChange
-      @listenTo kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
+      @listenTo @model,    AppEvent.CHANGE_MUTE,       @onMuteChange
+      @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
 
@@ -160,6 +161,15 @@ class PatternTrack extends View
          @$el.addClass 'mute'
 
       else @$el.removeClass 'mute'
+
+
+
+
+   # Handler for mute button clicks
+   # @param {InstrumentModel} model
+
+   onLabelClick: (event) =>
+      @kitModel.set 'currentInstrument', @model
 
 
 
