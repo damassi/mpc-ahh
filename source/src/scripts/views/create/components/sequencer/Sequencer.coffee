@@ -105,6 +105,7 @@ class Sequencer extends View
    # changes.  Updates all of the views accordingly
 
    addEventListeners: ->
+      @listenTo @appModel, AppEvent.CHANGE_BPM, @onBPMChange
       @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayingChange
       @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
 
@@ -200,6 +201,17 @@ class Sequencer extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   # Handler for BPM tempo changes
+   # @param {AppModel} model
+
+   onBPMChange: (model) =>
+      clearInterval @bpmInterval
+      @updateIntervalTime = model.changed.bpm
+      @bpmInterval = setInterval @updateTime, @updateIntervalTime
+
 
 
 

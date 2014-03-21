@@ -115,6 +115,7 @@ class PatternSquare extends View
          scale: .5
 
          onComplete: =>
+
             TweenMax.to @$el, .2,
                scale: 1
                ease: Back.easeOut

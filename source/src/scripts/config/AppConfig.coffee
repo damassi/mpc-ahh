@@ -22,13 +22,13 @@ AppConfig =
    # The BPM tempo
    # @type {Number}
 
-   BPM: 120
+   BPM: 320
 
 
    # The max BPM
    # @type {Number}
 
-   BPM_MAX: 300
+   BPM_MAX: 1000
 
 
    # The max varient on each pattern square (off, low, medium, high)

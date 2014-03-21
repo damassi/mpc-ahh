@@ -42,7 +42,14 @@ class BPMIndicator extends View
    # The amount to increase the BPM by on each tick
    # @type {Number}
 
-   bpmIncreaseAmount: 1
+   bpmIncreaseAmount: 10
+
+
+   # The current bpm before its set on the model.  Used to buffer
+   # updates and to provide for smooth animation
+   # @type {Number}
+
+   currBPM: null
 
 
 
@@ -67,7 +74,9 @@ class BPMIndicator extends View
       @increaseBtn = @$el.find '.btn-increase'
       @decreaseBtn = @$el.find '.btn-decrease'
 
-      @$bpmLabel.text @appModel.get('bpm')
+      @currBPM = @appModel.get('bpm')
+      @$bpmLabel.text @currBPM
+      @onBtnUp()
 
       @
 
@@ -87,7 +96,7 @@ class BPMIndicator extends View
 
    increaseBPM: ->
       @updateInterval = setInterval =>
-         bpm = @appModel.get 'bpm'
+         bpm = @currBPM
 
          if bpm < AppConfig.BPM_MAX
             bpm += @bpmIncreaseAmount
@@ -95,7 +104,8 @@ class BPMIndicator extends View
          else
             bpm = AppConfig.BPM_MAX
 
-         @appModel.set 'bpm', bpm
+         @currBPM = bpm
+         @$bpmLabel.text @currBPM
 
       , @intervalUpdateTime
 
@@ -107,7 +117,7 @@ class BPMIndicator extends View
 
    decreaseBPM: ->
       @updateInterval = setInterval =>
-         bpm = @appModel.get 'bpm'
+         bpm = @currBPM
 
          if bpm > 0
             bpm -= @bpmIncreaseAmount
@@ -115,7 +125,8 @@ class BPMIndicator extends View
          else
             bpm = 0
 
-         @appModel.set 'bpm', bpm
+         @currBPM = bpm
+         @$bpmLabel.text @currBPM
 
       , @intervalUpdateTime
 
@@ -156,6 +167,8 @@ class BPMIndicator extends View
       clearInterval @updateInterval
       @updateInterval = null
 
+      @appModel.set 'bpm', 60000 / @currBPM
+
 
 
 
@@ -163,7 +176,7 @@ class BPMIndicator extends View
    # kit selector
 
    onBPMChange: (model) ->
-      @$bpmLabel.text model.changed.bpm
+
 
 
 
