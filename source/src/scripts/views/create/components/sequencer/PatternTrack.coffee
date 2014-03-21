@@ -194,7 +194,8 @@ class PatternTrack extends View
    # @param {InstrumentModel} model
 
    onLabelClick: (event) =>
-      @model.set 'focus', ! @model.get('focus')
+      if @model.get('mute') isnt true
+         @model.set 'focus', ! @model.get('focus')
 
 
 

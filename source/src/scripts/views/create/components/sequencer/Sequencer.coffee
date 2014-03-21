@@ -191,8 +191,9 @@ class Sequencer extends View
       # play audio from there
 
       if focusedInstrument
-         focusedInstrument.get('patternSquares').each (patternSquare, index) =>
-            @playPatternSquareAudio( patternSquare, index )
+         if focusedInstrument.get('mute') isnt true
+            focusedInstrument.get('patternSquares').each (patternSquare, index) =>
+               @playPatternSquareAudio( patternSquare, index )
 
          return
 
@@ -201,8 +202,9 @@ class Sequencer extends View
       # the entire matrix
 
       @collection.each (instrument) =>
-         instrument.get('patternSquares').each (patternSquare, index) =>
-            @playPatternSquareAudio( patternSquare, index )
+         if instrument.get('mute') isnt true
+            instrument.get('patternSquares').each (patternSquare, index) =>
+               @playPatternSquareAudio( patternSquare, index )
 
 
 
