@@ -13,4 +13,10 @@ class InstrumentCollection extends Backbone.Collection
    model: InstrumentModel
 
 
+   exportPatternSquares: ->
+      return @map (instrument) =>
+         instrument.get('patternSquares')
+
+
+
 module.exports = InstrumentCollection

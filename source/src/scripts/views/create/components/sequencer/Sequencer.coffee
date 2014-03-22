@@ -270,6 +270,42 @@ class Sequencer extends View
       @collection = model.changed.kitModel.get('instruments')
       @renderTracks()
 
+      # Export old pattern squares so the users pattern isn't blown away
+      # when kit changes occur
+
+      oldInstrumentCollection = model._previousAttributes.kitModel.get('instruments')
+      oldPatternSquares = oldInstrumentCollection.exportPatternSquares()
+
+
+      # Update the new collection with old pattern square data
+      # and trigger UI updates on each square
+
+      @collection.each (instrumentModel, index) ->
+         oldCollection = oldPatternSquares[index]
+         newCollection = instrumentModel.get 'patternSquares'
+
+         # Update track / instrument level properties like volume / mute / focus
+         oldProps = oldInstrumentCollection.at(index)
+
+         unless oldProps is undefined
+
+            oldProps = oldProps.toJSON()
+
+            instrumentModel.set
+               volume: oldProps.volume
+               active: oldProps.active
+               mute:   oldProps.mute
+               focus:  oldProps.focus
+
+         # Check for inconsistancies between number of instruments
+         unless oldCollection is undefined
+
+            newCollection.each (patternSquare, index) ->
+               oldPatternSquare = oldCollection.at index
+               patternSquare.set oldPatternSquare.toJSON()
+
+
+
 
 
 
