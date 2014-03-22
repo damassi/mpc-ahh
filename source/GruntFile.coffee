@@ -138,6 +138,9 @@ module.exports = (grunt) ->
                "#{vendor}/backbone-relational.js"
                "#{vendor}/howler.js"
 
+               "#{vendor}/shims/requestAnimFrame.js"
+               "#{vendor}/beterInterval.js"
+
             ]
 
             dest: "#{output}/assets/scripts/vendor.js"
