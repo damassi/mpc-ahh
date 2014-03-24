@@ -35,8 +35,6 @@ describe 'Views', =>
 require './spec/views/share/ShareView-spec.coffee'
 require './spec/views/create/CreateView-spec.coffee'
 
-
-
 require './spec/models/SoundCollection-spec.coffee'
 require './spec/models/SoundModel-spec.coffee'
 
