@@ -107,6 +107,7 @@ class PadSquare extends View
 
 
    playSound: ->
+      @audioPlayback?.play()
       @model.set 'trigger', false
 
 
