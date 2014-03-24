@@ -14,8 +14,8 @@ describe 'Views', =>
 
    describe 'Live Pad', =>
 
-      require './spec/views/create/components/pad/LivePad-spec.coffee'
       require './spec/views/create/components/pad/PadSquare-spec.coffee'
+      require './spec/views/create/components/pad/LivePad-spec.coffee'
 
 
    describe 'Instrument Selector', =>
