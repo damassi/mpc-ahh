@@ -46,10 +46,10 @@ describe 'Pad Square', ->
 
 
    it 'Should set the sound based upon the dropped visual element', =>
-      @view.model.should.trigger('change:sound').when =>
+      @view.model.should.trigger('change:instrument').when =>
          @view.setSound()
 
 
    it 'Should clear the sound when the droppable element is disposed of', =>
-      @view.model.should.trigger('change:sound').shen =>
+      @view.model.should.trigger('change:instrument').when =>
          @view.removeSound()

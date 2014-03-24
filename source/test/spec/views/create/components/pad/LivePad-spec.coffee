@@ -38,5 +38,5 @@ describe 'Live Pad', ->
 
 
    it 'Should update the PadSquareCollection with the current kit when dropped', =>
-      @view.collection.should.trigger('change:sound').when =>
+      @view.collection.should.trigger('change:instrument').when =>
          @view.padSquareViews[0].setSound()
