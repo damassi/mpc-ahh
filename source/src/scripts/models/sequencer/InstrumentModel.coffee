@@ -17,9 +17,6 @@ class InstrumentModel extends Backbone.Model
       'active':   null
 
       # @type {Boolean}
-      'dragging': null
-
-      # @type {Boolean}
       'focus':    null
 
       # @type {String}

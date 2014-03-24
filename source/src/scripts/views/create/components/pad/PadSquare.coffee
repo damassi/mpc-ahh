@@ -5,24 +5,56 @@
  * @date   3.24.14
 ###
 
-AppEvent = require '../../../../events/AppEvent.coffee'
-View     = require '../../../../supers/View.coffee'
-template = require './templates/pad-square-template.hbs'
+AppConfig = require '../../../../config/AppConfig.coffee'
+AppEvent  = require '../../../../events/AppEvent.coffee'
+View      = require '../../../../supers/View.coffee'
+template  = require './templates/pad-square-template.hbs'
 
 
 class PadSquare extends View
 
    tagName: 'td'
    className: 'pad-square'
+
+
    template: template
 
+
+   # Model which tracks state of square and instruments
    # @type {PadSquareModel}
+
    model: null
+
+
+   # The current icon class as applied to the square
+   # @type {String}
+
+   currentIcon: null
+
+
+
+   audioPlayback: null
 
 
 
    events:
       'touchend': 'onClick'
+
+
+
+   render: (options) ->
+      super options
+
+      @$iconContainer = @$el.find '.container-icon'
+      @$icon          = @$iconContainer.find '.icon'
+
+      @
+
+
+   remove: ->
+      @audioPlayback?.unload()
+      super()
+
 
 
 
@@ -32,16 +64,51 @@ class PadSquare extends View
 
 
 
+
+   renderIcon: ->
+      if @$icon.hasClass @currentIcon
+         @$icon.removeClass @currentIcon
+
+      instrument = @model.get 'currentInstrument'
+
+
+      unless instrument is null
+         @currentIcon = instrument.get 'icon'
+         @$icon.addClass @currentIcon
+
+
+
+
    setSound: ->
+      @audioPlayback?.unload()
+
+      instrument = @model.get 'currentInstrument'
+
+
+      unless instrument is null
+
+         audioSrc = instrument.get 'src'
+
+         # TODO: Test methods
+         if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
+
+         @audioPlayback = new Howl
+            volume: AppConfig.VOLUME_LEVELS.medium
+            urls: [audioSrc]
+            onend: @onSoundEnd
 
 
 
    removeSound: ->
+      @audioPlayback?.unload()
+      @model.set 'currentInstrument', null
+
 
 
 
    playSound: ->
       @model.set 'trigger', false
+
 
 
 
@@ -56,7 +123,15 @@ class PadSquare extends View
 
 
 
+
+   onHold: (event) =>
+      @model.set 'dragging', true
+
+
+
+
    onDrag: (event) ->
+      @model.set 'dragging', true
 
 
 
@@ -65,7 +140,8 @@ class PadSquare extends View
       instrumentModel = @findInstrumentModel id
 
       @model.set
-         'dropped':    true
+         'dragging': false
+         'dropped': true
          'currentInstrument': instrumentModel
 
 
@@ -80,11 +156,20 @@ class PadSquare extends View
 
 
    onInstrumentChange: (model) =>
-      instrument = model.changed.currentInstrument
+      @renderIcon()
+      @setSound()
 
-      console.log 'here?'
 
-      console.log instrument.toJSON()
+
+
+   onSoundEnd: =>
+      @model.set 'trigger', false
+
+
+
+
+   # PRIVATE METHODS
+   # --------------------------------------------------------------------------------
 
 
 

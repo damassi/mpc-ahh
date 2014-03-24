@@ -32,8 +32,15 @@ class PatternSquare extends View
    template: template
 
 
+   # The audio playback instance (Howler)
+   # @type {Howl}
+
+   audioPlayback: null
+
+
    # The model which controls volume, playback, etc
    # @type {PatternSquareModel}
+
    patternSquareModel: null
 
 

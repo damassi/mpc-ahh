@@ -64,7 +64,9 @@ describe 'Pad Square', ->
       id = @kitCollection.at(0).get('instruments').at(0).get('id')
       @view.onDrop id
 
-      @view.$el.find('.icon-instrument').length.should.equal 1
+      icon = @kitCollection.at(0).get('instruments').at(0).get('icon')
+
+      @view.$el.find('.' + icon).length.should.equal 1
 
 
    it 'Should release the droppable visual element on press-hold', =>
@@ -73,10 +75,35 @@ describe 'Pad Square', ->
 
 
    it 'Should set the sound based upon the dropped visual element', =>
-      @view.model.should.trigger('change:instrument').when =>
-         @view.setSound()
+
+      id = @kitCollection.at(0).get('instruments').at(0).get('id')
+      @view.onDrop id
+
+      expect(@view.audioPlayback).to.not.equal undefined
 
 
    it 'Should clear the sound when the droppable element is disposed of', =>
-      @view.model.should.trigger('change:instrument').when =>
+      id = @kitCollection.at(0).get('instruments').at(0).get('id')
+      @view.onDrop id
+
+      @view.model.should.trigger('change:currentInstrument').when =>
          @view.removeSound()
+
+
+   it 'Should clear the icon when the droppable element is disposed of', =>
+      id = @kitCollection.at(0).get('instruments').at(0).get('id')
+      @view.onDrop id
+
+      icon = @kitCollection.at(0).get('instruments').at(0).get('icon')
+      @view.$el.find('.' + icon).length.should.equal 1
+
+      @view.removeSound()
+      @view.$el.find('.' + icon).length.should.equal 0
+
+
+
+
+
+
+
+
