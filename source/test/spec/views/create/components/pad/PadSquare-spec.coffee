@@ -1,15 +1,28 @@
 AppConfig = require '../../../../../../src/scripts/config/AppConfig.coffee'
 AppModel = require  '../../../../../../src/scripts/models/AppModel.coffee'
 KitCollection = require  '../../../../../../src/scripts/models/kits/KitCollection.coffee'
-PadSquareModel = require '../../../../../../src/scripts/models/pad/PadSquareModel.coffee'
 PadSquareCollection = require '../../../../../../src/scripts/models/pad/PadSquareCollection.coffee'
+PadSquareModel = require '../../../../../../src/scripts/models/pad/PadSquareModel.coffee'
 PadSquare = require '../../../../../../src/scripts/views/create/components/pad/PadSquare.coffee'
 
 
 describe 'Pad Square', ->
 
+   before =>
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
+
+      @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
+
    beforeEach =>
       @view = new PadSquare
+         collection: @kitCollection
          model: new PadSquareModel()
 
       @view.render()
@@ -28,16 +41,29 @@ describe 'Pad Square', ->
 
 
    it 'Should trigger a play action on tap', =>
-      @view.model.should.trigger('change:playing').when =>
+      @view.model.should.trigger('change:trigger').when =>
          @view.onClick()
 
 
    it 'Should accept a droppable visual element', =>
       @view.model.should.trigger('change:dropped').when =>
-         @view.onDrop()
+         id = @kitCollection.at(0).get('instruments').at(0).get('id')
+
+         @view.onDrop id
+
+
+   it 'Should trigger instrument change on drop', =>
+       @view.model.should.trigger('change:currentInstrument').when =>
+         id = @kitCollection.at(0).get('instruments').at(0).get('id')
+
+         @view.onDrop id
 
 
    it 'Should render out a sound icon when dropped', =>
+
+      id = @kitCollection.at(0).get('instruments').at(0).get('id')
+      @view.onDrop id
+
       @view.$el.find('.icon-instrument').length.should.equal 1
 
 

@@ -255,9 +255,16 @@ class AppRouter extends Backbone.Router
 
 
    padSquareRoute: ->
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
       view = new PadSquare
-         appModel: @appModel
          model: new PadSquareModel()
+         collection: @kitCollection
 
 
       @appModel.set 'view', view

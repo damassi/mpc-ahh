@@ -12,8 +12,8 @@ class PadSquareModel extends Backbone.Model
       'dragging':    false
 
       # @type {InstrumentModel}
-      'instrument':  null
-      'playing':     false
+      'currentInstrument':  null
+      'trigger':     false
 
 
 

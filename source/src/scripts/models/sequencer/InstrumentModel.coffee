@@ -13,29 +13,35 @@ class InstrumentModel extends Backbone.Model
 
    defaults:
 
-      # @type {String}
-      'icon':    null
+      # @type {Boolean}
+      'active':   null
+
+      # @type {Boolean}
+      'dragging': null
+
+      # @type {Boolean}
+      'focus':    null
 
       # @type {String}
-      'label':   null
+      'icon':     null
 
       # @type {String}
-      'src':     null
+      'label':    null
+
+      # @type {Boolean}
+      'mute':     null
+
+      # @type {String}
+      'src':      null
 
       # @type {Number}
-      'volume':  null
+      'volume':   null
 
-      # @type {Boolean}
-      'active':  null
 
-      # @type {Boolean}
-      'mute':    null
-
-      # @type {Boolean}
-      'focus':   null
 
       # @type {PatternSquareCollection}
       'patternSquares':    null
+
 
 
 module.exports = InstrumentModel

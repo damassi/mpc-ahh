@@ -16,6 +16,9 @@ class PadSquare extends View
    className: 'pad-square'
    template: template
 
+   # @type {PadSquareModel}
+   model: null
+
 
 
    events:
@@ -23,24 +26,9 @@ class PadSquare extends View
 
 
 
-   # initialize: (options) ->
-   #    super options
-
-
-
-   # render: (options) ->
-   #    super options
-
-   #    @addEventListeners()
-
-   #    @
-
-
-
    addEventListeners: ->
-      @listenTo @model, AppEvent.PLAYING, @onPlayingChange
-
-
+      @listenTo @model, AppEvent.CHANGE_TRIGGER, @onTriggerChange
+      @listenTo @model, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
 
@@ -53,7 +41,7 @@ class PadSquare extends View
 
 
    playSound: ->
-      @model.set 'playing', false
+      @model.set 'trigger', false
 
 
 
@@ -64,7 +52,7 @@ class PadSquare extends View
 
 
    onClick: (event) =>
-      @model.set 'playing', true
+      @model.set 'trigger', true
 
 
 
@@ -72,26 +60,47 @@ class PadSquare extends View
 
 
 
-   onDrop: (event) ->
-      $instrument     = $(event.currentTarget)
-      instrument      = $instrument.data('instrument')
-      instrumentModel = @collection.findWhere { instrument: instrument }
+
+   onDrop: (id) ->
+      instrumentModel = @findInstrumentModel id
 
       @model.set
-         'dropped': true
-         'instrument': instrumentModel
+         'dropped':    true
+         'currentInstrument': instrumentModel
 
 
 
 
-   onPlayingChange: (model) ->
-      console.log 'here?'
+   onTriggerChange: (model) =>
       playing = model.changed.playing
-
-      console.log playing
 
       if playing
          @playSound()
+
+
+
+   onInstrumentChange: (model) =>
+      instrument = model.changed.currentInstrument
+
+      console.log 'here?'
+
+      console.log instrument.toJSON()
+
+
+
+
+   findInstrumentModel: (id) ->
+      instrumentModel = null
+
+      @collection.each (kitModel) =>
+         kitModel.get('instruments').each (model) =>
+            if id is model.get('id')
+               instrumentModel = model
+
+      if instrumentModel is null
+         return false
+
+      instrumentModel
 
 
 
