@@ -12,6 +12,12 @@ describe 'Views', =>
    require './spec/views/create/components/BPMIndicator-spec.coffee'
 
 
+   describe 'Live Pad', =>
+
+      require './spec/views/create/components/pad/LivePad-spec.coffee'
+      require './spec/views/create/components/pad/PadSquare-spec.coffee'
+
+
    describe 'Instrument Selector', =>
 
       require './spec/views/create/components/instruments/InstrumentSelectorPanel-spec.coffee'
