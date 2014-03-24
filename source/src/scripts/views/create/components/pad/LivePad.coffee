@@ -61,6 +61,10 @@ class LivePad extends View
 
          # Render out columns
          _(4).times (index) =>
+
+            # Instantiate each pad view and tie the id
+            # to the DOM element
+
             padSquare = new PadSquare
                model: new PadSquareModel()
                collection: @kitCollection
@@ -79,6 +83,11 @@ class LivePad extends View
       tableData.rows = rows
 
       super tableData
+
+      _.each @padSquareViews, (padSquare) =>
+         id = padSquare.model.get 'id'
+         @$el.find("##{id}").html padSquare.render().el
+
 
       @$padContainer        = @$el.find '.container-pads'
       @$instrumentContainer = @$el.find '.container-instruments'
