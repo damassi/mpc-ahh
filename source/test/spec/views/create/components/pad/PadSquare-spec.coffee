@@ -10,6 +10,7 @@ describe 'Pad Square', ->
 
    beforeEach =>
       @view = new PadSquare
+         model: new PadSquareModel()
 
       @view.render()
 
@@ -37,7 +38,7 @@ describe 'Pad Square', ->
 
 
    it 'Should render out a sound icon when dropped', =>
-      @view.$el.find('.icon').length.should.equal 1
+      @view.$el.find('.icon-instrument').length.should.equal 1
 
 
    it 'Should release the droppable visual element on press-hold', =>

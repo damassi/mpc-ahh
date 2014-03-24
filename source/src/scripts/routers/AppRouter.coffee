@@ -257,6 +257,7 @@ class AppRouter extends Backbone.Router
    padSquareRoute: ->
       view = new PadSquare
          appModel: @appModel
+         model: new PadSquareModel()
 
 
       @appModel.set 'view', view
