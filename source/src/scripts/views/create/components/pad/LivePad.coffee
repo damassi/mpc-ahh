@@ -5,13 +5,94 @@
  * @date   3.24.14
 ###
 
-View     = require '../../../../supers/View.coffee'
-template = require './templates/live-pad-template.hbs'
+PadSquareModel = require '../../../../models/pad/PadSquareModel.coffee'
+View           = require '../../../../supers/View.coffee'
+PadSquare      = require './PadSquare.coffee'
+template       = require './templates/live-pad-template.hbs'
 
 
 class LivePad extends View
 
+
+   # The classname for the Live Pad
+   # @type {String}
+
+   className: 'container-live-pad'
+
+
+   # The template
+   # @type {Function}
+
    template: template
+
+
+   # Collection of kits to be rendered to the instrument container
+   # @type {KitCollection}
+
+   kitCollection: null
+
+
+   # Appmodel for listening to show / hide events
+   # @type {AppModel}
+
+   appModel: null
+
+
+   # An array of individual PadSquareViews
+   # @type {Array}
+
+   padSquareViews: null
+
+
+
+   # Render the view and and parse the collection into a displayable
+   # instrument / pad list.
+   # @param {Object} options
+
+   render: (options) ->
+
+      @padSquareViews = []
+      tableData = {}
+      rows = []
+
+      # Render out rows
+      _(4).times (index) =>
+         tds  = []
+
+         # Render out columns
+         _(4).times (index) =>
+            padSquare = new PadSquare
+               model: new PadSquareModel()
+               collection: @kitCollection
+
+            @padSquareViews.push padSquare
+
+            tds.push {
+               id: padSquare.model.get('id')
+            }
+
+         rows.push {
+            id: "pad-row-#{index}"
+            tds: tds
+         }
+
+      tableData.rows = rows
+
+      super tableData
+
+      @$padContainer        = @$el.find '.container-pads'
+      @$instrumentContainer = @$el.find '.container-instruments'
+
+      @
+
+
+
+
+   # Add collection listeners to listen for instrument drops
+
+   addEventListeners: ->
+
+
 
 
 module.exports = LivePad

@@ -10,10 +10,16 @@ class PadSquareModel extends Backbone.Model
 
    defaults:
       'dragging':    false
+      'trigger':     false
 
       # @type {InstrumentModel}
       'currentInstrument':  null
-      'trigger':     false
+
+
+   initialize: (options) ->
+      super options
+
+      @set 'id', _.uniqueId 'pad-square-'
 
 
 

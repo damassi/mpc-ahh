@@ -243,7 +243,6 @@ class AppRouter extends Backbone.Router
          view
 
       fullSequencerView = new View()
-
       fullSequencerView.$el.append kitSelection().render().el
       fullSequencerView.$el.append bpm().render().el
       fullSequencerView.$el.append instrumentSelection().render().el
@@ -274,8 +273,16 @@ class AppRouter extends Backbone.Router
 
 
    livePadRoute: ->
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
       view = new LivePad
          appModel: @appModel
+         kitCollection: @kitCollection
 
 
       @appModel.set 'view', view

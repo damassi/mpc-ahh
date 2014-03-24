@@ -13,9 +13,21 @@ template  = require './templates/pad-square-template.hbs'
 
 class PadSquare extends View
 
+
+   # The tag to be rendered to the DOM
+   # @type {String}
+
    tagName: 'td'
+
+
+   # The classname for the Pad Square
+   # @type {String}
+
    className: 'pad-square'
 
+
+   # The template
+   # @type {Function}
 
    template: template
 
@@ -32,13 +44,17 @@ class PadSquare extends View
    currentIcon: null
 
 
+   # The audio playback component
+   # @type {Howl}
 
    audioPlayback: null
 
 
 
+
    events:
       'touchend': 'onClick'
+
 
 
 
@@ -86,7 +102,6 @@ class PadSquare extends View
 
 
       unless instrument is null
-
          audioSrc = instrument.get 'src'
 
          # TODO: Test methods
@@ -121,6 +136,8 @@ class PadSquare extends View
 
    onClick: (event) =>
       @model.set 'trigger', true
+
+      console.log 'hey'
 
 
 
