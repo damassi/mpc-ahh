@@ -9,9 +9,22 @@ LivePad = require '../../../../../../src/scripts/views/create/components/pad/Liv
 
 describe 'Live Pad', ->
 
+   before =>
+      @kitCollection = new KitCollection
+         parse: true
+
+      @kitCollection.fetch
+         async: false
+         url: AppConfig.returnTestAssetPath('data') + '/' + 'sound-data.json'
+
+      @appModel = new AppModel
+      @appModel.set 'kitModel', @kitCollection.at(0)
+
 
    beforeEach =>
       @view = new LivePad
+         kitCollection: @kitCollection
+         appModel: @appModel
 
       @view.render()
 
@@ -24,12 +37,18 @@ describe 'Live Pad', ->
       @view.$el.should.exist
 
 
-   it 'Should render out 16 pad squares', =>
+   it 'Should render out pad squares', =>
       @view.$el.find('.pad-square').length.should.equal 16
 
 
    it 'Should render out the entire kit collection', =>
-      @view.$el.find('.instrument').length.should.equal 24
+      len = 0
+
+      @view.kitCollection.each (kit, index) ->
+         index = index + 1
+         len = kit.get('instruments').length * index
+
+      @view.$el.find('.instrument').length.should.equal len
 
 
    it 'Should listen to drops from the kits to the pads', =>
