@@ -56,6 +56,7 @@ class AppRouter extends Backbone.Router
       'pattern-track':        'patternTrackRoute'
       'sequencer':            'sequencerRoute'
       'full-sequencer':       'fullSequencerRoute'
+      'pad-square':           'padSquareRoute'
       'live-pad':             'livePadRoute'
 
 
@@ -249,6 +250,17 @@ class AppRouter extends Backbone.Router
       fullSequencerView.$el.append sequencer().render().el
 
       @appModel.set 'view', fullSequencerView
+
+
+
+
+   padSquareRoute: ->
+      view = new PadSquare
+         appModel: @appModel
+
+
+      @appModel.set 'view', view
+
 
 
 
