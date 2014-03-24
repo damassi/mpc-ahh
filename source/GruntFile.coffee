@@ -139,7 +139,7 @@ module.exports = (grunt) ->
                "#{vendor}/howler.js"
 
                "#{vendor}/shims/requestAnimFrame.js"
-               "#{vendor}/beterInterval.js"
+               "#{vendor}/betterInterval.js"
 
             ]
 

@@ -10,8 +10,14 @@ InstrumentModel = require './InstrumentModel.coffee'
 
 class InstrumentCollection extends Backbone.Collection
 
+
+   # @type {InstrumentModel}
    model: InstrumentModel
 
+
+
+   # Exports the pattern squares collection for use
+   # with transferring props across different drum kits
 
    exportPatternSquares: ->
       return @map (instrument) =>
