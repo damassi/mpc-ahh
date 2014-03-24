@@ -9,8 +9,9 @@ class PadSquareModel extends Backbone.Model
 
 
    defaults:
-      'dragging':    false
-      'trigger':     false
+      'dragging':  false
+      'keycode':   null
+      'trigger':   false
 
       # @type {InstrumentModel}
       'currentInstrument':  null

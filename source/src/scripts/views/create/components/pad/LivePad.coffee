@@ -44,16 +44,22 @@ class LivePad extends View
    padSquareViews: null
 
 
+   # Key command keymap for live kit playback
+   keymap: ['1','2','3','4','q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v']
+
+
 
    # Render the view and and parse the collection into a displayable
-   # instrument / pad list.
+   # instrument / pad table
    # @param {Object} options
+   # @return {LivePad}
 
    render: (options) ->
 
       @padSquareViews = []
       tableData = {}
       rows = []
+      iterator = 0
 
       # Render out rows
       _(4).times (index) =>
@@ -65,11 +71,15 @@ class LivePad extends View
             # Instantiate each pad view and tie the id
             # to the DOM element
 
+            model = new PadSquareModel
+               keycode: @keymap[iterator]
+
             padSquare = new PadSquare
-               model: new PadSquareModel()
+               model: model
                collection: @kitCollection
 
             @padSquareViews.push padSquare
+            iterator++
 
             tds.push {
                id: padSquare.model.get('id')
@@ -82,8 +92,10 @@ class LivePad extends View
 
       tableData.rows = rows
 
+      # Render the table to the DOM
       super tableData
 
+      # Render squares to the DOM
       _.each @padSquareViews, (padSquare) =>
          id = padSquare.model.get 'id'
          @$el.find("##{id}").html padSquare.render().el
@@ -100,6 +112,9 @@ class LivePad extends View
    # Add collection listeners to listen for instrument drops
 
    addEventListeners: ->
+
+
+
 
 
 
