@@ -8,4 +8,13 @@
 class PadSquareModel extends Backbone.Model
 
 
+   defaults:
+      'dragging':    false
+      'playing':     false
+
+      # @type {InstrumentModel}
+      'instrument':  null
+
+
+
 module.exports = PadSquareModel
