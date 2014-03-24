@@ -5,6 +5,9 @@
  * @date   3.24.14
 ###
 
+PadSquareModel = require './PadSquareModel.coffee'
+
+
 class PadSquareCollection extends Backbone.Collection
 
    model: PadSquareModel

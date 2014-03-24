@@ -32,6 +32,12 @@ PatternSquareCollection = require '../models/sequencer/PatternSquareCollection.c
 PatternTrack  = require '../views/create/components/sequencer/PatternTrack.coffee'
 Sequencer       = require '../views/create/components/sequencer/Sequencer.coffee'
 
+LivePadModel = require '../models/pad/LivePadModel.coffee'
+PadSquareCollection = require '../models/pad/PadSquareCollection.coffee'
+PadSquareModel = require '../models/pad/PadSquareModel.coffee'
+LivePad = require '../views/create/components/pad/LivePad.coffee'
+PadSquare = require '../views/create/components/pad/PadSquare.coffee'
+
 
 class AppRouter extends Backbone.Router
 
@@ -50,6 +56,7 @@ class AppRouter extends Backbone.Router
       'pattern-track':        'patternTrackRoute'
       'sequencer':            'sequencerRoute'
       'full-sequencer':       'fullSequencerRoute'
+      'live-pad':             'livePadRoute'
 
 
 
@@ -242,6 +249,17 @@ class AppRouter extends Backbone.Router
       fullSequencerView.$el.append sequencer().render().el
 
       @appModel.set 'view', fullSequencerView
+
+
+
+
+   livePadRoute: ->
+      view = new LivePad
+         appModel: @appModel
+
+
+      @appModel.set 'view', view
+
 
 
 

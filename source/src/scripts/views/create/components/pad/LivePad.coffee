@@ -5,8 +5,8 @@
  * @date   3.24.14
 ###
 
-View     = require '../../../supers/View.coffee'
-template = require './templates/pad-template.hbs'
+View     = require '../../../../supers/View.coffee'
+template = require './templates/live-pad-template.hbs'
 
 
 class LivePad extends View

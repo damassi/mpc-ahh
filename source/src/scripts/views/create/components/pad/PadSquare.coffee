@@ -5,7 +5,7 @@
  * @date   3.24.14
 ###
 
-View     = require '../../../supers/View.coffee'
+View     = require '../../../../supers/View.coffee'
 template = require './templates/pad-square-template.hbs'
 
 
