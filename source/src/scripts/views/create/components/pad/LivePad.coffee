@@ -10,6 +10,8 @@ PadSquareCollection = require '../../../../models/pad/PadSquareCollection.coffee
 PadSquareModel      = require '../../../../models/pad/PadSquareModel.coffee'
 View                = require '../../../../supers/View.coffee'
 PadSquare           = require './PadSquare.coffee'
+padsTemplate        = require './templates/pads-template.hbs'
+instrumentsTemplate = require './templates/instruments-template.hbs'
 template            = require './templates/live-pad-template.hbs'
 
 
@@ -72,26 +74,36 @@ class LivePad extends View
    # @return {LivePad}
 
    render: (options) ->
+      super options
 
-      # Render the table to the DOM
-      super {
-         padTable: @returnPadTableData()
-         instrumentTable: @returnInstrumentTableData()
-      }
+      @$padsContainer        = @$el.find '.container-pads'
+      @$instrumentsContainer = @$el.find '.container-instruments'
+
+      @renderPads()
+      @renderInstruments()
 
       # Render squares to the DOM
       _.each @padSquareViews, (padSquare) =>
          id = padSquare.model.get 'id'
          @$el.find("##{id}").html padSquare.render().el
 
-
-      @$padContainer        = @$el.find '.container-pads'
-      @$instrumentContainer = @$el.find '.container-instruments'
-      @$instrument          = @$el.find '.instrument'
-
       @setDragAndDrop()
 
       @
+
+
+
+   renderPads: ->
+      @$padsContainer.html padsTemplate {
+         padTable: @returnPadTableData()
+      }
+
+
+
+   renderInstruments: ->
+      @$instrumentsContainer.html instrumentsTemplate {
+         instrumentTable: @returnInstrumentTableData()
+      }
 
 
 
@@ -136,6 +148,10 @@ class LivePad extends View
       instrumentModel = @kitCollection.findInstrumentModel id
       instrumentModel.set 'dropped', true
 
+      _.defer =>
+         @renderInstruments()
+         @setDragAndDrop()
+
 
 
 
@@ -147,7 +163,8 @@ class LivePad extends View
    setDragAndDrop: ->
       self = @
 
-      $droppables = @$el.find '.container-pad'
+      @$instrument = @$el.find '.instrument'
+      $droppables  = @$el.find '.container-pad'
 
       @draggable = Draggable.create @$instrument,
          bounds: window
@@ -235,6 +252,8 @@ class LivePad extends View
 
          instruments = instrumentCollection.map (instrument) =>
             instrument.toJSON()
+
+         instruments = _.where instruments, { dropped: false }
 
          return {
             label: kit.get 'label'

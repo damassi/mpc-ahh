@@ -22,7 +22,7 @@ class InstrumentModel extends Backbone.Model
       # Flag to check if instrument has been dropped onto pad square
       # @type {Boolean}
 
-      'dropped':  null
+      'dropped':  false
 
 
       # Flag to check if audio focus is set on a particular instrument.
