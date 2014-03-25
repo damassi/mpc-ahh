@@ -311,6 +311,10 @@ class Sequencer extends View
             instrumentModel.set
                volume: oldProps.volume
                active: oldProps.active
+               mute:   null
+               focus:  null
+
+            instrumentModel.set
                mute:   oldProps.mute
                focus:  oldProps.focus
 
@@ -329,13 +333,11 @@ class Sequencer extends View
 
       @renderTracks()
 
-      #iterator = 0
-
       _.each @patternTrackViews, (trackView, iterator) ->
          trackView.collection.each (patternModel, index) ->
 
+            # Update each individual pattern square with settings
             patternModel.set patternSquareGroups[iterator][index]
-            console.log patternModel.toJSON()
 
       callback()
 

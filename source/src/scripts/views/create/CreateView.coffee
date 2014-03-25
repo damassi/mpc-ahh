@@ -92,13 +92,18 @@ class CreateView extends View
 
       instruments = @appModel.export().kitModel.instruments
 
-      instruments.forEach (instrument) =>
+      instruments = instruments.map (instrument) =>
          instrument.patternSquares.forEach (patternSquare) =>
             delete patternSquare.instrument
             @patternSquares.push patternSquare
 
+         instrument
+
       while (@patternSquares.length > 0)
          @patternSquareGroups.push @patternSquares.splice(0, 8)
+
+
+      console.log instruments
 
 
 

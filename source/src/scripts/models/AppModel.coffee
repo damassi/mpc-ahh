@@ -33,7 +33,6 @@ class AppModel extends Model
       json.kitModel.instruments = json.kitModel.instruments.toJSON()
       json.kitModel.instruments = _.map json.kitModel.instruments, (instrument) ->
          instrument.patternSquares = instrument.patternSquares.toJSON()
-
          return instrument
       return json
 

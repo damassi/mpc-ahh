@@ -213,10 +213,12 @@ class PatternTrack extends View
    # @param {InstrumentModel} model
 
    onMuteBtnClick: (event) =>
-      if @model.get 'mute'
-         @unmute()
+      @model.set 'mute', ! @model.get('mute')
 
-      else @mute()
+      # if @model.get 'mute'
+      #    @unmute()
+
+      # else @mute()
 
 
 
