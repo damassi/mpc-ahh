@@ -65,6 +65,8 @@ class PadSquare extends View
 
 
 
+   # Renders out individual pad squares
+
    render: (options) ->
       super options
 
@@ -74,12 +76,18 @@ class PadSquare extends View
       @
 
 
+
+   # Removes the pad square from the dom and clears
+   # out pre-set or user-set properties
+
    remove: ->
       @removeSoundAndClearPad()
       super()
 
 
 
+   # Add listeners related to dragging, dropping and changes
+   # to instruments.
 
    addEventListeners: ->
       @listenTo @model, AppEvent.CHANGE_TRIGGER,    @onTriggerChange
@@ -90,12 +98,16 @@ class PadSquare extends View
 
 
 
+   # Updates the visual representation of the pad square
+
    updateInstrumentClass: ->
       instrument = @model.get 'currentInstrument'
       @$el.parent().addClass instrument.get 'id'
 
 
 
+
+   # Renders out the initial icon and sets the isntrument
 
    renderIcon: ->
       if @$icon.hasClass @currentIcon
@@ -110,6 +122,8 @@ class PadSquare extends View
 
 
 
+
+   # Sets the current sound and enables audio playback
 
    setSound: ->
       @audioPlayback?.unload()
@@ -128,6 +142,19 @@ class PadSquare extends View
             onend: @onSoundEnd
 
 
+
+
+   # Triggers audio playback
+
+   playSound: ->
+      @audioPlayback?.play()
+      @model.set 'trigger', false
+
+
+
+
+   # Generic remove and clear which is triggered when a user
+   # drags the instrument off of the pad or the view is destroyed
 
    removeSoundAndClearPad: ->
       if @model.get('currentInstrument') is null
@@ -161,11 +188,6 @@ class PadSquare extends View
 
 
 
-   playSound: ->
-      @audioPlayback?.play()
-      @model.set 'trigger', false
-
-
 
 
 
@@ -173,6 +195,10 @@ class PadSquare extends View
    # --------------------------------------------------------------------------------
 
 
+
+   # Handler for press events, which, when held
+   # triggers a "drag" event on the model
+   # @param {MouseEvent} event
 
    onPress: (event) =>
       @model.set 'trigger', true
@@ -185,12 +211,20 @@ class PadSquare extends View
 
 
 
+   # Handler for release events which clears
+   # drag whether drag was initiated or not
+   # @param {MouseEvent} event
+
    onRelease: (event) =>
       clearTimeout @dragTimeout
       @model.set 'dragging', false
 
 
 
+
+   # Handler for drag events.
+   # TODO: Do we need this
+   # @param {MouseEvent} event
 
    onDrag: (event) ->
       @model.set 'dragging', true
@@ -214,6 +248,12 @@ class PadSquare extends View
 
 
 
+
+   # Handler for 'change:drag' model events, which
+   # sets up sequence for dragging on and off of
+   # the pad square
+   # @param {PadSquareModel} model
+
    onDraggingChange: (model) =>
       dragging = model.changed.dragging
 
@@ -236,6 +276,11 @@ class PadSquare extends View
 
 
 
+
+   # Handler for drop change events, which checks to see
+   # if its been dropped off the square amd clears
+   # @param {PadSquareModel} model
+
    onDroppedChange: (model) =>
       dropped = model.changed.dropped
 
@@ -245,6 +290,10 @@ class PadSquare extends View
 
 
 
+   # Handler for 'change:trigger' events, which triggers
+   # sound playback which then resets it to false on complet
+   # @param {PadSquareModel} model
+
    onTriggerChange: (model) =>
       trigger = model.changed.trigger
 
@@ -252,6 +301,11 @@ class PadSquare extends View
          @playSound()
 
 
+
+
+   # Handler for 'change:currentInstrument' events, which updates
+   # the pad square with the appropriate data
+   # @param {PadSquareModel} model
 
    onInstrumentChange: (model) =>
       instrument = model.changed.currentInstrument
@@ -264,14 +318,10 @@ class PadSquare extends View
 
 
 
+   # Handler for sound end events, which resets the sound playback
+
    onSoundEnd: =>
       @model.set 'trigger', false
-
-
-
-
-   # PRIVATE METHODS
-   # --------------------------------------------------------------------------------
 
 
 

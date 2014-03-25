@@ -74,6 +74,8 @@ class LivePad extends View
 
 
 
+
+
    # Render the view and and parse the collection into a displayable
    # instrument / pad table
    # @param {Object} options
@@ -100,6 +102,8 @@ class LivePad extends View
 
 
 
+   # Renders out the instrument pad squares
+
    renderPads: ->
       @$padsContainer.html padsTemplate {
          padTable: @returnPadTableData()
@@ -107,6 +111,8 @@ class LivePad extends View
 
 
 
+   # Renders out the instrument racks by iterating through
+   # each of the instrument sets in the KitCollection
 
    renderInstruments: ->
       @$instrumentsContainer.html instrumentsTemplate {
@@ -121,9 +127,14 @@ class LivePad extends View
       $(document).on 'mousemove', @onMouseMove
 
 
+
+   # Removes event listeners
+
    removeEventListeners: ->
       $(document).off 'mousemove', @onMouseMove
       @stopListening()
+
+
 
 
 
@@ -188,6 +199,10 @@ class LivePad extends View
 
 
 
+   # Handler for situations where the user attempts to drop the instrument incorrectly
+   # @param {HTMLDomElement} dragged
+   # @param {HTMLDomElement} dropped
+
    onPreventInstrumentDrop: (dragged, dropped) =>
       {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
 
@@ -195,14 +210,17 @@ class LivePad extends View
          'dropped': false
          'droppedEvent': null
 
-      console.log 'preventing'
-
       _.defer =>
          @renderInstruments()
          @setDragAndDrop()
 
 
 
+
+   # Handler for press and hold events, as dispatched from the pad square the user
+   # is interacting with.  Releases the instrument and allows the user to drag to
+   # a new square or deposit it back within the instrument rack
+   # @param {Object} params
 
    onPadSquareDraggingStart: (params) =>
       {instrumentId, $padSquare, originalDroppedEvent} = params
@@ -243,6 +261,10 @@ class LivePad extends View
    # --------------------------------------------------------------------------------
 
 
+
+   # Sets up drag and drop on each of the instruments rendered from the KitCollection
+   # Adds highlights and determines hit-tests, or defers to onPreventInstrumentDrop
+   # in situations where dropping isn't possible
 
    setDragAndDrop: ->
       self = @
@@ -306,6 +328,11 @@ class LivePad extends View
 
 
 
+
+   # Helper method for parsing the drag and drop event responses
+   # @param {HTMLDomElement} dragged
+   # @param {HTMLDomElement} dropped
+
    parseDraggedAndDropped: (dragged, dropped) =>
       $dragged = $(dragged)
       $dropped = $(dropped)
@@ -318,6 +345,7 @@ class LivePad extends View
          id: id
          instrumentModel: instrumentModel
       }
+
 
 
 
@@ -398,11 +426,6 @@ class LivePad extends View
          }
 
       instrumentTable
-
-
-
-
-
 
 
 
