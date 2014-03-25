@@ -96,9 +96,12 @@ class CreateView extends View
       @$bpm.html @bpm.render().el
 
 
+
+
    onExportBtnClick: (event) =>
       PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
          {@instruments, @patternSquareGroups} = params
+
 
 
 
@@ -111,20 +114,6 @@ class CreateView extends View
 
          callback: (response) ->
             console.log 'done importing'
-
-
-      return
-
-      PubSub.trigger AppEvent.EXPORT_TRACK, (params) ->
-         {instruments, patternSquareGroups} = params
-
-         PubSub.trigger AppEvent.IMPORT_TRACK,
-
-            instruments:         instruments
-            patternSquareGroups: patternSquareGroups
-
-            callback: (response) ->
-               console.log 'done importing'
 
 
 
