@@ -50,7 +50,7 @@ class LivePad extends View
    # Collection of individual pad square models
    # @type {PadSquareCollection}
 
-   collection: null
+   padSquareCollection: null
 
 
    # An array of individual PadSquareViews
@@ -111,19 +111,30 @@ class LivePad extends View
    # Handler for drop change events.  Checks to see if the instrument
    # className exists on the element and, if so, re-renders the
    # instrument and pad tables
-   # @param {InstrumentModel} model
+   # @param {InstrumentModel} instrumentModel
 
-   onDroppedChange: (model) =>
-      $instrument = @$el.find ".#{model.get('id')}"
-      console.log model.get('id'), $instrument.length
+   onDroppedChange: (instrumentModel) =>
+      instrumentId = instrumentModel.get('id')
+      $padSquare   = @$el.find ".#{instrumentId}"
+      padSquareId  = $padSquare.attr 'id'
+      padSquareModel = @padSquareCollection.findWhere { id: padSquareId }
+
+      padSquareModel.set 'currentInstrument', instrumentModel
+
+      console.log instrumentId, padSquareId, $padSquare.length, padSquareModel
 
 
 
 
    onInstrumentDrop: (dragged, dropped) =>
-      id = $(dragged).attr 'id'
-      model = @kitCollection.findInstrumentModel id
-      console.log 'DROPPED!', model
+      $dragged = $(dragged)
+      $dropped = $(dropped)
+
+      id = $dragged.attr 'id'
+      $dropped.addClass id
+
+      instrumentModel = @kitCollection.findInstrumentModel id
+      instrumentModel.set 'dropped', true
 
 
 
@@ -168,7 +179,7 @@ class LivePad extends View
 
    returnPadTableData: ->
 
-      @collection = new PadSquareCollection()
+      @padSquareCollection = new PadSquareCollection()
       @padSquareViews = []
       padTable = {}
       rows = []
@@ -191,7 +202,7 @@ class LivePad extends View
                model: model
                collection: @kitCollection
 
-            @collection.add model
+            @padSquareCollection.add model
             @padSquareViews.push padSquare
             iterator++
 

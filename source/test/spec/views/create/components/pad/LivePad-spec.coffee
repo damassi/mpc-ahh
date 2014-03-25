@@ -23,7 +23,7 @@ describe 'Live Pad', ->
 
       @view = new LivePad
          kitCollection: @kitCollection
-         collection: new PadSquareCollection()
+         #padSquareCollection: new PadSquareCollection()
          appModel: @appModel
 
       @view.render()
@@ -57,7 +57,7 @@ describe 'Live Pad', ->
 
    it 'Should listen to drops from the kits to the pads', =>
 
-      @view.collection.should.trigger('change:dropped').when =>
+      @view.padSquareCollection.should.trigger('change:dropped').when =>
          id = @view.kitCollection.at(0).get('instruments').at(0).get('id')
          @view.padSquareViews[0].onDrop id
 
@@ -65,7 +65,7 @@ describe 'Live Pad', ->
 
    it 'Should update the PadSquareCollection with the current kit when dropped', =>
 
-      @view.collection.should.trigger('change:currentInstrument').when =>
+      @view.padSquareCollection.should.trigger('change:currentInstrument').when =>
          id = @view.kitCollection.at(0).get('instruments').at(0).get('id')
          @view.padSquareViews[0].onDrop id
 
