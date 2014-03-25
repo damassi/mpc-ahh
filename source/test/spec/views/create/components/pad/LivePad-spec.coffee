@@ -9,7 +9,8 @@ LivePad = require '../../../../../../src/scripts/views/create/components/pad/Liv
 
 describe 'Live Pad', ->
 
-   before =>
+
+   beforeEach =>
       @kitCollection = new KitCollection
          parse: true
 
@@ -20,8 +21,6 @@ describe 'Live Pad', ->
       @appModel = new AppModel
       @appModel.set 'kitModel', @kitCollection.at(0)
 
-
-   beforeEach =>
       @view = new LivePad
          kitCollection: @kitCollection
          collection: new PadSquareCollection()
@@ -34,6 +33,7 @@ describe 'Live Pad', ->
       @view.remove()
 
 
+
    it 'Should render', =>
       @view.$el.should.exist
 
@@ -42,7 +42,9 @@ describe 'Live Pad', ->
       @view.$el.find('.pad-square').length.should.equal 16
 
 
+
    it 'Should render out the entire kit collection', =>
+
       len = 0
 
       @view.kitCollection.each (kit, index) ->
@@ -52,19 +54,28 @@ describe 'Live Pad', ->
       @view.$el.find('.instrument').length.should.equal len + 1
 
 
+
    it 'Should listen to drops from the kits to the pads', =>
+
       @view.collection.should.trigger('change:dropped').when =>
-         @view.padSquareViews[0].onDrop()
+         id = @view.kitCollection.at(0).get('instruments').at(0).get('id')
+         @view.padSquareViews[0].onDrop id
+
 
 
    it 'Should update the PadSquareCollection with the current kit when dropped', =>
-      @view.collection.should.trigger('change:instrument').when =>
-         @view.padSquareViews[0].setSound()
+
+      @view.collection.should.trigger('change:currentInstrument').when =>
+         id = @view.kitCollection.at(0).get('instruments').at(0).get('id')
+         @view.padSquareViews[0].onDrop id
 
 
-   it 'Should listen for changes to instrument dropped status', (done) =>
+
+   it 'Should listen for changes to instrument dropped status', =>
+
       @view.kitCollection.at(0).get('instruments').at(0).should.trigger('change:dropped').when =>
-         @view.padSquareViews[0].setSound()
+         id = @view.kitCollection.at(0).get('instruments').at(0).get('id')
+         @view.padSquareViews[0].onDrop id
 
 
 

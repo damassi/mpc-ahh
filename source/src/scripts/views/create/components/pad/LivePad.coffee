@@ -173,7 +173,7 @@ class LivePad extends View
 
    onDroppedChange: (model) ->
       console.log 'Model dropped'
-      console.log model
+      #console.log model
 
 
 
