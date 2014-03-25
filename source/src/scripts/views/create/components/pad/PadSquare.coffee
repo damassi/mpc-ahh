@@ -81,6 +81,13 @@ class PadSquare extends View
 
 
 
+   updateInstrumentClass: ->
+      instrument = @model.get 'currentInstrument'
+      @$el.addClass instrument.get 'id'
+
+
+
+
    renderIcon: ->
       if @$icon.hasClass @currentIcon
          @$icon.removeClass @currentIcon
@@ -114,7 +121,12 @@ class PadSquare extends View
 
    removeSound: ->
       @audioPlayback?.unload()
-      @model.set 'currentInstrument', null
+
+      id = @model.get('currentInstrument').get('id')
+      @$el.removeClass id
+
+      _.defer =>
+         @model.set 'currentInstrument', null
 
 
 
@@ -178,6 +190,7 @@ class PadSquare extends View
 
 
    onInstrumentChange: (model) =>
+      @updateInstrumentClass()
       @renderIcon()
       @setSound()
 

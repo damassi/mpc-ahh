@@ -171,9 +171,10 @@ class LivePad extends View
 
 
 
-   onDroppedChange: (model) ->
-      console.log 'Model dropped'
-      #console.log model
+   onDroppedChange: (model) =>
+      $instrument = @$el.find "##{model.get('id')}"
+      #console.log model.get('id'), $instrument.length
+
 
 
 

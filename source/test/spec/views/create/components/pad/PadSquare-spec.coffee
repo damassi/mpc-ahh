@@ -36,13 +36,16 @@ describe 'Pad Square', ->
       @view.$el.should.exist
 
 
+
    it 'Should render out the appropriate key-code trigger', =>
       @view.$el.find('.key-code').length.should.equal 1
+
 
 
    it 'Should trigger a play action on tap', =>
       @view.model.should.trigger('change:trigger').when =>
          @view.onClick()
+
 
 
    it 'Should accept a droppable visual element', =>
@@ -52,6 +55,7 @@ describe 'Pad Square', ->
          @view.onDrop id
 
 
+
    it 'Should trigger instrument change on drop', =>
        @view.model.should.trigger('change:currentInstrument').when =>
          id = @kitCollection.at(0).get('instruments').at(0).get('id')
@@ -59,8 +63,8 @@ describe 'Pad Square', ->
          @view.onDrop id
 
 
-   it 'Should render out a sound icon when dropped', =>
 
+   it 'Should render out a sound icon when dropped', =>
       id = @kitCollection.at(0).get('instruments').at(0).get('id')
       @view.onDrop id
 
@@ -69,13 +73,23 @@ describe 'Pad Square', ->
       @view.$el.find('.' + icon).length.should.equal 1
 
 
+
+   it 'Should update the td with the corresponding instrument id when dropped', =>
+      id = @kitCollection.at(0).get('instruments').at(0).get('id')
+      @view.onDrop id
+
+      @view.$el.hasClass("#{id}").should.be.true
+
+
+
+
    it 'Should release the droppable visual element on press-hold', =>
       @view.model.should.trigger('change:dragging').when =>
          @view.onHold()
 
 
-   it 'Should set the sound based upon the dropped visual element', =>
 
+   it 'Should set the sound based upon the dropped visual element', =>
       id = @kitCollection.at(0).get('instruments').at(0).get('id')
       @view.onDrop id
 
@@ -87,6 +101,7 @@ describe 'Pad Square', ->
       @view.onDrop id
 
       @view.model.should.trigger('change:currentInstrument').when =>
+         console.log @view.model.get('currentInstrument')
          @view.removeSound()
 
 
