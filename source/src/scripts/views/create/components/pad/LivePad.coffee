@@ -113,6 +113,7 @@ class LivePad extends View
                model: model
                collection: @kitCollection
 
+            @collection.add model
             @padSquareViews.push padSquare
             iterator++
 
