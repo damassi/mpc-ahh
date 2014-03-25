@@ -31,6 +31,10 @@ class KitCollection extends Backbone.Collection
 
 
 
+   # Parses the collection to assign paths to each individual sound
+   # based upon configuration data
+   # @param {Object} response
+
    parse: (response) ->
       assetPath = response.config.assetPath
       kits = response.kits
@@ -40,6 +44,26 @@ class KitCollection extends Backbone.Collection
          return kit
 
       return kits
+
+
+
+
+   # Iterates through the collection and returns a specific instrument
+   # by matching associated id
+   # @param {Number} id
+
+   findInstrumentModel: (id) ->
+      instrumentModel = null
+
+      @each (kitModel) =>
+         kitModel.get('instruments').each (model) =>
+            if id is model.get('id')
+               instrumentModel = model
+
+      if instrumentModel is null
+         return false
+
+      instrumentModel
 
 
 

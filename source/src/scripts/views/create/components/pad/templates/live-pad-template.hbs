@@ -2,7 +2,7 @@
 	{{#each padTable.rows}}
 		<tr>
 			{{#each tds}}
-				<td id="{{{id}}}">
+				<td class='container-pad' id="{{{id}}}">
 
 				</td>
 			{{/each}}
@@ -19,7 +19,7 @@
 			</h3>
 
 			{{#each instruments}}
-				<div class='instrument'>
+				<div class='instrument' id="{{{id}}}">
 					{{{label}}}
 				</div>
 			{{/each}}

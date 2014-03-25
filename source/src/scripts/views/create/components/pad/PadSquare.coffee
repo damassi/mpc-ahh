@@ -17,7 +17,7 @@ class PadSquare extends View
    # The tag to be rendered to the DOM
    # @type {String}
 
-   tagName: 'td'
+   tagName: 'div'
 
 
    # The classname for the Pad Square
@@ -168,7 +168,7 @@ class PadSquare extends View
 
 
    onDrop: (id) ->
-      instrumentModel = @findInstrumentModel id
+      instrumentModel = @collection.findInstrumentModel id
 
       # Set dropped status so that bi-directional
       # change can be triggered from the LivePad
@@ -211,22 +211,6 @@ class PadSquare extends View
 
    # PRIVATE METHODS
    # --------------------------------------------------------------------------------
-
-
-
-
-   findInstrumentModel: (id) ->
-      instrumentModel = null
-
-      @collection.each (kitModel) =>
-         kitModel.get('instruments').each (model) =>
-            if id is model.get('id')
-               instrumentModel = model
-
-      if instrumentModel is null
-         return false
-
-      instrumentModel
 
 
 

@@ -87,8 +87,78 @@ class LivePad extends View
 
       @$padContainer        = @$el.find '.container-pads'
       @$instrumentContainer = @$el.find '.container-instruments'
+      @$instrument          = @$el.find '.instrument'
+
+      @setDragAndDrop()
 
       @
+
+
+
+   # Add collection listeners to listen for instrument drops
+
+   addEventListeners: ->
+
+
+
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+
+
+   # Handler for drop change events.  Checks to see if the instrument
+   # className exists on the element and, if so, re-renders the
+   # instrument and pad tables
+   # @param {InstrumentModel} model
+
+   onDroppedChange: (model) =>
+      $instrument = @$el.find ".#{model.get('id')}"
+      console.log model.get('id'), $instrument.length
+
+
+
+
+   onInstrumentDrop: (dragged, dropped) =>
+      id = $(dragged).attr 'id'
+      model = @kitCollection.findInstrumentModel id
+      console.log 'DROPPED!', model
+
+
+
+
+   # PRIVATE METHODS
+   # --------------------------------------------------------------------------------
+
+
+
+   setDragAndDrop: ->
+      self = @
+
+      $droppables = @$el.find '.container-pad'
+
+      @draggable = Draggable.create @$instrument,
+         bounds: window
+
+         onDrag: (event) ->
+            i = $droppables.length
+
+            while(--i > -1)
+               if @hitTest($droppables[i], '50%')
+                  $($droppables[i]).addClass 'highlight'
+               else
+                  $($droppables[i]).removeClass 'highlight'
+
+         onDragEnd: (event) ->
+            i = $droppables.length
+
+            while(--i > -1)
+               if @hitTest($droppables[i], '50%')
+                  self.onInstrumentDrop(this.target, $droppables[i])
+
+
+
 
 
 
@@ -161,23 +231,6 @@ class LivePad extends View
          }
 
       instrumentTable
-
-
-
-   # Add collection listeners to listen for instrument drops
-
-   addEventListeners: ->
-
-
-
-   # Handler for drop change events.  Checks to see if the instrument
-   # className exists on the element and, if so, re-renders the
-   # instrument and pad tables
-   # @param {InstrumentModel} model
-
-   onDroppedChange: (model) =>
-      $instrument = @$el.find ".#{model.get('id')}"
-      console.log model.get('id'), $instrument.length
 
 
 
