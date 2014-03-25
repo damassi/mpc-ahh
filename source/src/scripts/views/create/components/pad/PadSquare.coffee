@@ -75,15 +75,16 @@ class PadSquare extends View
 
 
    remove: ->
-      @audioPlayback?.unload()
+      @removeSoundAndClearPad()
       super()
 
 
 
 
    addEventListeners: ->
-      @listenTo @model, AppEvent.CHANGE_TRIGGER, @onTriggerChange
-      @listenTo @model, AppEvent.CHANGE_DRAGGING, @onDraggingChange
+      @listenTo @model, AppEvent.CHANGE_TRIGGER,    @onTriggerChange
+      @listenTo @model, AppEvent.CHANGE_DRAGGING,   @onDraggingChange
+      @listenTo @model, AppEvent.CHANGE_DROPPED,    @onDroppedChange
       @listenTo @model, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
@@ -128,16 +129,33 @@ class PadSquare extends View
 
 
 
-   removeSound: ->
+   removeSoundAndClearPad: ->
+      if @model.get('currentInstrument') is null
+         return
+
       @audioPlayback?.unload()
+      @audioPlayback = null
 
-      id   = @model.get('currentInstrument').get 'id'
-      icon = @model.get('currentInstrument').get 'icon'
+      currentInstrument = @model.get 'currentInstrument'
 
+      id   = currentInstrument.get 'id'
+      icon = currentInstrument.get 'icon'
+
+      @$el.parent().removeAttr 'data-instrument'
+      @$el.parent().removeClass id
       @$el.removeClass id
       @$icon.removeClass icon
+      @$icon.text ''
 
       _.defer =>
+         @model.set
+            'dragging': false
+            'dropped': false
+
+         currentInstrument.set
+            'dropped': false
+            'droppedEvent': null
+
          @model.set 'currentInstrument', null
 
 
@@ -203,11 +221,26 @@ class PadSquare extends View
 
          instrumentId = @$el.parent().attr 'data-instrument'
 
+         currentInstrument    = @model.get('currentInstrument')
+         originalDroppedEvent = currentInstrument.get 'droppedEvent'
+
+         @model.set 'dropped', false
+         currentInstrument.set 'dropped', false
+
          # Dispatch drag start event back to LivePad
          @trigger AppEvent.CHANGE_DRAGGING, {
-            'instrumentId':  instrumentId
-            '$padSquare':    @$el.parent()
+            'instrumentId': instrumentId
+            '$padSquare': @$el.parent()
+            'originalDroppedEvent': originalDroppedEvent
          }
+
+
+
+   onDroppedChange: (model) =>
+      dropped = model.changed.dropped
+
+      unless dropped
+         @removeSoundAndClearPad()
 
 
 

@@ -89,7 +89,7 @@ describe 'Pad Square', ->
       @view.model.once 'change:currentInstrument', =>
          done()
 
-      @view.removeSound()
+      @view.removeSoundAndClearPad()
 
 
    it 'Should clear the icon when the droppable element is disposed of', =>
@@ -99,7 +99,7 @@ describe 'Pad Square', ->
       icon = @kitCollection.at(0).get('instruments').at(0).get('icon')
       @view.$el.find('.' + icon).length.should.equal 1
 
-      @view.removeSound()
+      @view.removeSoundAndClearPad()
 
       @view.$el.find('.' + icon).length.should.equal 0
 

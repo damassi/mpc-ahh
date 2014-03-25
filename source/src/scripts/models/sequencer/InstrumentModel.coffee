@@ -25,6 +25,13 @@ class InstrumentModel extends Backbone.Model
       'dropped':  false
 
 
+      # Cache of the original mouse drag event in order to update the
+      # drag position when dislodging in instrument from the PadSquare
+      # @type {MouseEvent}
+
+      'droppedEvent': null
+
+
       # Flag to check if audio focus is set on a particular instrument.
       # If so, it mutes all other tracks.
       # @type {Boolean}

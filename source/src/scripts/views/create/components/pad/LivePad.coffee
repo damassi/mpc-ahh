@@ -67,6 +67,12 @@ class LivePad extends View
    padSquareViews: null
 
 
+   # Mouse tracker which constantly updates mouse / touch position via .x and .y
+   # @type {Object}
+
+   mousePosition: x: 0, y: 0
+
+
 
    # Render the view and and parse the collection into a displayable
    # instrument / pad table
@@ -88,6 +94,7 @@ class LivePad extends View
          @$el.find("##{id}").html padSquare.render().el
 
       @setDragAndDrop()
+      @addEventListeners()
 
       @
 
@@ -97,6 +104,7 @@ class LivePad extends View
       @$padsContainer.html padsTemplate {
          padTable: @returnPadTableData()
       }
+
 
 
 
@@ -110,6 +118,13 @@ class LivePad extends View
    # Add collection listeners to listen for instrument drops
 
    addEventListeners: ->
+      $(document).on 'mousemove', @onMouseMove
+
+
+   removeEventListeners: ->
+      $(document).off 'mousemove', @onMouseMove
+      @stopListening()
+
 
 
 
@@ -117,6 +132,13 @@ class LivePad extends View
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
 
+
+   onMouseMove: (event) =>
+      @mousePosition =
+         x: event.pageX
+         y: event.pageY
+
+      #console.log @mousePosition
 
 
 
@@ -138,7 +160,16 @@ class LivePad extends View
 
 
 
-   onInstrumentDrop: (dragged, dropped) =>
+   # Handler for drop events.  Passes in the item dragged, the item it was
+   # dropped upon, and the original event to store in memory for when
+   # the user wants to "detach" the dropped item and move it back into the
+   # instrument queue
+   #
+   # @param {HTMLDomElement} dragged
+   # @param {HTMLDomElement} dropped
+   # @param {MouseEvent} event
+
+   onInstrumentDrop: (dragged, dropped, event) =>
       $dragged = $(dragged)
       $dropped = $(dropped)
 
@@ -151,10 +182,12 @@ class LivePad extends View
 
       instrumentModel.set
          'dropped': true
+         'droppedEvent': event
 
       _.defer =>
          @renderInstruments()
          @setDragAndDrop()
+
 
 
 
@@ -165,9 +198,36 @@ class LivePad extends View
 
 
    onPadSquareDraggingStart: (params) =>
-      {$padSquare} = params
+      {instrumentId, $padSquare, originalDroppedEvent} = params
 
-      console.log $padSquare
+      $droppedInstrument = $(document.getElementById(instrumentId))
+
+      # Return the draggable instance associated with the pad square
+      draggable = _.find @draggable, (draggableElement) =>
+         if $(draggableElement._eventTarget).attr('id') is $droppedInstrument.attr('id')
+            return draggableElement
+
+      offset = $droppedInstrument.offset()
+
+      # Silently update the position of the instrument
+      $droppedInstrument.css 'position', 'absolute'
+
+      # TODO: If Bounds are set on the original draggable then there's a weird
+      # boundry offset that needs to be solved.  Reset in Draggable constructor
+
+      TweenMax.set $droppedInstrument,
+         left: @mousePosition.x - ($droppedInstrument.width()  * .5)
+         top:  @mousePosition.y - ($droppedInstrument.height() * .5)
+
+      # Renable dragging
+      draggable.startDrag originalDroppedEvent
+      draggable.update(true)
+
+      # And show it
+      $droppedInstrument.show()
+
+
+
 
 
 
@@ -184,7 +244,7 @@ class LivePad extends View
       $droppables  = @$el.find '.container-pad'
 
       @draggable = Draggable.create @$instrument,
-         bounds: window
+         #bounds: window
 
 
          # Handler for drag events.  Iterates over all droppable square areas
@@ -223,7 +283,7 @@ class LivePad extends View
 
                   # Prevent droppables on squares that already have instruments
                   if instrument is null or instrument is undefined
-                     self.onInstrumentDrop( this.target, $droppables[i] )
+                     self.onInstrumentDrop( this.target, $droppables[i], event )
 
                   else
                      self.onPreventInstrumentDrop( this.target, $droppables[i] )
