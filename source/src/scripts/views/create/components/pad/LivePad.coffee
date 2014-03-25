@@ -133,12 +133,14 @@ class LivePad extends View
    # --------------------------------------------------------------------------------
 
 
+
+   # TODO: Update mouse move to support touch events
+   # @param {MouseEvent} event
+
    onMouseMove: (event) =>
       @mousePosition =
          x: event.pageX
          y: event.pageY
-
-      #console.log @mousePosition
 
 
 
@@ -170,15 +172,10 @@ class LivePad extends View
    # @param {MouseEvent} event
 
    onInstrumentDrop: (dragged, dropped, event) =>
-      $dragged = $(dragged)
-      $dropped = $(dropped)
+      {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
 
-      id = $dragged.attr 'id'
       $dropped.addClass id
-
       $dropped.attr 'data-instrument', "#{id}"
-
-      instrumentModel = @kitCollection.findInstrumentModel id
 
       instrumentModel.set
          'dropped': true
@@ -192,7 +189,17 @@ class LivePad extends View
 
 
    onPreventInstrumentDrop: (dragged, dropped) =>
-      console.log 'oops!'
+      {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
+
+      instrumentModel.set
+         'dropped': false
+         'droppedEvent': null
+
+      console.log 'preventing'
+
+      _.defer =>
+         @renderInstruments()
+         @setDragAndDrop()
 
 
 
@@ -276,6 +283,8 @@ class LivePad extends View
 
             i = $droppables.length
 
+            droppedProperly = false
+
             while( --i > -1 )
 
                if @hitTest($droppables[i], '50%')
@@ -283,13 +292,32 @@ class LivePad extends View
 
                   # Prevent droppables on squares that already have instruments
                   if instrument is null or instrument is undefined
+                     droppedProperly = true
                      self.onInstrumentDrop( this.target, $droppables[i], event )
 
+
+                  # Send instrument back
                   else
                      self.onPreventInstrumentDrop( this.target, $droppables[i] )
 
+               # Send instrument back
+               if droppedProperly is false
+                  self.onPreventInstrumentDrop( this.target, $droppables[i] )
 
 
+
+   parseDraggedAndDropped: (dragged, dropped) =>
+      $dragged = $(dragged)
+      $dropped = $(dropped)
+      id = $dragged.attr 'id'
+      instrumentModel = @kitCollection.findInstrumentModel id
+
+      return {
+         $dragged: $dragged
+         $dropped: $dropped
+         id: id
+         instrumentModel: instrumentModel
+      }
 
 
 
