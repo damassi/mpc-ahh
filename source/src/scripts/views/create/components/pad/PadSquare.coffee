@@ -199,10 +199,15 @@ class PadSquare extends View
    onDraggingChange: (model) =>
       dragging = model.changed.dragging
 
-      console.log 'Dragging: ', dragging
+      if dragging is true
 
-      if dragging
-         console.log @$el.parent().attr 'data-instrument'
+         instrumentId = @$el.parent().attr 'data-instrument'
+
+         # Dispatch drag start event back to LivePad
+         @trigger AppEvent.CHANGE_DRAGGING, {
+            'instrumentId':  instrumentId
+            '$padSquare':    @$el.parent()
+         }
 
 
 

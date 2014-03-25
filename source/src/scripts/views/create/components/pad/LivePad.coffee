@@ -158,6 +158,19 @@ class LivePad extends View
 
 
 
+   onPreventInstrumentDrop: (dragged, dropped) =>
+      console.log 'oops!'
+
+
+
+
+   onPadSquareDraggingStart: (params) =>
+      {$padSquare} = params
+
+      console.log $padSquare
+
+
+
 
    # PRIVATE METHODS
    # --------------------------------------------------------------------------------
@@ -181,7 +194,7 @@ class LivePad extends View
 
             i = $droppables.length
 
-            while(--i > -1)
+            while( --i > -1 )
 
                if @hitTest($droppables[i], '50%')
 
@@ -196,17 +209,24 @@ class LivePad extends View
                   $($droppables[i]).removeClass 'highlight'
 
 
+         # Check to see if instrument is droppable; otherwise
+         # trigger a "cant drop" animation
+
          onDragEnd: (event) ->
 
             i = $droppables.length
 
-            while(--i > -1)
+            while( --i > -1 )
+
                if @hitTest($droppables[i], '50%')
                   instrument = $($droppables[i]).attr('data-instrument')
 
                   # Prevent droppables on squares that already have instruments
                   if instrument is null or instrument is undefined
-                     self.onInstrumentDrop(this.target, $droppables[i])
+                     self.onInstrumentDrop( this.target, $droppables[i] )
+
+                  else
+                     self.onPreventInstrumentDrop( this.target, $droppables[i] )
 
 
 
@@ -246,13 +266,19 @@ class LivePad extends View
             @padSquareViews.push padSquare
             iterator++
 
+            # Begin listening to drag / release / remove events from
+            # each pad square and re-render pad squares
+
+            @listenTo padSquare, AppEvent.CHANGE_DRAGGING, @onPadSquareDraggingStart
+
+
             tds.push {
-               id: padSquare.model.get('id')
+               'id': padSquare.model.get('id')
             }
 
          rows.push {
-            id: "pad-row-#{index}"
-            tds: tds
+            'id': "pad-row-#{index}"
+            'tds': tds
          }
 
       padTable.rows = rows
@@ -270,17 +296,17 @@ class LivePad extends View
       instrumentTable = @kitCollection.map (kit) =>
          instrumentCollection = kit.get('instruments')
 
-         # Begin listening to drop events
+         # Begin listening to drop events for each instrument
+         # in the Instrument collection
+
          @listenTo instrumentCollection, AppEvent.CHANGE_DROPPED, @onDroppedChange
 
          instruments = instrumentCollection.map (instrument) =>
             instrument.toJSON()
 
-         #instruments = _.where instruments, { dropped: false }
-
          return {
-            label: kit.get 'label'
-            instruments: instruments
+            'label':       kit.get 'label'
+            'instruments': instruments
          }
 
       instrumentTable

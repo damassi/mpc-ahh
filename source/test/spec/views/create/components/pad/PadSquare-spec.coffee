@@ -74,14 +74,6 @@ describe 'Pad Square', ->
 
 
 
-   it 'Should update the td with the corresponding instrument id when dropped', =>
-      id = @kitCollection.at(0).get('instruments').at(0).get('id')
-      @view.onDrop id
-
-      @view.$el.hasClass("#{id}").should.be.true
-
-
-
 
    it 'Should set the sound based upon the dropped visual element', =>
       id = @kitCollection.at(0).get('instruments').at(0).get('id')
