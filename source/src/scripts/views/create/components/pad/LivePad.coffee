@@ -5,10 +5,11 @@
  * @date   3.24.14
 ###
 
-PadSquareModel = require '../../../../models/pad/PadSquareModel.coffee'
-View           = require '../../../../supers/View.coffee'
-PadSquare      = require './PadSquare.coffee'
-template       = require './templates/live-pad-template.hbs'
+PadSquareCollection = require '../../../../models/pad/PadSquareCollection.coffee'
+PadSquareModel      = require '../../../../models/pad/PadSquareModel.coffee'
+View                = require '../../../../supers/View.coffee'
+PadSquare           = require './PadSquare.coffee'
+template            = require './templates/live-pad-template.hbs'
 
 
 class LivePad extends View
@@ -36,6 +37,12 @@ class LivePad extends View
    # @type {AppModel}
 
    appModel: null
+
+
+   # Collection of individual pad square models
+   # @type {PadSquareCollection}
+
+   collection: null
 
 
    # An array of individual PadSquareViews
@@ -77,32 +84,13 @@ class LivePad extends View
 
 
 
-
-   # Render out the instrument table and push it into
-   # and array of individual instruments
-   # @return {Object}
-
-   returnInstrumentTableData: ->
-      instrumentTable = @kitCollection.map (kit) =>
-         instruments = kit.get('instruments').map (instrument) =>
-            instrument.toJSON()
-
-         return {
-            label: kit.get 'label'
-            instruments: instruments
-         }
-
-      instrumentTable
-
-
-
-
    # Render out the table for the live pad grid and push
    # it into an array of table rows and tds
    # @return {Object}
 
    returnPadTableData: ->
 
+      @collection = new PadSquareCollection()
       @padSquareViews = []
       padTable = {}
       rows = []
@@ -140,6 +128,26 @@ class LivePad extends View
       padTable.rows = rows
 
       padTable
+
+
+
+
+   # Render out the instrument table and push it into
+   # and array of individual instruments
+   # @return {Object}
+
+   returnInstrumentTableData: ->
+      instrumentTable = @kitCollection.map (kit) =>
+         instruments = kit.get('instruments').map (instrument) =>
+            instrument.toJSON()
+
+         return {
+            label: kit.get 'label'
+            instruments: instruments
+         }
+
+      instrumentTable
+
 
 
 

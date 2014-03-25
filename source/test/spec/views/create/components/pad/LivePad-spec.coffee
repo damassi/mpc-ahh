@@ -24,6 +24,7 @@ describe 'Live Pad', ->
    beforeEach =>
       @view = new LivePad
          kitCollection: @kitCollection
+         collection: new PadSquareCollection()
          appModel: @appModel
 
       @view.render()
@@ -48,7 +49,7 @@ describe 'Live Pad', ->
          index = index + 1
          len = kit.get('instruments').length * index
 
-      @view.$el.find('.instrument').length.should.equal len
+      @view.$el.find('.instrument').length.should.equal len + 1
 
 
    it 'Should listen to drops from the kits to the pads', =>
