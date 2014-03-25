@@ -20,4 +20,7 @@ AppEvent =
    CHANGE_TRIGGER:    'change:trigger'
    CHANGE_VELOCITY:   'change:velocity'
 
+   IMPORT_TRACK:      'onImportTrack'
+   EXPORT_TRACK:      'onExportTrack'
+
 module.exports = AppEvent

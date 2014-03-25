@@ -25,14 +25,4 @@ class InstrumentCollection extends Collection
          instrument.get('patternSquares')
 
 
-
-   export: ->
-      clone = @toJSON()
-      clone = _.map clone, (instrument) ->
-         instrument.patternSquares = instrument.patternSquares.export()
-         instrument
-      clone
-
-
-
 module.exports = InstrumentCollection

@@ -6,6 +6,7 @@
 ###
 
 PatternTrack = require './PatternTrack.coffee'
+PubSub       = require '../../../../utils/PubSub'
 AppEvent     = require '../../../../events/AppEvent.coffee'
 View         = require '../../../../supers/View.coffee'
 helpers      = require '../../../../helpers/handlebars-helpers'
@@ -108,6 +109,17 @@ class Sequencer extends View
       @listenTo @appModel,   AppEvent.CHANGE_PLAYING, @onPlayingChange
       @listenTo @appModel,   AppEvent.CHANGE_KIT,     @onKitChange
       @listenTo @collection, AppEvent.CHANGE_FOCUS,   @onFocusChange
+
+      PubSub.on AppEvent.IMPORT_TRACK, @onImportTrack
+      PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
+
+
+
+   removeEventListeners: ->
+      super()
+
+      PubSub.off AppEvent.IMPORT_TRACK
+      PubSub.off AppEvent.EXPORT_TRACK
 
 
 
@@ -309,6 +321,33 @@ class Sequencer extends View
                oldPatternSquare = oldCollection.at index
                patternSquare.set oldPatternSquare.toJSON()
 
+
+
+
+   onImportTrack: (params) =>
+      {callback, patternSquareGroups, patternSquares} = params
+
+      @renderTracks()
+
+      #iterator = 0
+
+      _.each @patternTrackViews, (trackView, iterator) ->
+         trackView.collection.each (patternModel, index) ->
+
+            patternModel.set patternSquareGroups[iterator][index]
+            console.log patternModel.toJSON()
+
+      callback()
+
+
+
+
+   onExportTrack: ->
+      {callback} = params
+
+      patternSquares = []
+
+      console.log 'firing export!!'
 
 
 

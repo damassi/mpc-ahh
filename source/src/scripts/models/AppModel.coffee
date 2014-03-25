@@ -26,4 +26,16 @@ class AppModel extends Model
       'bpm':         AppConfig.BPM
 
 
+   export: ->
+      json = @toJSON()
+
+      json.kitModel = json.kitModel.toJSON()
+      json.kitModel.instruments = json.kitModel.instruments.toJSON()
+      json.kitModel.instruments = _.map json.kitModel.instruments, (instrument) ->
+         instrument.patternSquares = instrument.patternSquares.toJSON()
+
+         return instrument
+      return json
+
+
 module.exports = AppModel

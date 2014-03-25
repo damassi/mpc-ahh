@@ -32,17 +32,6 @@ class KitCollection extends Collection
 
 
 
-   export: ->
-      clone = @toJSON()
-
-      clone = _.map clone, (kit) ->
-         kit.instruments = kit.instruments.export()
-         kit
-
-      clone
-
-
-
    # Parses the collection to assign paths to each individual sound
    # based upon configuration data
    # @param {Object} response

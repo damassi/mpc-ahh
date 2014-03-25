@@ -5,8 +5,9 @@
  * @date   3.17.14
 ###
 
-
+PubSub                  = require '../../utils/PubSub'
 View                    = require '../../supers/View.coffee'
+AppEvent                = require '../../events/AppEvent.coffee'
 KitSelector             = require '../../views/create/components/KitSelector.coffee'
 InstrumentSelectorPanel = require '../../views/create/components/instruments/InstrumentSelectorPanel.coffee'
 Sequencer               = require '../../views/create/components/sequencer/Sequencer.coffee'
@@ -21,7 +22,8 @@ class CreateView extends View
 
 
    events:
-      'touchend .btn-share': 'onShareBtnClick'
+      'touchend .btn-share':  'onShareBtnClick'
+      'touchend .btn-export': 'onExportBtnClick'
 
 
    initialize: (options) ->
@@ -84,8 +86,31 @@ class CreateView extends View
 
 
 
-   onShareBtnClick: (event) ->
-      console.log @kitCollection.toJSON()
+   onExportBtnClick: (event) =>
+      @patternSquareGroups = []
+      @patternSquares = []
+
+      instruments = @appModel.export().kitModel.instruments
+
+      instruments.forEach (instrument) =>
+         instrument.patternSquares.forEach (patternSquare) =>
+            delete patternSquare.instrument
+            @patternSquares.push patternSquare
+
+      while (@patternSquares.length > 0)
+         @patternSquareGroups.push @patternSquares.splice(0, 8)
+
+
+
+
+   onShareBtnClick: (event) =>
+      PubSub.trigger AppEvent.IMPORT_TRACK,
+         patternSquares: @patternSquares
+         patternSquareGroups: @patternSquareGroups
+
+         callback: (response) ->
+            console.log 'done!'
+
 
 
 
