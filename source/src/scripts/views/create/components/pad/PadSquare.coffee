@@ -87,7 +87,6 @@ class PadSquare extends View
 
       instrument = @model.get 'currentInstrument'
 
-
       unless instrument is null
          @currentIcon = instrument.get 'icon'
          @$icon.addClass @currentIcon
@@ -99,7 +98,6 @@ class PadSquare extends View
       @audioPlayback?.unload()
 
       instrument = @model.get 'currentInstrument'
-
 
       unless instrument is null
          audioSrc = instrument.get 'src'

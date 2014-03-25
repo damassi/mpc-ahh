@@ -70,6 +70,14 @@ class PatternTrack extends View
 
 
 
+   remove: ->
+      _.each @patternSquareViews, (square) =>
+         square.remove()
+
+      super()
+
+
+
 
    # Add listeners to the view which listen for view changes
    # as well as changes to the collection, which should update

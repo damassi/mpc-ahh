@@ -91,8 +91,12 @@ class Sequencer extends View
    # the ticker interval
 
    remove: ->
-      super()
+      _.each @patternTrackViews, (track) =>
+         track.remove()
+
       @pause()
+
+      super()
 
 
 
@@ -100,11 +104,10 @@ class Sequencer extends View
    # changes.  Updates all of the views accordingly
 
    addEventListeners: ->
-      @listenTo @appModel, AppEvent.CHANGE_BPM, @onBPMChange
-      @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayingChange
-      @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
-
-      @listenTo @collection, AppEvent.CHANGE_FOCUS, @onFocusChange
+      @listenTo @appModel,   AppEvent.CHANGE_BPM,     @onBPMChange
+      @listenTo @appModel,   AppEvent.CHANGE_PLAYING, @onPlayingChange
+      @listenTo @appModel,   AppEvent.CHANGE_KIT,     @onKitChange
+      @listenTo @collection, AppEvent.CHANGE_FOCUS,   @onFocusChange
 
 
 

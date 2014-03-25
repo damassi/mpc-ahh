@@ -45,6 +45,8 @@ class LivePad extends View
 
 
    # Key command keymap for live kit playback
+   # @type {Array}
+
    keymap: ['1','2','3','4','q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v']
 
 
@@ -56,8 +58,54 @@ class LivePad extends View
 
    render: (options) ->
 
+      templateData =
+         padTable: @returnPadTableData()
+         instrumentTable: @returnInstrumentTableData()
+
+      console.log templateData
+
+      # Render the table to the DOM
+      super templateData
+
+      # Render squares to the DOM
+      _.each @padSquareViews, (padSquare) =>
+         id = padSquare.model.get 'id'
+         @$el.find("##{id}").html padSquare.render().el
+
+
+      @$padContainer        = @$el.find '.container-pads'
+      @$instrumentContainer = @$el.find '.container-instruments'
+
+      @
+
+
+
+   # Render out the instrument table and push it into
+   # and array of individual instruments
+   # @return {Object}
+
+   returnInstrumentTableData: ->
+      instrumentTable = @kitCollection.map (kit) =>
+         instruments = kit.get('instruments').map (instrument) =>
+            instrument.toJSON()
+
+         return {
+            label: kit.get 'label'
+            instruments: instruments
+         }
+
+      instrumentTable
+
+
+
+   # Render out the table for the live pad grid and push
+   # it into an array of table rows and tds
+   # @return {Object}
+
+   returnPadTableData: ->
+
       @padSquareViews = []
-      tableData = {}
+      padTable = {}
       rows = []
       iterator = 0
 
@@ -90,21 +138,9 @@ class LivePad extends View
             tds: tds
          }
 
-      tableData.rows = rows
+      padTable.rows = rows
 
-      # Render the table to the DOM
-      super tableData
-
-      # Render squares to the DOM
-      _.each @padSquareViews, (padSquare) =>
-         id = padSquare.model.get 'id'
-         @$el.find("##{id}").html padSquare.render().el
-
-
-      @$padContainer        = @$el.find '.container-pads'
-      @$instrumentContainer = @$el.find '.container-instruments'
-
-      @
+      padTable
 
 
 

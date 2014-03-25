@@ -96,7 +96,7 @@ class AppController extends View
       previousView = model._previousAttributes.view
       currentView  = model.changed.view
 
-      if previousView then previousView.hide
+      previousView?.hide
          remove: true
 
 
