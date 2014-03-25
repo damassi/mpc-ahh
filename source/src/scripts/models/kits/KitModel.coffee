@@ -5,10 +5,11 @@
  * @date   3.18.14
 ###
 
+Model                = require '../../supers/Model.coffee'
 InstrumentCollection = require '../sequencer/InstrumentCollection.coffee'
 
 
-class KitModel extends Backbone.Model
+class KitModel extends Model
 
 
    defaults:

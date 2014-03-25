@@ -6,9 +6,10 @@
 ###
 
 InstrumentModel = require '../sequencer/InstrumentModel.coffee'
+Collection      = require '../../supers/Collection.coffee'
 
 
-class PadSquareCollection extends Backbone.Collection
+class PadSquareCollection extends Collection
 
    model: InstrumentModel
 

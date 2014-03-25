@@ -5,7 +5,10 @@
  * @date   3.24.14
 ###
 
-class PadSquareModel extends Backbone.Model
+Model = require '../../supers/Model.coffee'
+
+
+class PadSquareModel extends Model
 
 
    defaults:

@@ -7,9 +7,10 @@
 
 AppEvent  = require '../../events/AppEvent.coffee'
 AppConfig = require '../../config/AppConfig.coffee'
+Model     = require '../../supers/Model.coffee'
 
 
-class PatternSquareModel extends Backbone.Model
+class PatternSquareModel extends Model
 
 
    defaults:

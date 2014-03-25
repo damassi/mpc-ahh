@@ -6,8 +6,7 @@
 ###
 
 
-View = Backbone.View.extend
-
+class View extends Backbone.View
 
 
    # Initializes the view

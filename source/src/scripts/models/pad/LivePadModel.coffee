@@ -5,7 +5,10 @@
  * @date   3.24.14
 ###
 
-class LivePadModel extends Backbone.Model
+Model = require '../../supers/Model.coffee'
+
+
+class LivePadModel extends Model
 
 
 module.exports = LivePadModel

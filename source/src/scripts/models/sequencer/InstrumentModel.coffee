@@ -6,9 +6,10 @@
 ###
 
 AppConfig = require '../../config/AppConfig.coffee'
+Model     = require '../../supers/Model.coffee'
 
 
-class InstrumentModel extends Backbone.Model
+class InstrumentModel extends Model
 
 
    defaults:

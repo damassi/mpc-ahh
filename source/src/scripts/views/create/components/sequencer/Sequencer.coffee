@@ -273,6 +273,8 @@ class Sequencer extends View
       @collection = model.changed.kitModel.get('instruments')
       @renderTracks()
 
+      console.log @collection.toJSON()
+
       # Export old pattern squares so the users pattern isn't blown away
       # when kit changes occur
 

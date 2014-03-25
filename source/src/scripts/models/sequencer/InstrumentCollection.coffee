@@ -6,9 +6,10 @@
 ###
 
 InstrumentModel = require './InstrumentModel.coffee'
+Collection      = require '../../supers/Collection.coffee'
 
 
-class InstrumentCollection extends Backbone.Collection
+class InstrumentCollection extends Collection
 
 
    # @type {InstrumentModel}
@@ -22,6 +23,15 @@ class InstrumentCollection extends Backbone.Collection
    exportPatternSquares: ->
       return @map (instrument) =>
          instrument.get('patternSquares')
+
+
+
+   export: ->
+      clone = @toJSON()
+      clone = _.map clone, (instrument) ->
+         instrument.patternSquares = instrument.patternSquares.export()
+         instrument
+      clone
 
 
 

@@ -7,12 +7,17 @@
 
 AppConfig          = require '../../config/AppConfig.coffee'
 PatternSquareModel = require './PatternSquareModel.coffee'
-InstrumentModel = require '../sequencer/InstrumentModel.coffee'
+Collection         = require '../../supers/Collection.coffee'
+InstrumentModel    = require '../sequencer/InstrumentModel.coffee'
 
 
-class PatternSquareCollection extends Backbone.Collection
+class PatternSquareCollection extends Collection
 
    model: InstrumentModel
+
+   export: ->
+      clone = @toJSON()
+      clone
 
 
 module.exports = PatternSquareCollection

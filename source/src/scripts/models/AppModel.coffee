@@ -1,14 +1,15 @@
 ###*
-  Primary application model which coordinates state
-
-  @author Christopher Pappas <chris@wintr.us>
-  @date   3.17.14
+ * Primary application model which coordinates state
+ *
+ * @author Christopher Pappas <chris@wintr.us>
+ * @date   3.17.14
 ###
 
 AppConfig = require '../config/AppConfig.coffee'
+Model     = require '../supers/Model.coffee'
 
 
-AppRouter = Backbone.Model.extend
+class AppModel extends Model
 
 
    defaults:
@@ -18,8 +19,11 @@ AppRouter = Backbone.Model.extend
 
       'kitModel':    null
 
+      # For exporting share functionality
+      'songModel':   null
+
       # Settings
       'bpm':         AppConfig.BPM
 
 
-module.exports = AppRouter
+module.exports = AppModel

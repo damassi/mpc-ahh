@@ -20,6 +20,10 @@ class CreateView extends View
    template: template
 
 
+   events:
+      'touchend .btn-share': 'onShareBtnClick'
+
+
    initialize: (options) ->
       super options
 
@@ -77,6 +81,11 @@ class CreateView extends View
          appModel: @appModel
 
       @$bpm.html @bpm.render().el
+
+
+
+   onShareBtnClick: (event) ->
+      console.log @kitCollection.toJSON()
 
 
 

@@ -5,11 +5,12 @@
  * @date   3.18.14
 ###
 
-AppConfig = require '../../config/AppConfig.coffee'
-KitModel  = require './KitModel.coffee'
+Collection = require '../../supers/Collection.coffee'
+AppConfig  = require '../../config/AppConfig.coffee'
+KitModel   = require './KitModel.coffee'
 
 
-class KitCollection extends Backbone.Collection
+class KitCollection extends Collection
 
 
    # Url to data for fetch
@@ -28,6 +29,17 @@ class KitCollection extends Backbone.Collection
    # @type {Number}
 
    kitId: 0
+
+
+
+   export: ->
+      clone = @toJSON()
+
+      clone = _.map clone, (kit) ->
+         kit.instruments = kit.instruments.export()
+         kit
+
+      clone
 
 
 
