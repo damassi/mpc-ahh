@@ -190,8 +190,14 @@ button {
 }
 
 .container-live-pad .pad-square {
+  position: relative;
   width: 100px;
   height: 100px;
+}
+.container-live-pad .pad-square .instrument {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .container-live-pad .highlight {
   border: 2px solid red;

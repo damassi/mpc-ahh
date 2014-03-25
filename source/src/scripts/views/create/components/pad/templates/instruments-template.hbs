@@ -5,7 +5,8 @@
 		</h3>
 
 		{{#each instruments}}
-			<div class='instrument' id="{{{id}}}">
+
+			<div class='instrument {{#if dropped}} hidden{{/if}}' id="{{{id}}}">
 				{{{label}}}
 			</div>
 		{{/each}}

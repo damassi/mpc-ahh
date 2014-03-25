@@ -25,6 +25,9 @@ class InstrumentModel extends Backbone.Model
       'dropped':  false
 
 
+      '$draggedInstrument': null
+
+
       # Flag to check if audio focus is set on a particular instrument.
       # If so, it mutes all other tracks.
       # @type {Boolean}

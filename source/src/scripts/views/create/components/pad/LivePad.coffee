@@ -126,14 +126,16 @@ class LivePad extends View
    # @param {InstrumentModel} instrumentModel
 
    onDroppedChange: (instrumentModel) =>
-      instrumentId = instrumentModel.get('id')
-      $padSquare   = @$el.find ".#{instrumentId}"
-      padSquareId  = $padSquare.attr 'id'
-      padSquareModel = @padSquareCollection.findWhere { id: padSquareId }
+      instrumentId       = instrumentModel.get('id')
+      $padSquare         = @$el.find ".#{instrumentId}"
+      padSquareId        = $padSquare.attr 'id'
+      padSquareModel     = @padSquareCollection.findWhere { id: padSquareId }
 
       # Checks against tests and draggable, which is less testable
       unless padSquareModel is undefined
+         $draggedInstrument = instrumentModel.get('$draggedInstrument').clone()
          padSquareModel.set 'currentInstrument', instrumentModel
+         #$padSquare.append $draggedInstrument
 
 
 
@@ -146,7 +148,10 @@ class LivePad extends View
       $dropped.addClass id
 
       instrumentModel = @kitCollection.findInstrumentModel id
-      instrumentModel.set 'dropped', true
+
+      instrumentModel.set
+         'dropped': true
+         '$draggedInstrument': $dragged
 
       _.defer =>
          @renderInstruments()
@@ -253,7 +258,7 @@ class LivePad extends View
          instruments = instrumentCollection.map (instrument) =>
             instrument.toJSON()
 
-         instruments = _.where instruments, { dropped: false }
+         #instruments = _.where instruments, { dropped: false }
 
          return {
             label: kit.get 'label'
