@@ -122,8 +122,11 @@ class PadSquare extends View
    removeSound: ->
       @audioPlayback?.unload()
 
-      id = @model.get('currentInstrument').get('id')
+      id   = @model.get('currentInstrument').get 'id'
+      icon = @model.get('currentInstrument').get 'icon'
+
       @$el.removeClass id
+      @$icon.removeClass icon
 
       _.defer =>
          @model.set 'currentInstrument', null
@@ -190,9 +193,12 @@ class PadSquare extends View
 
 
    onInstrumentChange: (model) =>
-      @updateInstrumentClass()
-      @renderIcon()
-      @setSound()
+      instrument = model.changed.currentInstrument
+
+      unless instrument is null or instrument is undefined
+         @updateInstrumentClass()
+         @renderIcon()
+         @setSound()
 
 
 

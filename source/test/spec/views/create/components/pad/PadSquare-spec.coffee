@@ -96,13 +96,14 @@ describe 'Pad Square', ->
       expect(@view.audioPlayback).to.not.equal undefined
 
 
-   it 'Should clear the sound when the droppable element is disposed of', =>
+   it 'Should clear the sound when the droppable element is disposed of', (done) =>
       id = @kitCollection.at(0).get('instruments').at(0).get('id')
       @view.onDrop id
 
-      @view.model.should.trigger('change:currentInstrument').when =>
-         console.log @view.model.get('currentInstrument')
-         @view.removeSound()
+      @view.model.once 'change:currentInstrument', =>
+         done()
+
+      @view.removeSound()
 
 
    it 'Should clear the icon when the droppable element is disposed of', =>
@@ -113,6 +114,7 @@ describe 'Pad Square', ->
       @view.$el.find('.' + icon).length.should.equal 1
 
       @view.removeSound()
+      console.log @view.el
       @view.$el.find('.' + icon).length.should.equal 0
 
 
