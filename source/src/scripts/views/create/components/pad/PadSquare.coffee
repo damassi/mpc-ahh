@@ -97,6 +97,7 @@ class PadSquare extends View
       unless instrument is null
          @currentIcon = instrument.get 'icon'
          @$icon.addClass @currentIcon
+         @$icon.text instrument.get 'label'
 
 
 
