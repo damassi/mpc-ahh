@@ -114,7 +114,7 @@ describe 'Pad Square', ->
       @view.$el.find('.' + icon).length.should.equal 1
 
       @view.removeSound()
-      console.log @view.el
+
       @view.$el.find('.' + icon).length.should.equal 0
 
 

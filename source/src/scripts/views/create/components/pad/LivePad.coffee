@@ -170,10 +170,14 @@ class LivePad extends View
 
 
 
+   # Handler for drop change events.  Checks to see if the instrument
+   # className exists on the element and, if so, re-renders the
+   # instrument and pad tables
+   # @param {InstrumentModel} model
 
    onDroppedChange: (model) =>
-      $instrument = @$el.find "##{model.get('id')}"
-      #console.log model.get('id'), $instrument.length
+      $instrument = @$el.find ".#{model.get('id')}"
+      console.log model.get('id'), $instrument.length
 
 
 
