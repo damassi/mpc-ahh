@@ -119,9 +119,9 @@ class LivePad extends View
       padSquareId  = $padSquare.attr 'id'
       padSquareModel = @padSquareCollection.findWhere { id: padSquareId }
 
-      padSquareModel.set 'currentInstrument', instrumentModel
-
-      console.log instrumentId, padSquareId, $padSquare.length, padSquareModel
+      # Checks against tests and draggable, which is less testable
+      unless padSquareModel is undefined
+         padSquareModel.set 'currentInstrument', instrumentModel
 
 
 
