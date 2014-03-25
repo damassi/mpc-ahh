@@ -53,7 +53,7 @@ class PadSquare extends View
 
 
    events:
-      'touchend': 'onClick'
+      'touchstart': 'onClick'
 
 
 
