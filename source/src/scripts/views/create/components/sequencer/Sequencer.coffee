@@ -110,8 +110,8 @@ class Sequencer extends View
       @listenTo @appModel,   AppEvent.CHANGE_KIT,     @onKitChange
       @listenTo @collection, AppEvent.CHANGE_FOCUS,   @onFocusChange
 
-      PubSub.on AppEvent.IMPORT_TRACK, @onImportTrack
-      PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
+      PubSub.on AppEvent.IMPORT_TRACK, @importTrack
+      #PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
 
 
 
@@ -314,6 +314,7 @@ class Sequencer extends View
                mute:   null
                focus:  null
 
+            # Reset visually tied props to trigger ui update
             instrumentModel.set
                mute:   oldProps.mute
                focus:  oldProps.focus
@@ -328,15 +329,26 @@ class Sequencer extends View
 
 
 
-   onImportTrack: (params) =>
-      {callback, patternSquareGroups, patternSquares} = params
+   importTrack: (params) =>
+      {callback, patternSquareGroups, instruments} = params
 
       @renderTracks()
 
-      _.each @patternTrackViews, (trackView, iterator) ->
-         trackView.collection.each (patternModel, index) ->
+      # Iterate over each view and set saved properties
+      _.each @patternTrackViews, (patternTrackView, iterator) ->
+         instrumentModel = patternTrackView.model
 
-            # Update each individual pattern square with settings
+         instrumentModel.set
+            mute:  null
+            focus: null
+
+         # Update props to trigger UI updates
+         instrumentModel.set
+            mute:  instruments[iterator].mute
+            focus: instruments[iterator].focus
+
+         # Update each individual pattern square with settings
+         patternTrackView.collection.each (patternModel, index) ->
             patternModel.set patternSquareGroups[iterator][index]
 
       callback()

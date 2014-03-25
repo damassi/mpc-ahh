@@ -51,6 +51,17 @@ class CreateView extends View
 
 
 
+   addEventListeners: ->
+      PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
+
+
+
+   removeEventListeners: ->
+      PubSub.off AppEvent.EXPORT_TRACK
+
+
+
+
    renderKitSelector: ->
       @kitSelector = new KitSelector
          appModel: @appModel
@@ -85,36 +96,59 @@ class CreateView extends View
       @$bpm.html @bpm.render().el
 
 
-
    onExportBtnClick: (event) =>
-      @patternSquareGroups = []
-      @patternSquares = []
+      PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
+         {@instruments, @patternSquareGroups} = params
+
+
+
+   onShareBtnClick: (event) =>
+
+      PubSub.trigger AppEvent.IMPORT_TRACK,
+
+         instruments:         @instruments
+         patternSquareGroups: @patternSquareGroups
+
+         callback: (response) ->
+            console.log 'done importing'
+
+
+      return
+
+      PubSub.trigger AppEvent.EXPORT_TRACK, (params) ->
+         {instruments, patternSquareGroups} = params
+
+         PubSub.trigger AppEvent.IMPORT_TRACK,
+
+            instruments:         instruments
+            patternSquareGroups: patternSquareGroups
+
+            callback: (response) ->
+               console.log 'done importing'
+
+
+
+
+   onExportTrack: (callback) =>
+      patternSquareGroups = []
+      patternSquares = []
 
       instruments = @appModel.export().kitModel.instruments
 
       instruments = instruments.map (instrument) =>
          instrument.patternSquares.forEach (patternSquare) =>
             delete patternSquare.instrument
-            @patternSquares.push patternSquare
+            patternSquares.push patternSquare
 
          instrument
 
-      while (@patternSquares.length > 0)
-         @patternSquareGroups.push @patternSquares.splice(0, 8)
+      while (patternSquares.length > 0)
+         patternSquareGroups.push patternSquares.splice(0, 8)
 
-
-      console.log instruments
-
-
-
-
-   onShareBtnClick: (event) =>
-      PubSub.trigger AppEvent.IMPORT_TRACK,
-         patternSquares: @patternSquares
-         patternSquareGroups: @patternSquareGroups
-
-         callback: (response) ->
-            console.log 'done!'
+      callback {
+         patternSquareGroups: patternSquareGroups
+         instruments: instruments
+      }
 
 
 
