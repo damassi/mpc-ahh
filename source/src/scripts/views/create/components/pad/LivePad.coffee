@@ -133,9 +133,7 @@ class LivePad extends View
 
       # Checks against tests and draggable, which is less testable
       unless padSquareModel is undefined
-         $draggedInstrument = instrumentModel.get('$draggedInstrument').clone()
          padSquareModel.set 'currentInstrument', instrumentModel
-         #$padSquare.append $draggedInstrument
 
 
 
@@ -151,7 +149,6 @@ class LivePad extends View
 
       instrumentModel.set
          'dropped': true
-         '$draggedInstrument': $dragged
 
       _.defer =>
          @renderInstruments()

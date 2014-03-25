@@ -44,7 +44,7 @@ describe 'Pad Square', ->
 
    it 'Should trigger a play action on tap', =>
       @view.model.should.trigger('change:trigger').when =>
-         @view.onClick()
+         @view.onPress()
 
 
 
@@ -80,12 +80,6 @@ describe 'Pad Square', ->
 
       @view.$el.hasClass("#{id}").should.be.true
 
-
-
-
-   it 'Should release the droppable visual element on press-hold', =>
-      @view.model.should.trigger('change:dragging').when =>
-         @view.onHold()
 
 
 

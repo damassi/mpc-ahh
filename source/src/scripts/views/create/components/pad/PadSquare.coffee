@@ -14,6 +14,12 @@ template  = require './templates/pad-square-template.hbs'
 class PadSquare extends View
 
 
+   # The delay time before drag functionality is initialized
+   # @type {Number}
+
+   DRAG_TRIGGER_DELAY: 1000
+
+
    # The tag to be rendered to the DOM
    # @type {String}
 
@@ -53,7 +59,8 @@ class PadSquare extends View
 
 
    events:
-      'touchstart': 'onClick'
+      'touchstart': 'onPress'
+      'touchend':   'onRelease'
 
 
 
@@ -76,6 +83,7 @@ class PadSquare extends View
 
    addEventListeners: ->
       @listenTo @model, AppEvent.CHANGE_TRIGGER, @onTriggerChange
+      @listenTo @model, AppEvent.CHANGE_DRAGGING, @onDraggingChange
       @listenTo @model, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
@@ -148,14 +156,19 @@ class PadSquare extends View
 
 
 
-   onClick: (event) =>
+   onPress: (event) =>
       @model.set 'trigger', true
 
+      @dragTimeout = setTimeout =>
+         @model.set 'dragging', true
+
+      , @DRAG_TRIGGER_DELAY
 
 
 
-   onHold: (event) =>
-      @model.set 'dragging', true
+
+   onRelease: (event) =>
+      clearTimeout @dragTimeout
 
 
 
@@ -166,12 +179,12 @@ class PadSquare extends View
 
 
 
+   # Set dropped status so that bi-directional change can
+   # be triggered from the LivePad kit render
+   # @param {Number} id
+
    onDrop: (id) ->
       instrumentModel = @collection.findInstrumentModel id
-
-      # Set dropped status so that bi-directional
-      # change can be triggered from the LivePad
-      # kit render
 
       instrumentModel.set 'dropped', true
 
@@ -179,6 +192,11 @@ class PadSquare extends View
          'dragging': false
          'dropped': true
          'currentInstrument': instrumentModel
+
+
+
+   onDraggingChange: (model) =>
+      dragging = model.changed.dragging
 
 
 
