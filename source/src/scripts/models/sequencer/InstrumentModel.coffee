@@ -32,22 +32,39 @@ class InstrumentModel extends Backbone.Model
       'focus':    null
 
 
+      # The icon class that represents the instrument
       # @type {String}
+
       'icon':     null
 
+
+      # The text label describing the instrument
       # @type {String}
+
       'label':    null
 
+
+      # Mute or unmute setting
       # @type {Boolean}
+
       'mute':     null
 
+
+      # The path to the sound source
       # @type {String}
+
       'src':      null
 
+
+      # The volume
       # @type {Number}
       'volume':   null
 
+
+      # Collection of associated pattern squares (a track) for the
+      # Sequencer view.  Updated when the tracks are swapped out
       # @type {PatternSquareCollection}
+
       'patternSquares':    null
 
 
