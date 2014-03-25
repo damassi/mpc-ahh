@@ -60,3 +60,16 @@ describe 'Live Pad', ->
    it 'Should update the PadSquareCollection with the current kit when dropped', =>
       @view.collection.should.trigger('change:instrument').when =>
          @view.padSquareViews[0].setSound()
+
+
+   it 'Should listen for changes to instrument dropped status', (done) =>
+      @view.kitCollection.at(0).get('instruments').at(0).should.trigger('change:dropped').when =>
+         @view.padSquareViews[0].setSound()
+
+
+
+
+
+
+
+

@@ -5,6 +5,7 @@
  * @date   3.24.14
 ###
 
+AppEvent            = require '../../../../events/AppEvent.coffee'
 PadSquareCollection = require '../../../../models/pad/PadSquareCollection.coffee'
 PadSquareModel      = require '../../../../models/pad/PadSquareModel.coffee'
 View                = require '../../../../supers/View.coffee'
@@ -27,16 +28,23 @@ class LivePad extends View
    template: template
 
 
+   # Appmodel for listening to show / hide events
+   # @type {AppModel}
+
+   appModel: null
+
+
    # Collection of kits to be rendered to the instrument container
    # @type {KitCollection}
 
    kitCollection: null
 
 
-   # Appmodel for listening to show / hide events
-   # @type {AppModel}
+   # Collection of instruments.  Used to listen to `dropped` status
+   # on individual instrument models, as set from the PadSquare
+   # @type {InstrumentCollection}
 
-   appModel: null
+   instrumentCollection: null
 
 
    # Collection of individual pad square models
@@ -139,7 +147,12 @@ class LivePad extends View
 
    returnInstrumentTableData: ->
       instrumentTable = @kitCollection.map (kit) =>
-         instruments = kit.get('instruments').map (instrument) =>
+         instrumentCollection = kit.get('instruments')
+
+         # Begin listening to drop events
+         @listenTo instrumentCollection, AppEvent.CHANGE_DROPPED, @onDroppedChange
+
+         instruments = instrumentCollection.map (instrument) =>
             instrument.toJSON()
 
          return {
@@ -151,11 +164,16 @@ class LivePad extends View
 
 
 
-
-
    # Add collection listeners to listen for instrument drops
 
    addEventListeners: ->
+
+
+
+
+   onDroppedChange: (model) ->
+      console.log 'Model dropped'
+      console.log model
 
 
 

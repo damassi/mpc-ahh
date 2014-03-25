@@ -155,6 +155,12 @@ class PadSquare extends View
    onDrop: (id) ->
       instrumentModel = @findInstrumentModel id
 
+      # Set dropped status so that bi-directional
+      # change can be triggered from the LivePad
+      # kit render
+
+      instrumentModel.set 'dropped', true
+
       @model.set
          'dragging': false
          'dropped': true

@@ -13,11 +13,24 @@ class InstrumentModel extends Backbone.Model
 
    defaults:
 
+      # If active, sound can play
       # @type {Boolean}
+
       'active':   null
 
+
+      # Flag to check if instrument has been dropped onto pad square
       # @type {Boolean}
+
+      'dropped':  null
+
+
+      # Flag to check if audio focus is set on a particular instrument.
+      # If so, it mutes all other tracks.
+      # @type {Boolean}
+
       'focus':    null
+
 
       # @type {String}
       'icon':     null
@@ -33,8 +46,6 @@ class InstrumentModel extends Backbone.Model
 
       # @type {Number}
       'volume':   null
-
-
 
       # @type {PatternSquareCollection}
       'patternSquares':    null
