@@ -18,6 +18,12 @@ template            = require './templates/live-pad-template.hbs'
 class LivePad extends View
 
 
+   # Key command keymap for live kit playback
+   # @type {Array}
+
+   KEYMAP: ['1','2','3','4','q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v']
+
+
    # The classname for the Live Pad
    # @type {String}
 
@@ -59,12 +65,6 @@ class LivePad extends View
    # @type {Array}
 
    padSquareViews: null
-
-
-   # Key command keymap for live kit playback
-   # @type {Array}
-
-   keymap: ['1','2','3','4','q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v']
 
 
 
@@ -145,6 +145,8 @@ class LivePad extends View
       id = $dragged.attr 'id'
       $dropped.addClass id
 
+      $dropped.attr 'data-instrument', "#{id}"
+
       instrumentModel = @kitCollection.findInstrumentModel id
 
       instrumentModel.set
@@ -171,21 +173,40 @@ class LivePad extends View
       @draggable = Draggable.create @$instrument,
          bounds: window
 
+
+         # Handler for drag events.  Iterates over all droppable square areas
+         # and checks to see if an instrument currently occupies the position
+
          onDrag: (event) ->
+
             i = $droppables.length
 
             while(--i > -1)
+
                if @hitTest($droppables[i], '50%')
-                  $($droppables[i]).addClass 'highlight'
+
+                  instrument = $($droppables[i]).attr('data-instrument')
+
+                  # Prevent droppables on squares that already have instruments
+                  if instrument is null or instrument is undefined
+                     $($droppables[i]).addClass 'highlight'
+
+               # Remove if not over square
                else
                   $($droppables[i]).removeClass 'highlight'
 
+
          onDragEnd: (event) ->
+
             i = $droppables.length
 
             while(--i > -1)
                if @hitTest($droppables[i], '50%')
-                  self.onInstrumentDrop(this.target, $droppables[i])
+                  instrument = $($droppables[i]).attr('data-instrument')
+
+                  # Prevent droppables on squares that already have instruments
+                  if instrument is null or instrument is undefined
+                     self.onInstrumentDrop(this.target, $droppables[i])
 
 
 
@@ -215,7 +236,7 @@ class LivePad extends View
             # to the DOM element
 
             model = new PadSquareModel
-               keycode: @keymap[iterator]
+               keycode: @KEYMAP[iterator]
 
             padSquare = new PadSquare
                model: model

@@ -91,7 +91,7 @@ class PadSquare extends View
 
    updateInstrumentClass: ->
       instrument = @model.get 'currentInstrument'
-      @$el.addClass instrument.get 'id'
+      @$el.parent().addClass instrument.get 'id'
 
 
 
@@ -169,6 +169,7 @@ class PadSquare extends View
 
    onRelease: (event) =>
       clearTimeout @dragTimeout
+      @model.set 'dragging', false
 
 
 
@@ -197,6 +198,11 @@ class PadSquare extends View
 
    onDraggingChange: (model) =>
       dragging = model.changed.dragging
+
+      console.log 'Dragging: ', dragging
+
+      if dragging
+         console.log @$el.parent().attr 'data-instrument'
 
 
 
