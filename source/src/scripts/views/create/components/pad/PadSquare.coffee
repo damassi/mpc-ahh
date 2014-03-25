@@ -151,8 +151,6 @@ class PadSquare extends View
    onClick: (event) =>
       @model.set 'trigger', true
 
-      console.log 'hey'
-
 
 
 
@@ -186,9 +184,9 @@ class PadSquare extends View
 
 
    onTriggerChange: (model) =>
-      playing = model.changed.playing
+      trigger = model.changed.trigger
 
-      if playing
+      if trigger
          @playSound()
 
 
