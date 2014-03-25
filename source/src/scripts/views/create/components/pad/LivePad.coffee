@@ -58,14 +58,11 @@ class LivePad extends View
 
    render: (options) ->
 
-      templateData =
+      # Render the table to the DOM
+      super {
          padTable: @returnPadTableData()
          instrumentTable: @returnInstrumentTableData()
-
-      console.log templateData
-
-      # Render the table to the DOM
-      super templateData
+      }
 
       # Render squares to the DOM
       _.each @padSquareViews, (padSquare) =>
@@ -77,6 +74,7 @@ class LivePad extends View
       @$instrumentContainer = @$el.find '.container-instruments'
 
       @
+
 
 
 
@@ -95,6 +93,7 @@ class LivePad extends View
          }
 
       instrumentTable
+
 
 
 
