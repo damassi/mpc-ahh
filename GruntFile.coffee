@@ -34,11 +34,11 @@ module.exports = (grunt) ->
    # Path to compile to during development
    output   = "#{basePath}/public"
 
-   # Path to build final deploy files
-   dist     = "#{basePath}/dist"
-
    # Test specs directory and html
    test     = "#{basePath}/test"
+
+   # Path to build final deploy files
+   dist     = "../"
 
    # Browser port during development
    port     = 3000
