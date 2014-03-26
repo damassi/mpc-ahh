@@ -5,8 +5,9 @@ Built on top of Backbone.js and CoffeeScript
 
 Preview Links
 -------------
-- For an overview of in-progress development: [Development Overview](http://{path-to-server}/#development)
-- MPC Ahh Unit tests: [Unit Tests](http://{path-to-server}/source/test/html/)
+- Link to [Experience](http://38h-test.s3-website-us-east-1.amazonaws.com/)
+- For an overview of in-progress development components: [Development Overview](http://38h-test.s3-website-us-east-1.amazonaws.com/#development)
+- MPC Ahh Unit tests: [Unit Tests](http://38h-test.s3-website-us-east-1.amazonaws.com/source/test/html/)
 
 
 Technologies
