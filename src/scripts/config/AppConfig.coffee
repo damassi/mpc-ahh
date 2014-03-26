@@ -57,7 +57,7 @@ AppConfig =
    # @param {String} assetType
 
    returnTestAssetPath: (assetType) ->
-      '/test/html/' + @ASSETS.path + '/' + @ASSETS[assetType]
+      window.location.pathname + @ASSETS.path + '/' + @ASSETS[assetType]
 
 
 

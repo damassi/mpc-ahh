@@ -225,7 +225,7 @@ module.exports = (grunt) ->
          dist:
             files: [{
                expand: true
-               cwd: "#{dist}"
+               cwd: "#{dist}/assets"
                src: ['**']
             }]
 
@@ -384,7 +384,7 @@ module.exports = (grunt) ->
 
 
    grunt.registerTask 'build', [
-      'clean:dev'
+      #'clean:dev'
       'clean:dist'
       'copy:assets'
       'copy:html'
@@ -395,7 +395,7 @@ module.exports = (grunt) ->
       'uglify'
       'imagemin'
       'copy:dist'
-      'clean:dev'
+      #'clean:dev'
    ]
 
 
