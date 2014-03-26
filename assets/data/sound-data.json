@@ -1,6 +1,6 @@
 {
   "config": {
-    "assetPath": "http://38h-test.s3-website-us-east-1.amazonaws.com/assets/audio"
+    "assetPath": "/assets/audio"
   },
 
   "kits": [
