@@ -18,14 +18,29 @@ class SharedTrackModel extends Parse.Object
 
    defaults:
 
-      # @type {String}
-      kitType: null
+      # @type {Number}
+      bpm: null
 
       # @type {Object}
       instruments: null
 
+      # @type {String}
+      kitType: null
+
+      # @type {String}
+      message: null
+
+      # @type {String}
+      name: null
+
       # @type {Array}
       patternSquareGroups: null
+
+      # @type {String}
+      title: null
+
+      # @type {String}
+      visualization: null
 
 
 
