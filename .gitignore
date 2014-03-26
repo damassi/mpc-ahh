@@ -24,9 +24,12 @@ Thumbs.db
 node_modules/
 bower_components/
 
+<<<<<<< HEAD
 source/node_modules/
 source/bower_components/
 
+=======
+>>>>>>> a3c3fed2bf54717bc3ae7bc7c8cd1eb76a84a647
 # Project folders
 dist/
 

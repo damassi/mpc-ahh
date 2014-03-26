@@ -1,0 +1,14 @@
+{{#each instrumentTable}}
+	<div class='container-kit'>
+		<h3>
+			<b>{{{label}}}</b>
+		</h3>
+
+		{{#each instruments}}
+
+			<div class='instrument {{#if dropped}} hidden {{/if}}' id="{{{id}}}">
+				{{{label}}}
+			</div>
+		{{/each}}
+	</div>
+{{/each}}
