@@ -103,68 +103,109 @@ class CreateView extends View
 
 
 
-   importSharedTrack: (shareId) =>
-      query = new Parse.Query SharedTrackModel
-
-      query.get shareId,
-
-         error: (object, error) =>
-            console.error 'Error retrieving parse track'
-            console.error object, error
-
-         success: (sharedTrackModel) =>
-
-            PubSub.trigger AppEvent.IMPORT_TRACK,
-               kitType:             sharedTrackModel.get 'kitType'
-               instruments:         sharedTrackModel.get 'instruments'
-               patternSquareGroups: sharedTrackModel.get 'patternSquareGroups'
-
-               callback: (response) ->
-                  #console.log 'done importing'
 
 
+   # PUBLIC METHODS
+   # --------------------------------------------------------------------------------
 
 
-   onExportBtnClick: (event) =>
+   # Exports the current track conguration into a serializable,
+   # savable format which is then posted to Parse or later retrieval
+
+   exportTrack: =>
+
       PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
 
          {@kitType, @instruments, @patternSquareGroups} = params
 
-         sharedTrackModel = new SharedTrackModel
-            kitType:             @kitType
-            instruments:         @instruments,
-            patternSquareGroups: @patternSquareGroups
-
-         console.log sharedTrackModel
-
-         sharedTrackModel.save
-            success: (response) =>
-               console.log 'success'
-               console.log response
-
-               @shareId = response.id
-
-               console.log @shareId
-
-            error: (response) =>
-               console.log 'error...'
-               console.log error
 
 
 
+   # Create a new Parse model and pass in params that
+   # have been retrieved, via PubSub from the Sequencer view
 
-   onShareBtnClick: (event) =>
-      @importSharedTrack @shareId
+   saveTrack: =>
+
+      sharedTrackModel = new SharedTrackModel
+         bpm:                 @appModel.get 'bpm'
+         instruments:         @instruments
+         kitType:             @kitType
+         patternSquareGroups: @patternSquareGroups
+         shareMessage:        @appModel.get 'shareMessage'
+         trackTitle:          @appModel.get 'trackTitle'
+         visualization:       @appModel.get 'visualization'
+
+      # Send the Parse model up the wire and save to DB
+      sharedTrackModel.save
+
+         error: (object, error) =>
+            console.error object, error
+
+
+         # Handler for success events.  Create a new
+         # visual success message and pass user on to
+         # their page
+
+         success: (response) =>
+            @shareId = response.id
+            console.log @shareId
 
 
 
+
+   # Import the shared track by requesting the data from parse
+   # Once imported
+
+   importTrack: (shareId) =>
+
+      query = new Parse.Query SharedTrackModel
+
+      # Create request to fetch data from the Parse DB
+      query.get shareId,
+
+         error: (object, error) =>
+            console.error object, error
+
+
+         # Handler for success events.  Returns the saved model which is then
+         # dispatched, via PubSub, to the Sequencer view for playback and render
+         # @param {SharedTrackModel}
+
+         success: (sharedTrackModel) =>
+
+            PubSub.trigger AppEvent.IMPORT_TRACK,
+
+               kitType:             sharedTrackModel.get 'kitType'
+               instruments:         sharedTrackModel.get 'instruments'
+               patternSquareGroups: sharedTrackModel.get 'patternSquareGroups'
+
+
+               # Handler for callbacks once the track has been imported and
+               # rendered.  Displays the Share view and begins playback
+               # @param {Object} response
+
+               callback: (response) ->
+
+
+
+
+
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+
+   # Handler for PubSub EXPORT_TRACK events.  Prepares the data in a way that
+   # is savable, exportable, and importable
+   # @param {Function} callback
 
    onExportTrack: (callback) =>
+
       patternSquareGroups = []
-      patternSquares = []
+      patternSquares      = []
 
-      kit = @appModel.get('kitModel').toJSON()
-
+      kit         = @appModel.get('kitModel').toJSON()
       instruments = @appModel.export().kitModel.instruments
 
       instruments = instruments.map (instrument) =>
@@ -182,6 +223,18 @@ class CreateView extends View
          instruments: instruments
          patternSquareGroups: patternSquareGroups
       }
+
+
+
+
+   onExportBtnClick: (event) =>
+      @exportTrack()
+
+
+
+
+   onShareBtnClick: (event) =>
+      @importTrack @shareId
 
 
 

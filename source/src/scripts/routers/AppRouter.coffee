@@ -44,6 +44,7 @@ class AppRouter extends Backbone.Router
 
    routes:
       '':             'landingRoute'
+      'landing':      'landingRoute'
       'create':       'createRoute'
       'share/:id':    'shareRoute'
 

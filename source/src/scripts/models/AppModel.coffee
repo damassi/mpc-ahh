@@ -13,19 +13,18 @@ class AppModel extends Model
 
 
    defaults:
-      'view':        null
-      'playing':     null
-      'mute':        null
-      'kitModel':    null
+      'bpm':           AppConfig.BPM
+      'mute':          null
+      'kitModel':      null
+      'playing':       null
 
       # Share id returned from parse
-      'shareId': null
+      'shareId':       null
 
-      # For exporting share functionality
-      'songModel':   null
-
-      # Settings
-      'bpm':         AppConfig.BPM
+      'shareMessage':  null
+      'trackTitle':    null
+      'view':          null
+      'visualization': null
 
 
    export: ->
