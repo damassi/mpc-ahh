@@ -14,7 +14,13 @@
 <body>
   <script>
       var howl = new Howl({
-        urls: ['/assets/audio/jazz/FX_1.mp3']
+        volume: 1,
+        buffer: true,
+        urls: ['/assets/audio/jazz/FX_1.mp3'],
+        onend: function() {
+          console.log( 'end')
+        }
+
       })
   </script>
 
