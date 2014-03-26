@@ -49,7 +49,7 @@ class AppRouter extends Backbone.Router
       'share/:id':    'shareRoute'
 
       # Component test routes
-      'tests':                'tests'
+      'development':          'tests'
       'kit-selection':        'kitSelectionRoute'
       'bpm-indicator':        'bpmIndicatorRoute'
       'instrument-selector':  'instrumentSelectorRoute'
@@ -184,6 +184,7 @@ class AppRouter extends Backbone.Router
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
       view = new PatternTrack
+         appModel: @appModel
          model: @kitCollection.at(0).get('instruments').at(0)
 
       @appModel.set 'view', view

@@ -28,16 +28,16 @@ class SharedTrackModel extends Parse.Object
       kitType: null
 
       # @type {String}
-      message: null
-
-      # @type {String}
       name: null
 
       # @type {Array}
       patternSquareGroups: null
 
       # @type {String}
-      title: null
+      shareMessage: null
+
+      # @type {String}
+      trackTitle: null
 
       # @type {String}
       visualization: null

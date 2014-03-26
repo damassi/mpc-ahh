@@ -57,7 +57,10 @@ class PatternSquare extends View
    render: (options) ->
       super options
 
-      audioSrc = @patternSquareModel.get('instrument').get 'src'
+      audioSrc = ''
+
+      if @patternSquareModel.get('instrument')
+         audioSrc = @patternSquareModel.get('instrument').get 'src'
 
       # TODO: Test methods
       if window.location.href.indexOf('test') isnt -1 then audioSrc = ''

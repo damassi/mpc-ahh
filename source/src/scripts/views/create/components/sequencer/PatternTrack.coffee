@@ -83,7 +83,7 @@ class PatternTrack extends View
    # as well as changes to the collection, which should update
    # pattern squares without re-rendering the views
 
-   addEventListeners: ->
+   addEventListeners: =>
       @kitModel = @appModel.get('kitModel')
 
       @listenTo @model,    AppEvent.CHANGE_FOCUS,      @onFocusChange
