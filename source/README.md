@@ -1,4 +1,4 @@
-MPC AHH Frontend Project
+MPC AHH Frontend Project (coke-teen-ahh-38h)
 ================================================================
 
 Built on top of Backbone.js and CoffeeScript
