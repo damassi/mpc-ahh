@@ -1,7 +1,7 @@
 {
-  "name": "grunt-frontend-scaffold",
+  "name": "Coke-Teens-MPC-AHH-38",
   "version": "0.0.1",
-  "description": "Grunt scaffold for common front-end tasks, using CoffeeScript, Browserify and SASS",
+  "description": "Development project for Coke Teens MPC Ahh",
   "main": "GruntFile.coffee",
   "scripts": {
     "postinstall": "bower install"
@@ -45,9 +45,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/damassi/grunt-coffee-sass-scaffold"
+    "url": "git@wintr.beanstalkapp.com:/wintr/ahh-mpc.git"
   },
   "author": "chris@wintr.us",
-  "license": "MIT",
+  "license": "Closed Source",
   "readmeFilename": "README.md"
 }
