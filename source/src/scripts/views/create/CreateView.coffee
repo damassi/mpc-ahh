@@ -100,6 +100,7 @@ class CreateView extends View
 
    onExportBtnClick: (event) =>
       PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
+         console.log JSON.stringify params
          {@instruments, @patternSquareGroups} = params
 
 

@@ -16,6 +16,8 @@ $ ->
 
    Touch.translateTouchEvents()
 
+   Parse.initialize( "oZgOktrcDXEetGBjCGI6qqRLNbJ7j8GTDMmPyrxb", "U6b0hDT2Isb5blCVd0WU41NJ0EOFgY0Fx7orql4Q" )
+
    kitCollection = new KitCollection
       parse: true
 
