@@ -1,5 +1,5 @@
 ###*
- * Primary application model which coordinates state
+ * Handles sharing songs between the app and Parse, as well as other services
  *
  * @author Christopher Pappas <chris@wintr.us>
  * @date   3.25.14
@@ -18,17 +18,14 @@ class SharedTrackModel extends Parse.Object
 
    defaults:
 
-      # @kitType {String}
+      # @type {String}
       kitType: null
 
-      # @kitType {Object}
+      # @type {Object}
       instruments: null
 
-      # @kitType {Array}
+      # @type {Array}
       patternSquareGroups: null
-
-
-
 
 
 
