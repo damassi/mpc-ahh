@@ -3,6 +3,11 @@ MPC AHH Frontend Project (coke-teen-ahh-38h)
 
 Built on top of Backbone.js and CoffeeScript
 
+Preview Links
+-------------
+- For an overview of in-progress development: [Development Overview](http://{path-to-server}/#development)
+- MPC Ahh Unit tests: [Unit Tests](http://{path-to-server}/source/test/html/)
+
 
 Technologies
 -----------
