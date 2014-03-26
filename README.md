@@ -6,10 +6,10 @@ Built on top of Backbone.js and CoffeeScript
 
 Technologies
 -----------
-Backbone.js - Application state
-Howler.js - Audio playback
-Easel.js - Canvas visualization
-Parse - Remote data storage / sharing
+- Backbone.js - Application state
+- Howler.js - Audio playback
+- Easel.js - Canvas visualization
+- Parse - Remote data storage / sharing
 
 
 Project Setup
