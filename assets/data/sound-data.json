@@ -1,11 +1,11 @@
 {
   "config": {
-    "assetPath": "http://mpcahh.s3-website-us-west-2.amazonaws.com/"
+    "assetPath": "http://38h-test.s3-website-us-east-1.amazonaws.com/assets/audio"
   },
 
   "kits": [
     {
-      "label": "Jazzz",
+      "label": "Jazz",
       "folder": "jazz",
       "instruments": [
         {
