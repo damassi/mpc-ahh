@@ -1,13 +1,15 @@
 MPC AHH Frontend Project
 ================================================================
 
-Built on top of React.js and CoffeeScript
+Built on top of Backbone.js and CoffeeScript
 
 
-Build Plan
+Technologies
 -----------
-- https://docs.google.com/document/d/1PDPadEdhYkLveBNzajHdiT33ZOMToEaDWQkzLDj0Oy8/edit
-
+Backbone.js - Application state
+Howler.js - Audio playback
+Easel.js - Canvas visualization
+Parse - Remote data storage / sharing
 
 
 Project Setup
@@ -18,24 +20,15 @@ Project Setup
  - `sudo npm install -g grunt-cli`
 - For sourcemap and Compass support, SASS and Compass gems need to be installed with the --pre flag
  - `gem install sass --pre && gem install compass --pre`
-- Clone and cd into the repo
- - `git clone https://github.com/WINTR/grunt-frontend-scaffold.git && cd grunt-frontend-scaffold`
+- Clone the repo and cd into the `source` folder
 - Then install Grunt task dependencies
  - `npm install`
-- Source control is handled via the Gitflow pattern:
- - Installation: https://github.com/nvie/gitflow/wiki/Mac-OS-X
 
-
-Development Strategy
---------------------
-- Source control is handled via the Gitflow pattern:
- - Installation: https://github.com/nvie/gitflow/wiki/Mac-OS-X
- - http://nvie.com/posts/a-successful-git-branching-model/
 
 
 Development Tasks
 -----------------
-- For development: `grunt dev` then navigate to `http://localhost:3001` (or IP address).
+- For development: `grunt dev` then navigate to `http://localhost:3000` (or IP address).
 - For deploy: `grunt build`
 
 This concatinates and minifies all CoffeeScripts and SASS and moves the project into 'dist' for production deploy.
@@ -56,11 +49,13 @@ Unit Testing
 ------------
 Mocha is used as the default for unit tests.  Via grunt-mocha, unit tests can be run in both the terminal as well as the browser.
 
-- To execute tests via PhantomJS
- - `grunt test`
-- To test in browser
+- Install httpster:  `sudo npm install -g httpster`
+- Cd into the `source` folder
+- Execute `httpster`
+- Open new console tab, cd into `source
+- To execute Mocha tests
  - Run `grunt test`
- - Navigate to `test/html/index.html`
+ - Navigate to `localhost:3333/test/html/index.html`
 - When running `grunt dev`, tests are automatically re-run on save of either your source or your spec files and should trigger a reload in the browser.
 
 

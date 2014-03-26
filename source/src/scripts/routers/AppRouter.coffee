@@ -9,34 +9,42 @@ AppConfig   = require '../config/AppConfig.coffee'
 PubSub      = require '../utils/PubSub'
 PubEvent    = require '../events/PubEvent.coffee'
 
+
+# ***************************************************************************************************
+# ***************************************************************************************************
+
 # TODO: The below items are only included for testing component
 # modularity.  They, and their routes, should be removed in production
 
-TestsView     = require '../views/tests/TestsView.coffee'
+TestsView               = require '../views/tests/TestsView.coffee'
 
-View = require '../supers/View.coffee'
+View                    = require '../supers/View.coffee'
 
-KitSelector  = require '../views/create/components/KitSelector.coffee'
-KitCollection = require '../models/kits/KitCollection.coffee'
-KitModel      = require '../models/kits/KitModel.coffee'
+KitSelector             = require '../views/create/components/KitSelector.coffee'
+KitCollection           = require '../models/kits/KitCollection.coffee'
+KitModel                = require '../models/kits/KitModel.coffee'
 
-BPMIndicator  = require '../views/create/components/BPMIndicator.coffee'
+BPMIndicator            = require '../views/create/components/BPMIndicator.coffee'
 InstrumentSelectorPanel = require '../views/create/components/instruments/InstrumentSelectorPanel.coffee'
 
-InstrumentModel = '../models/sequencer/InstrumentModel.coffee'
-InstrumentCollection = '../models/sequencer/InstrumentCollection.coffee'
+InstrumentModel         = require '../models/sequencer/InstrumentModel.coffee'
+InstrumentCollection    = require '../models/sequencer/InstrumentCollection.coffee'
 
-PatternSquare = require '../views/create/components/sequencer/PatternSquare.coffee'
-PatternSquareModel = require '../models/sequencer/PatternSquareModel.coffee'
+PatternSquare           = require '../views/create/components/sequencer/PatternSquare.coffee'
+PatternSquareModel      = require '../models/sequencer/PatternSquareModel.coffee'
 PatternSquareCollection = require '../models/sequencer/PatternSquareCollection.coffee'
-PatternTrack  = require '../views/create/components/sequencer/PatternTrack.coffee'
-Sequencer       = require '../views/create/components/sequencer/Sequencer.coffee'
+PatternTrack            = require '../views/create/components/sequencer/PatternTrack.coffee'
+Sequencer               = require '../views/create/components/sequencer/Sequencer.coffee'
 
-LivePadModel = require '../models/pad/LivePadModel.coffee'
-PadSquareCollection = require '../models/pad/PadSquareCollection.coffee'
-PadSquareModel = require '../models/pad/PadSquareModel.coffee'
-LivePad = require '../views/create/components/pad/LivePad.coffee'
-PadSquare = require '../views/create/components/pad/PadSquare.coffee'
+LivePadModel            = require '../models/pad/LivePadModel.coffee'
+PadSquareCollection     = require '../models/pad/PadSquareCollection.coffee'
+PadSquareModel          = require '../models/pad/PadSquareModel.coffee'
+LivePad                 = require '../views/create/components/pad/LivePad.coffee'
+PadSquare               = require '../views/create/components/pad/PadSquare.coffee'
+
+
+# ***************************************************************************************************
+# ***************************************************************************************************
 
 
 class AppRouter extends Backbone.Router
@@ -100,8 +108,10 @@ class AppRouter extends Backbone.Router
 
 
 
-   # COMPONENT TEST ROUTES
-   # --------------------------------------------------------------------------------
+
+   # ***************************************************************************************************
+   # ***************************************************************************************************
+
 
 
    tests: ->
@@ -294,6 +304,13 @@ class AppRouter extends Backbone.Router
 
 
       @appModel.set 'view', view
+
+
+
+
+   # ***************************************************************************************************
+   # ***************************************************************************************************
+
 
 
 

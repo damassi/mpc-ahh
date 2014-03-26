@@ -51,7 +51,7 @@ describe 'Live Pad', ->
          index = index + 1
          len = kit.get('instruments').length * index
 
-      @view.$el.find('.instrument').length.should.equal len + 1
+      @view.$el.find('.instrument').length.should.equal len
 
 
 
