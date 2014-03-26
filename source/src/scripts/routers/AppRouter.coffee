@@ -45,7 +45,7 @@ class AppRouter extends Backbone.Router
    routes:
       '':             'landingRoute'
       'create':       'createRoute'
-      'share':        'shareRoute'
+      'share/:id':    'shareRoute'
 
       # Component test routes
       'tests':                'tests'
@@ -85,8 +85,14 @@ class AppRouter extends Backbone.Router
 
 
 
-   shareRoute: ->
-      @appModel.set 'view', @appController.shareView
+   shareRoute: (shareId) ->
+      console.log shareId
+
+      @appModel.set
+         'view': @appController.createView
+         'shareId': shareId
+
+      #@appModel.set 'view', @appController.shareView
 
 
 

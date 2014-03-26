@@ -16,8 +16,10 @@ class AppModel extends Model
       'view':        null
       'playing':     null
       'mute':        null
-
       'kitModel':    null
+
+      # Share id returned from parse
+      'shareId': null
 
       # For exporting share functionality
       'songModel':   null

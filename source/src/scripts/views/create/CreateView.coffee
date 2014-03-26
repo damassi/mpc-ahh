@@ -8,6 +8,7 @@
 PubSub                  = require '../../utils/PubSub'
 View                    = require '../../supers/View.coffee'
 AppEvent                = require '../../events/AppEvent.coffee'
+SharedTrackModel        = require '../../models/SharedTrackModel.coffee'
 KitSelector             = require '../../views/create/components/KitSelector.coffee'
 InstrumentSelectorPanel = require '../../views/create/components/instruments/InstrumentSelectorPanel.coffee'
 Sequencer               = require '../../views/create/components/sequencer/Sequencer.coffee'
@@ -46,6 +47,11 @@ class CreateView extends View
       @renderInstrumentSelector()
       @renderSequencer()
       @renderBPM()
+
+      shareId = @appModel.get 'shareId'
+
+      if shareId isnt null
+         @importSharedTrack shareId
 
       @
 
@@ -97,24 +103,58 @@ class CreateView extends View
 
 
 
+   importSharedTrack: (shareId) =>
+      query = new Parse.Query SharedTrackModel
+
+      query.get shareId,
+
+         error: (object, error) =>
+            console.error 'Error retrieving parse track'
+            console.error object, error
+
+         success: (sharedTrackModel) =>
+
+            PubSub.trigger AppEvent.IMPORT_TRACK,
+               kitType:             sharedTrackModel.get 'kitType'
+               instruments:         sharedTrackModel.get 'instruments'
+               patternSquareGroups: sharedTrackModel.get 'patternSquareGroups'
+
+               callback: (response) ->
+                  #console.log 'done importing'
+
+
+
 
    onExportBtnClick: (event) =>
       PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
-         console.log JSON.stringify params
-         {@instruments, @patternSquareGroups} = params
+
+         {@kitType, @instruments, @patternSquareGroups} = params
+
+         sharedTrackModel = new SharedTrackModel
+            kitType:             @kitType
+            instruments:         @instruments,
+            patternSquareGroups: @patternSquareGroups
+
+         console.log sharedTrackModel
+
+         sharedTrackModel.save
+            success: (response) =>
+               console.log 'success'
+               console.log response
+
+               @shareId = response.id
+
+               console.log @shareId
+
+            error: (response) =>
+               console.log 'error...'
+               console.log error
 
 
 
 
    onShareBtnClick: (event) =>
-
-      PubSub.trigger AppEvent.IMPORT_TRACK,
-
-         instruments:         @instruments
-         patternSquareGroups: @patternSquareGroups
-
-         callback: (response) ->
-            console.log 'done importing'
+      @importSharedTrack @shareId
 
 
 
@@ -122,6 +162,8 @@ class CreateView extends View
    onExportTrack: (callback) =>
       patternSquareGroups = []
       patternSquares = []
+
+      kit = @appModel.get('kitModel').toJSON()
 
       instruments = @appModel.export().kitModel.instruments
 
@@ -136,8 +178,9 @@ class CreateView extends View
          patternSquareGroups.push patternSquares.splice(0, 8)
 
       callback {
-         patternSquareGroups: patternSquareGroups
+         kitType: @appModel.get('kitModel').get('label')
          instruments: instruments
+         patternSquareGroups: patternSquareGroups
       }
 
 

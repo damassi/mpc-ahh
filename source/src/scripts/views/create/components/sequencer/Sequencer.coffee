@@ -356,17 +356,6 @@ class Sequencer extends View
 
 
 
-   onExportTrack: ->
-      {callback} = params
-
-      patternSquares = []
-
-      console.log 'firing export!!'
-
-
-
-
-
    # Handler for focus change events.  Iterates over all of the models within
    # the InstrumentCollection and toggles their focus to off if the changed
    # model's focus is set to true.
