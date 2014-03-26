@@ -25,6 +25,15 @@ Project Setup
  - `npm install`
 
 
+To commit to Wieden Github and S3 staging
+----------------------
+- While in development environment run `grunt build`
+- Commit your changes to beanstalk mpc repo
+- In a seperate folder outside of the Beanstalk repo, run
+  - `git clone git@github.com:wieden-kennedy/coke-teen-ahh-38h.git`
+-
+
+
 
 Development Tasks
 -----------------
