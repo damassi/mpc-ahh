@@ -6,10 +6,10 @@ Built on top of Backbone.js and CoffeeScript
 
 Technologies
 -----------
-Backbone.js - Application state
-Howler.js - Audio playback
-Easel.js - Canvas visualization
-Parse - Remote data storage / sharing
+- Backbone.js - Application state
+- Howler.js - Audio playback
+- Easel.js - Canvas visualization
+- Parse - Remote data storage / sharing
 
 
 Project Setup
@@ -23,15 +23,6 @@ Project Setup
 - Clone the repo and cd into the `source` folder
 - Then install Grunt task dependencies
  - `npm install`
-
-
-To commit to Wieden Github and S3 staging
-----------------------
-- While in development environment run `grunt build`
-- Commit your changes to beanstalk mpc repo
-- In a seperate folder outside of the Beanstalk repo, run
-  - `git clone git@github.com:wieden-kennedy/coke-teen-ahh-38h.git`
--
 
 
 
