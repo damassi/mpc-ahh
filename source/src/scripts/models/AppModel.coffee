@@ -19,10 +19,9 @@ class AppModel extends Model
       'playing':       null
 
       # Share id returned from parse
-      'shareId':       null
+      'shareId':           null
+      'sharedTrackModel':  null
 
-      'shareMessage':  null
-      'trackTitle':    null
       'view':          null
       'visualization': null
 

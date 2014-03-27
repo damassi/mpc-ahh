@@ -27,9 +27,12 @@ class AppController extends View
       @appModel.set 'kitModel', @kitCollection.at(0)
 
       @landingView = new LandingView
-      @shareView   = new ShareView
 
       @createView  = new CreateView
+         appModel: @appModel
+         kitCollection: @kitCollection
+
+      @shareView   = new ShareView
          appModel: @appModel
          kitCollection: @kitCollection
 

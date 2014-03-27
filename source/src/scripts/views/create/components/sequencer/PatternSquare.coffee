@@ -63,10 +63,11 @@ class PatternSquare extends View
          audioSrc = @patternSquareModel.get('instrument').get 'src'
 
       # TODO: Test methods
-      if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
+      #if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
 
       @audioPlayback = new Howl
          volume: AppConfig.VOLUME_LEVELS.low
+         buffer: true
          urls: [audioSrc]
          onend: @onSoundEnd
 

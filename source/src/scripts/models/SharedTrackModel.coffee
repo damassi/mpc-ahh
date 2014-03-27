@@ -18,6 +18,10 @@ class SharedTrackModel extends Parse.Object
 
    defaults:
 
+
+      # Kit playback properties
+
+
       # @type {Number}
       bpm: null
 
@@ -27,17 +31,22 @@ class SharedTrackModel extends Parse.Object
       # @type {String}
       kitType: null
 
-      # @type {String}
-      name: null
-
       # @type {Array}
       patternSquareGroups: null
 
-      # @type {String}
-      shareMessage: null
+
+
+      # Share data related to user
+
 
       # @type {String}
-      trackTitle: null
+      shareName: null
+
+      # @type {String}
+      shareTitle: null
+
+       # @type {String}
+      shareMessage: null
 
       # @type {String}
       visualization: null

@@ -17,10 +17,14 @@ AppEvent =
    CHANGE_KIT:        'change:kitModel'
    CHANGE_MUTE:       'change:mute'
    CHANGE_PLAYING:    'change:playing'
+   CHANGE_SHARE_ID:   'change:shareId'
    CHANGE_TRIGGER:    'change:trigger'
    CHANGE_VELOCITY:   'change:velocity'
 
    IMPORT_TRACK:      'onImportTrack'
    EXPORT_TRACK:      'onExportTrack'
+   SAVE_TRACK:        'onSaveTrack'
+
+   CLOSE_SHARE:       'onCloseShare'
 
 module.exports = AppEvent

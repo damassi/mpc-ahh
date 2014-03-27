@@ -1,5 +1,5 @@
 ###*
-  Application-wide general configurations
+  Application-wide general  configurations
 
   @author Christopher Pappas <chris@wintr.us>
   @date   3.19.14
@@ -13,7 +13,7 @@ AppConfig =
    # @type {Number}
 
    ASSETS:
-      path:   '/assets'
+      path:   'assets'
       audio:  'audio'
       data:   'data'
       images: 'images'
@@ -50,14 +50,16 @@ AppConfig =
    # @param {String} assetType
 
    returnAssetPath: (assetType) ->
-      @ASSETS.path + '/' + @ASSETS[assetType]
+      path = @ASSETS.path + '/' + @ASSETS[assetType]
+      path
 
 
    # Returns a normalized asset path for the TEST environment
    # @param {String} assetType
 
    returnTestAssetPath: (assetType) ->
-      window.location.pathname + @ASSETS.path + '/' + @ASSETS[assetType]
+      path = window.location.pathname + @ASSETS.path + '/' + @ASSETS[assetType]
+      path
 
 
 

@@ -42,6 +42,9 @@ PadSquareModel          = require '../models/pad/PadSquareModel.coffee'
 LivePad                 = require '../views/create/components/pad/LivePad.coffee'
 PadSquare               = require '../views/create/components/pad/PadSquare.coffee'
 
+CreateView              = require '../views/create/CreateView.coffee'
+ShareModal              = require '../views/create/components/share/ShareModal.coffee'
+
 
 # ***************************************************************************************************
 # ***************************************************************************************************
@@ -67,6 +70,7 @@ class AppRouter extends Backbone.Router
       'full-sequencer':       'fullSequencerRoute'
       'pad-square':           'padSquareRoute'
       'live-pad':             'livePadRoute'
+      'share-modal':          'shareModalRoute'
 
 
 
@@ -98,10 +102,8 @@ class AppRouter extends Backbone.Router
       console.log shareId
 
       @appModel.set
-         'view': @appController.createView
+         'view': @appController.shareView
          'shareId': shareId
-
-      #@appModel.set 'view', @appController.shareView
 
 
 
@@ -299,6 +301,17 @@ class AppRouter extends Backbone.Router
          url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
       view = new LivePad
+         appModel: @appModel
+         kitCollection: @kitCollection
+
+
+      @appModel.set 'view', view
+
+
+
+
+   shareModalRoute: ->
+      view = new ShareModal
          appModel: @appModel
          kitCollection: @kitCollection
 

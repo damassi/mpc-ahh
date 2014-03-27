@@ -9,17 +9,22 @@ PubSub                  = require '../../utils/PubSub'
 View                    = require '../../supers/View.coffee'
 AppEvent                = require '../../events/AppEvent.coffee'
 SharedTrackModel        = require '../../models/SharedTrackModel.coffee'
-KitSelector             = require '../../views/create/components/KitSelector.coffee'
-InstrumentSelectorPanel = require '../../views/create/components/instruments/InstrumentSelectorPanel.coffee'
-Sequencer               = require '../../views/create/components/sequencer/Sequencer.coffee'
-BPMIndicator            = require '../../views/create/components/BPMIndicator.coffee'
+KitSelector             = require './components/KitSelector.coffee'
+InstrumentSelectorPanel = require './components/instruments/InstrumentSelectorPanel.coffee'
+Sequencer               = require './components/sequencer/Sequencer.coffee'
+ShareModal              = require './components/share/ShareModal.coffee'
+BPMIndicator            = require './components/BPMIndicator.coffee'
 template                = require './templates/create-template.hbs'
 
 
 class CreateView extends View
 
 
+   # The template
+   # @type {Function}
+
    template: template
+
 
 
    events:
@@ -27,13 +32,17 @@ class CreateView extends View
       'touchend .btn-export': 'onExportBtnClick'
 
 
-   initialize: (options) ->
-      super options
 
+   # Renders the view and all of the individual components.  Also checks
+   # for a `shareId` on the AppModel and hides elements appropriately
+   # @param {Object} options
 
    render: (options) ->
       super options
 
+      @sharedTrackModel = new SharedTrackModel
+
+      @$mainContainer          = @$el.find '.container-main'
       @$kitSelectorContainer   = @$el.find '.container-kit-selector'
       @$kitSelector            = @$el.find '.kit-selector'
       @$visualizationContainer = @$el.find '.container-visualization'
@@ -50,23 +59,41 @@ class CreateView extends View
 
       shareId = @appModel.get 'shareId'
 
-      if shareId isnt null
-         @importSharedTrack shareId
+      if shareId isnt null and shareId isnt '' and shareId isnt undefined
+         @$mainContainer.hide()
+         @importTrack shareId
+         @appModel.set 'shareId', null
 
       @
 
 
+
+   # Removes the view
+
+   remove: ->
+      @shareModal?.remove()
+      super()
+
+
+
+   # Adds listeners related to exporting the track pattern
 
    addEventListeners: ->
       PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
 
 
 
+
+   # Removes listeners
+
    removeEventListeners: ->
       PubSub.off AppEvent.EXPORT_TRACK
+      super()
 
 
 
+
+   # Renders the kit selector carousel
 
    renderKitSelector: ->
       @kitSelector = new KitSelector
@@ -77,6 +104,10 @@ class CreateView extends View
 
 
 
+
+   # Renders the instrument selector which, on desktop, does nothing, but on
+   # mobile focuses the track within the view
+
    renderInstrumentSelector: ->
       @instrumentSelector = new InstrumentSelectorPanel
          appModel: @appModel
@@ -85,6 +116,9 @@ class CreateView extends View
       @$instrumentSelector.html @instrumentSelector.render().el
 
 
+
+
+   # Renders out the pattern square sequencer
 
    renderSequencer: ->
       @sequencer = new Sequencer
@@ -95,6 +129,9 @@ class CreateView extends View
 
 
 
+
+   # Renders out the BPM interface for controlling tempo
+
    renderBPM: ->
       @bpm = new BPMIndicator
          appModel: @appModel
@@ -104,19 +141,103 @@ class CreateView extends View
 
 
 
+   # Renders out the share modal which then posts to Parse
 
-   # PUBLIC METHODS
+   renderShareModal: ->
+      @shareModal = new ShareModal
+         appModel: @appModel
+         sharedTrackModel: @sharedTrackModel
+
+      $('.wrapper').prepend @shareModal.render().el
+
+      @shareModal.show()
+
+      @listenTo @shareModal, AppEvent.SAVE_TRACK,  @onSaveTrack
+      @listenTo @shareModal, AppEvent.CLOSE_SHARE, @onCloseShare
+
+
+
+
+
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
+
+
+
+   # Handler for saving, sharing and posting a track
+
+   onSaveTrack: =>
+      @exportTrack =>
+         @saveTrack()
+
+
+
+   # Handler for PubSub EXPORT_TRACK events.  Prepares the data in a way that
+   # is savable, exportable, and importable
+   # @param {Function} callback
+
+   onExportTrack: (callback) =>
+
+      patternSquareGroups = []
+      patternSquares      = []
+
+      instruments = @appModel.export().kitModel.instruments
+      kit         = @appModel.get('kitModel').toJSON()
+
+      # Iterate over each instrument and clean values that are unneeded
+      instruments = instruments.map (instrument) =>
+         instrument.patternSquares.forEach (patternSquare) =>
+            delete patternSquare.instrument
+            patternSquares.push patternSquare
+
+         instrument
+
+      # Break the patternSquares into groups of tracks
+      while (patternSquares.length > 0)
+         patternSquareGroups.push patternSquares.splice(0, 8)
+
+      # Pass parsable values back to callee
+      callback {
+         kitType: @appModel.get('kitModel').get('label')
+         instruments: instruments
+         patternSquareGroups: patternSquareGroups
+      }
+
+
+
+
+   # Handler for share button clicks.  Creates the modal and prompts the user
+   # to enter info related to their creation
+   # @param {MouseEvent} event
+
+   onShareBtnClick: (event) =>
+      @renderShareModal()
+
+
+
+
+   # Handler for close btn event on the share modal, as dispatched from the ShareModal
+   # @param {MouseEvent} event
+
+   onCloseShare: (event) =>
+      @stopListening @shareModal
+
+
+
+
+   # PRIVATE METHODS
    # --------------------------------------------------------------------------------
 
 
    # Exports the current track conguration into a serializable,
    # savable format which is then posted to Parse or later retrieval
 
-   exportTrack: =>
-
+   exportTrack: (callback) =>
       PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
 
          {@kitType, @instruments, @patternSquareGroups} = params
+
+         if callback then callback()
 
 
 
@@ -126,20 +247,26 @@ class CreateView extends View
 
    saveTrack: =>
 
-      sharedTrackModel = new SharedTrackModel
+      @sharedTrackModel.set
+
          bpm:                 @appModel.get 'bpm'
          instruments:         @instruments
          kitType:             @kitType
          patternSquareGroups: @patternSquareGroups
-         shareMessage:        @appModel.get 'shareMessage'
-         trackTitle:          @appModel.get 'trackTitle'
          visualization:       @appModel.get 'visualization'
 
+         # shareName:           @appModel.get 'shareName'
+         # shareTitle:          @appModel.get 'shareTitle'
+         # shareMessage:        @appModel.get 'shareMessage'
+         # shareLink:           @appModel.get 'shareLink'
+
       # Send the Parse model up the wire and save to DB
-      sharedTrackModel.save
+      @sharedTrackModel.save
 
          error: (object, error) =>
             console.error object, error
+            @appModel.set 'shareId', 'error'
+
 
 
          # Handler for success events.  Create a new
@@ -147,8 +274,7 @@ class CreateView extends View
          # their page
 
          success: (response) =>
-            @shareId = response.id
-            console.log @shareId
+            @appModel.set 'shareId', response.id
 
 
 
@@ -173,6 +299,12 @@ class CreateView extends View
 
          success: (sharedTrackModel) =>
 
+            console.log sharedTrackModel
+
+            @appModel.set
+               'bpm':              sharedTrackModel.get 'bpm'
+               'sharedTrackModel': sharedTrackModel
+
             PubSub.trigger AppEvent.IMPORT_TRACK,
 
                kitType:             sharedTrackModel.get 'kitType'
@@ -185,57 +317,6 @@ class CreateView extends View
                # @param {Object} response
 
                callback: (response) ->
-
-
-
-
-
-
-   # EVENT HANDLERS
-   # --------------------------------------------------------------------------------
-
-
-
-   # Handler for PubSub EXPORT_TRACK events.  Prepares the data in a way that
-   # is savable, exportable, and importable
-   # @param {Function} callback
-
-   onExportTrack: (callback) =>
-
-      patternSquareGroups = []
-      patternSquares      = []
-
-      kit         = @appModel.get('kitModel').toJSON()
-      instruments = @appModel.export().kitModel.instruments
-
-      instruments = instruments.map (instrument) =>
-         instrument.patternSquares.forEach (patternSquare) =>
-            delete patternSquare.instrument
-            patternSquares.push patternSquare
-
-         instrument
-
-      while (patternSquares.length > 0)
-         patternSquareGroups.push patternSquares.splice(0, 8)
-
-      callback {
-         kitType: @appModel.get('kitModel').get('label')
-         instruments: instruments
-         patternSquareGroups: patternSquareGroups
-      }
-
-
-
-
-   onExportBtnClick: (event) =>
-      @exportTrack()
-
-
-
-
-   onShareBtnClick: (event) =>
-      @importTrack @shareId
-
 
 
 

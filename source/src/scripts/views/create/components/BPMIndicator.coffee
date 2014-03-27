@@ -169,7 +169,8 @@ class BPMIndicator extends View
       clearInterval @updateInterval
       @updateInterval = null
 
-      @appModel.set 'bpm', 60000 / @currBPM
+      @appModel.set 'bpm', @currBPM
+      #@appModel.set 'bpm', 60000 / @currBPM
 
 
 
