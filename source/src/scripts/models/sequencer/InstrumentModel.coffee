@@ -37,7 +37,7 @@ class InstrumentModel extends Model
       # If so, it mutes all other tracks.
       # @type {Boolean}
 
-      'focus':    null
+      'focus':    false
 
 
       # The icon class that represents the instrument
@@ -55,7 +55,7 @@ class InstrumentModel extends Model
       # Mute or unmute setting
       # @type {Boolean}
 
-      'mute':     null
+      'mute':     false
 
 
       # The path to the sound source

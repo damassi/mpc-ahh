@@ -1,0 +1,74 @@
+
+#container-bpm
+   width: 100%
+   padding-top: 28px
+
+   $btn-left-pos: 66px
+
+   > .wrapper
+      position: relative
+      display: inline-block
+      width: 175px
+      height: 133px
+
+
+   .bg-circle
+      $size: 126px
+      +border-radius( $size, $size )
+
+      background: white
+      border: 4px solid $red
+      position: absolute
+      left: 26px
+      top: 4px
+      width:  $size
+      height: $size
+      z-index: 1
+
+
+
+   .label-bpm, .bpm-value
+      @extend .label
+      z-index: 2
+
+
+
+   .label-bpm
+      font-size: 20px
+      top: -18px
+
+
+
+   .bpm-value
+      color: $red
+      font-size: 63px
+      top: -4px
+
+
+
+   .btn-circle
+
+      $padding: 8px
+      $size: 45px
+      @extend .button
+      @extend .miso-regular
+      +border-radius( $size, $size )
+
+      background: $red
+      color: $white
+      font-size: 70px
+      width: $size
+      height: $size
+      padding: $padding
+      padding-top: $padding + 2
+      position: relative
+
+
+
+   .btn-decrease
+      left: -$btn-left-pos
+
+
+
+   .btn-increase
+      left: $btn-left-pos

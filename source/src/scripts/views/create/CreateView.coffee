@@ -10,6 +10,8 @@ View                    = require '../../supers/View.coffee'
 AppEvent                = require '../../events/AppEvent.coffee'
 SharedTrackModel        = require '../../models/SharedTrackModel.coffee'
 KitSelector             = require './components/KitSelector.coffee'
+PlayPauseBtn            = require './components/PlayPauseBtn.coffee'
+Toggle                  = require './components/Toggle.coffee'
 InstrumentSelectorPanel = require './components/instruments/InstrumentSelectorPanel.coffee'
 Sequencer               = require './components/sequencer/Sequencer.coffee'
 ShareModal              = require './components/share/ShareModal.coffee'
@@ -20,11 +22,12 @@ template                = require './templates/create-template.hbs'
 class CreateView extends View
 
 
+   id: 'container-create'
+
    # The template
    # @type {Function}
 
    template: template
-
 
 
    events:
@@ -42,25 +45,36 @@ class CreateView extends View
 
       @sharedTrackModel = new SharedTrackModel
 
-      @$mainContainer          = @$el.find '.container-main'
+      @playPauseBtn = new PlayPauseBtn
+         appModel: @appModel
+
+      @toggle = new Toggle
+         appModel: @appModel
+
+      @$topContainer           = $('body').find '#container-top'
+      @$wrapper                = @$el.find '.wrapper'
       @$kitSelectorContainer   = @$el.find '.container-kit-selector'
-      @$kitSelector            = @$el.find '.kit-selector'
-      @$visualizationContainer = @$el.find '.container-visualization'
+      @$toggleContainer        = @$el.find '.container-toggle'
+      @$playPauseContainer     = @$el.find '.container-play-pause'
       @$sequencerContainer     = @$el.find '.container-sequencer'
       @$instrumentSelector     = @$sequencerContainer.find '.instrument-selector'
       @$sequencer              = @$sequencerContainer.find '.sequencer'
       @$bpm                    = @$sequencerContainer.find '.bpm'
       @$shareBtn               = @$sequencerContainer.find '.btn-share'
 
+      @$toggleContainer.html @toggle.render().el
+      @$playPauseContainer.html @playPauseBtn.render().el
       @renderKitSelector()
-      @renderInstrumentSelector()
       @renderSequencer()
       @renderBPM()
+      @toggle
 
+      @$kitSelector = @$el.find '.kit-selector'
+
+      # Check if the user is importing a track
       shareId = @appModel.get 'shareId'
-
       if shareId isnt null and shareId isnt '' and shareId isnt undefined
-         @$mainContainer.hide()
+         @$wrapper.hide()
          @importTrack shareId
          @appModel.set 'shareId', null
 
@@ -71,6 +85,10 @@ class CreateView extends View
    # Removes the view
 
    remove: ->
+      @kitSelector.remove()
+      @instrumentSelector.remove()
+      @sequencer.remove()
+      @bpm.remove()
       @shareModal?.remove()
       super()
 
@@ -100,7 +118,7 @@ class CreateView extends View
          appModel: @appModel
          kitCollection: @kitCollection
 
-      @$kitSelector.html @kitSelector.render().el
+      @$topContainer.append @kitSelector.render().el
 
 
 

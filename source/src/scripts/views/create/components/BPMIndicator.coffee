@@ -14,6 +14,9 @@ template  = require './templates/bpm-template.hbs'
 class BPMIndicator extends View
 
 
+   id: 'container-bpm'
+
+
    # Ref to the main AppModel
    # @type {AppModel}
 
@@ -70,7 +73,7 @@ class BPMIndicator extends View
    render: (options) ->
       super options
 
-      @$bpmLabel   = @$el.find '.label-bpm'
+      @$bpmLabel   = @$el.find '.bpm-value'
       @increaseBtn = @$el.find '.btn-increase'
       @decreaseBtn = @$el.find '.btn-decrease'
 

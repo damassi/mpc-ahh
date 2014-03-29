@@ -5,6 +5,55 @@ General CSS utilities and SASS mixins
 
 ///////////////////////////////////////////////////// */
 
+
+@mixin center-section( $width: 100% ) {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: $width;
+  margin: 0 auto;
+}
+
+@mixin center-everywhere( $width: 100% ) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+@mixin disable-selection {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline-style:none;/*IE*/
+}
+
+
+.hidden {
+  display: none;
+}
+
+.selected {
+  color: red;
+}
+
+.placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+
+
+
+
 @mixin image-replace($image) {
   background: image-url($image) no-repeat;
   width: image-width($image);
@@ -50,7 +99,7 @@ $old-ie: false !default;
 
 .no-mobile {
   display: none;
-  
+
   @include respond-min {
     display: block;
   }
@@ -58,7 +107,7 @@ $old-ie: false !default;
 
 .mobile-only {
   display: block;
-  
+
   @include respond-min {
     display: none;
   }
@@ -76,9 +125,9 @@ image-height($image)
 image-url($image)
 
 replace-text($img, $x, $y)
-hide-text() 
+hide-text()
   @import "compass/typography/text/replacement";
-  
+
 inline-block
   @import "compass/css3/inline-block";
 

@@ -1,0 +1,88 @@
+#container-kit-selector
+
+   $btn-margin:   12px
+   $arrow-margin: 10px
+
+
+   > .wrapper
+
+      +disable-selection
+
+      //background: url("#{$images}/placeholders/desktop/placeholder-kitselector.png") no-repeat
+      width: 240px
+      height: 94px
+      margin: auto
+      padding-top: 10px
+
+
+
+   .bg-half-circle
+
+      $size: 240px
+      +border-radius( $size, $size )
+
+      background: white
+      width: $size
+      height: $size
+      position: absolute
+      top: -(($size * .5) + 26)
+
+
+
+   .label-select
+
+      @extend .label
+      font-size: 16px
+      margin-bottom: -$btn-margin
+      overflow: hidden
+
+
+
+   .label-kit
+
+      @extend .label
+      font-size: 30px
+      height: 24px
+      width: 90px
+      top: 4px
+      overflow: hidden
+
+      div
+         position: relative
+
+
+
+   .label-kit, .btn-left, .btn-right
+      display: inline-block
+
+
+
+   .btn-left, .btn-right
+
+      @extend .button
+      @extend .miso-regular
+      $size: 50px
+
+      color: $red
+      font-size: 44px
+      cursor: pointer
+      padding-top: $btn-margin
+      position: relative
+      top: 3px
+      width: $size
+      height: $size
+
+
+
+   .btn-left
+      left: $arrow-margin
+
+
+
+   .btn-right
+      left: -$arrow-margin
+
+
+
+
+

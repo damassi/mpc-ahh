@@ -1,0 +1,10 @@
+
+
+@mixin respond-desktop($width: $break-small)
+   @media screen and (min-width: $width)
+      @content
+
+
+@mixin respond-mobile($width: $break-small - 1)
+   @media screen and (max-width: $width)
+      @content

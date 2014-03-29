@@ -13,6 +13,9 @@ template = require './templates/kit-selection-template.hbs'
 class KitSelector extends View
 
 
+   id: 'container-kit-selector'
+
+
    # Ref to the main AppModel
    # @type {AppModel}
 
@@ -52,7 +55,7 @@ class KitSelector extends View
    render: (options) ->
       super options
 
-      @$kitLabel = @$el.find '.label-kit'
+      @$kitLabel = @$el.find('.label-kit').find 'div'
 
       if @appModel.get('kitModel') is null
          @appModel.set 'kitModel', @kitCollection.at(0)
@@ -101,7 +104,16 @@ class KitSelector extends View
 
    onChangeKit: (model) ->
       @kitModel = model.changed.kitModel
-      @$kitLabel.text @kitModel.get 'label'
+
+      TweenMax.to @$kitLabel, .2,
+         y: -20
+         ease: Expo.easeIn
+
+         onComplete: =>
+            @$kitLabel.text @kitModel.get 'label'
+            TweenMax.fromTo @$kitLabel, .2, { y: 20 },
+               y: 0
+               ease: Expo.easeOut
 
 
 

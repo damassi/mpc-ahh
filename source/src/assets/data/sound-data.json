@@ -5,74 +5,74 @@
 
   "kits": [
     {
-      "label": "Jazz",
-      "folder": "jazz",
-      "instruments": [
-        {
-          "label": "FX",
-          "src": "FX_1.mp3",
-          "icon": "icon-fx"
-        },
-        {
-          "label": "Closed HiHat",
-          "src": "HAT_1.mp3",
-          "icon": "icon-hihat-closed"
-        },
-        {
-          "label": "Kick Drum",
-          "src": "KIK_1.mp3",
-          "icon": "icon-kickdrum"
-        },
-        {
-          "label": "Open HiHat",
-          "src": "OP_HAT_7.mp3",
-          "icon": "icon-hihat-open"
-        },
-        {
-          "label": "Ride",
-          "src": "RIDE_CYM.mp3",
-          "icon": "icon-ride"
-        },
-        {
-          "label": "Snare",
-          "src": "SN_1.mp3",
-          "icon": "icon-snare"
-        }
-      ]
-    },
-    {
-      "label": "Hip Hop",
+      "label": "Hip-Hop",
       "folder": "hip-hop",
       "instruments": [
         {
-          "label": "Closed HiHat",
-          "src": "HAT_2.mp3",
-          "icon": "icon-hihat-closed"
+          "label": "Kick Drum 1",
+          "src": "KIK_2.mp3",
+          "icon": "icon-kit-0-kick1"
         },
         {
-          "label": "Kick Drum",
-          "src": "KIK_2.mp3",
-          "icon": "icon-kickdrum"
+          "label": "Kick Drum 2",
+          "src": "TAMB.mp3",
+          "icon": "icon-kit-0-kick2"
+        },
+        {
+          "label": "Closed HiHat",
+          "src": "HAT_2.mp3",
+          "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
           "src": "OP_HAT_2.mp3",
-          "icon": "icon-hihat-open"
-        },
-        {
-          "label": "Ride",
-          "src": "RIDE_CYM.mp3",
-          "icon": "icon-ride"
+          "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
           "src": "SN_2.mp3",
-          "icon": "icon-snare"
+          "icon": "icon-kit-0-snare"
         },
         {
-          "label": "Tamborine",
-          "src": "TAMB.mp3",
-          "icon": "icon-tamborine"
+          "label": "Voice",
+          "src": "RIDE_CYM.mp3",
+          "icon": "icon-kit-0-voice"
+        }
+      ]
+    },
+    {
+      "label": "Jazz",
+      "folder": "jazz",
+      "instruments": [
+        {
+          "label": "Kick Drum 1",
+          "src": "FX_1.mp3",
+          "icon": "icon-kit-0-kick1"
+        },
+        {
+          "label": "Kick Drum 2",
+          "src": "HAT_1.mp3",
+          "icon": "icon-kit-0-kick2"
+        },
+        {
+          "label": "Closed HiHat",
+          "src": "KIK_1.mp3",
+          "icon": "icon-kit-0-hihat-closed"
+        },
+        {
+          "label": "Open HiHat",
+          "src": "OP_HAT_7.mp3",
+          "icon": "icon-kit-0-hihat-open"
+        },
+        {
+          "label": "Snare",
+          "src": "RIDE_CYM.mp3",
+          "icon": "icon-kit-0-snare"
+        },
+        {
+          "label": "Voice",
+          "src": "SN_1.mp3",
+          "icon": "icon-kit-0-voice"
         }
       ]
     }

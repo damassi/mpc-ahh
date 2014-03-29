@@ -31,6 +31,19 @@ AppConfig =
    BPM_MAX: 1000
 
 
+   # Breakpoint definition for enquire
+   # and BreakpointManager class
+
+   BREAKPOINTS:
+      mobile:
+            min: null
+            max: 784
+
+      desktop:
+         min: 785
+         max: null
+
+
    # The max varient on each pattern square (off, low, medium, high)
    # @type {Number}
 

@@ -138,7 +138,7 @@ class PadSquare extends View
 
          @audioPlayback = new Howl
             volume: AppConfig.VOLUME_LEVELS.medium
-            buffer: true
+            buffer: false
             urls: [audioSrc]
             onend: @onSoundEnd
 

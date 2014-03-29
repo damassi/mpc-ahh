@@ -6,27 +6,25 @@ FONT DEFINITIONS
 
 .gotham-bold {
   font-family: 'Conv_GothamHTF-Bold';
-  font-weight: normal;
-  font-style: normal;
 }
 
 .miso-bold {
   font-family: 'misobold';
-  font-weight: normal;
-  font-style: normal;
 }
 
 .miso-light {
   font-family: 'misolight';
-  font-weight: normal;
-  font-style: normal;
 }
 
 .miso-regular {
   font-family: 'misoregular';
-  font-weight: normal;
-  font-style: normal;
 }
+
+.mono-social {
+  font-family: 'MonoSocialIconsFont';
+}
+
+
 
 
 /* Webfont Includes
@@ -34,19 +32,19 @@ FONT DEFINITIONS
 
 @font-face {
   font-family: 'Conv_GothamHTF-Bold';
-  src: url('fonts/GothamHTF-Bold.eot');
-  src: local('☺'), url('fonts/GothamHTF-Bold.woff') format('woff'), url('fonts/GothamHTF-Bold.ttf') format('truetype'), url('fonts/GothamHTF-Bold.svg') format('svg');
+  src: url($webfonts + '/GothamHTF-Bold.eot');
+  src: local('☺'), url($webfonts + '/GothamHTF-Bold.woff') format('woff'), url($webfonts + '/GothamHTF-Bold.ttf') format('truetype'), url($webfonts + '/GothamHTF-Bold.svg') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
     font-family: 'misobold';
-    src: url('miso-bold-webfont.eot');
-    src: url('miso-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('miso-bold-webfont.woff') format('woff'),
-         url('miso-bold-webfont.ttf') format('truetype'),
-         url('miso-bold-webfont.svg#misobold') format('svg');
+    src: url($webfonts + '/miso-bold-webfont.eot');
+    src: url($webfonts + '/miso-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url($webfonts + '/miso-bold-webfont.woff') format('woff'),
+         url($webfonts + '/miso-bold-webfont.ttf') format('truetype'),
+         url($webfonts + '/miso-bold-webfont.svg#misobold') format('svg');
     font-weight: normal;
     font-style: normal;
 
@@ -54,11 +52,11 @@ FONT DEFINITIONS
 
 @font-face {
     font-family: 'misolight';
-    src: url('miso-light-webfont.eot');
-    src: url('miso-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('miso-light-webfont.woff') format('woff'),
-         url('miso-light-webfont.ttf') format('truetype'),
-         url('miso-light-webfont.svg#misolight') format('svg');
+    src: url($webfonts + '/miso-light-webfont.eot');
+    src: url($webfonts + '/miso-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url($webfonts + '/miso-light-webfont.woff') format('woff'),
+         url($webfonts + '/miso-light-webfont.ttf') format('truetype'),
+         url($webfonts + '/miso-light-webfont.svg#misolight') format('svg');
     font-weight: normal;
     font-style: normal;
 
@@ -66,12 +64,85 @@ FONT DEFINITIONS
 
 @font-face {
     font-family: 'misoregular';
-    src: url('miso-regular-webfont.eot');
-    src: url('miso-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('miso-regular-webfont.woff') format('woff'),
-         url('miso-regular-webfont.ttf') format('truetype'),
-         url('miso-regular-webfont.svg#misoregular') format('svg');
+    src: url($webfonts + '/miso-regular-webfont.eot');
+    src: url($webfonts + '/miso-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url($webfonts + '/miso-regular-webfont.woff') format('woff'),
+         url($webfonts + '/miso-regular-webfont.ttf') format('truetype'),
+         url($webfonts + '/miso-regular-webfont.svg#misoregular') format('svg');
     font-weight: normal;
     font-style: normal;
+}
 
+@font-face {
+  font-family: 'MonoSocialIconsFont';
+  src: url($webfonts + '/MonoSocialIconsFont-1.10.eot'); /* IE9 Compat Modes */
+  src: url($webfonts + '/MonoSocialIconsFont-1.10.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url($webfonts + '/MonoSocialIconsFont-1.10.woff') format('woff'), /* Modern Browsers */
+       url($webfonts + '/MonoSocialIconsFont-1.10.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url($webfonts + '/MonoSocialIconsFont-1.10.svg#6bfd47e09490f6412b1214e93a0be9a1') format('svg'); /* Legacy iOS */
+
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: 'mpc-icons';
+  src:url($webfonts + '/mpc-icons.eot?eq38tc');
+  src:url($webfonts + '/mpc-icons.eot?#iefixeq38tc') format('embedded-opentype'),
+    url($webfonts + '/mpc-icons.woff?eq38tc') format('woff'),
+    url($webfonts + '/mpc-icons.ttf?eq38tc') format('truetype'),
+    url($webfonts + '/mpc-icons.svg?eq38tc#mpc-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'mpc-icons';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-twitter:before {
+  content: "\e60c";
+}
+.icon-tumblr:before {
+  content: "\e60d";
+}
+.icon-facebook:before {
+  content: "\e60e";
+}
+.icon-gear:before {
+  content: "\e600";
+}
+.icon-play:before {
+  content: "\e604";
+}
+.icon-pause:before {
+  content: "\e605";
+}
+.icon-kit-0-voice:before {
+  content: "\e606";
+}
+.icon-kit-0-snare:before {
+  content: "\e607";
+}
+.icon-kit-0-kick2:before {
+  content: "\e608";
+}
+.icon-kit-0-kick1:before {
+  content: "\e609";
+}
+.icon-kit-0-hihat-open:before {
+  content: "\e60a";
+}
+.icon-kit-0-hihat-closed:before {
+  content: "\e60b";
 }

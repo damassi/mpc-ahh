@@ -50,8 +50,8 @@ class PatternTrack extends View
 
 
    events:
-      'touchend .label-instrument': 'onLabelClick'
-      'touchend .btn-mute':         'onMuteBtnClick'
+      'touchend .instrument':   'onInstrumentBtnClick'
+      'touchend .btn-mute':     'onMuteBtnClick'
 
 
 
@@ -62,8 +62,10 @@ class PatternTrack extends View
    render: (options) ->
       super options
 
-      @$label = @$el.find '.label-instrument'
+      @$instrument = @$el.find '.instrument'
+      @$mute       = @$el.find '.btn-mute'
 
+      @$mute.hide()
       @renderPatternSquares()
 
       @
@@ -87,7 +89,6 @@ class PatternTrack extends View
       @kitModel = @appModel.get('kitModel')
 
       @listenTo @model,    AppEvent.CHANGE_FOCUS,      @onFocusChange
-      @listenTo @model,    AppEvent.CHANGE_MUTE,       @onMuteChange
       @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
@@ -108,7 +109,7 @@ class PatternTrack extends View
          patternSquare = new PatternSquare
             patternSquareModel: model
 
-         @$label.text model.get 'label'
+         @$instrument.text model.get 'label'
          @$el.append patternSquare.render().el
          @patternSquareViews.push patternSquare
 
@@ -117,18 +118,6 @@ class PatternTrack extends View
 
 
 
-   # Mute the entire track
-
-   mute: ->
-      @model.set 'mute', true
-
-
-
-   # Unmute the entire track
-
-   unmute: ->
-      @model.set 'mute', false
-
 
 
    select: ->
@@ -136,21 +125,12 @@ class PatternTrack extends View
 
 
 
+
+
    deselect: ->
       if @$el.hasClass 'selected'
          @$el.removeClass 'selected'
 
-
-
-   focus: ->
-      @$el.addClass 'focus'
-
-
-
-
-   unfocus: ->
-      if @$el.hasClass 'focus'
-         @$el.removeClass 'focus'
 
 
 
@@ -174,37 +154,42 @@ class PatternTrack extends View
 
 
 
-   # Handler for mute model change events
-   # @param {InstrumentModel} model
-
-   onMuteChange: (model) ->
-      mute = model.changed.mute
-
-      if mute
-         @$el.addClass 'mute'
-
-      else @$el.removeClass 'mute'
-
-
-
-   # Handler for focus change events
-   # @param {InstrumentModel} model
-
-   onFocusChange: (model) ->
-      if model.changed.focus
-          @focus()
-      else
-          @unfocus()
-
-
-
    # Handler for mute button clicks
    # @param {InstrumentModel} model
 
-   onLabelClick: (event) =>
-      if @model.get('mute') isnt true
-         @model.set 'focus', ! @model.get('focus')
+   onInstrumentBtnClick: (event) =>
 
+      # Off state > Focus
+      if @model.get('mute') is false and @model.get('focus') is false
+
+         return @model.set
+            'mute':  false
+            'focus': true
+
+      # Focus state > Mute
+      if @model.get('focus')
+
+         return @model.set
+            'mute':  true
+            'focus': false
+
+      # Mute state > off
+      if @model.get('mute')
+
+         return @model.set
+            'mute': false
+            'focus': false
+
+
+
+
+   onFocusChange: (model) ->
+      focus = model.changed.focus
+
+      if focus
+         @$instrument.addClass 'focus'
+      else
+         @$instrument.removeClass 'focus'
 
 
 
@@ -214,17 +199,6 @@ class PatternTrack extends View
 
    onMuteBtnClick: (event) =>
       @model.set 'mute', ! @model.get('mute')
-
-      # if @model.get 'mute'
-      #    @unmute()
-
-      # else @mute()
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,134 @@
+
+#container-sequencer
+
+   $square-min-width: 30px
+   $square-height: 30px
+
+   > .wrapper
+
+      //background: url("#{$images}/placeholders/desktop/placeholder-sequencer.png") no-repeat
+      background-position: 0 10px
+      width: 100%
+      height: 199px
+      padding-left: 6px
+
+      +disable-selection
+
+
+      // Sequencer Container
+      // -------------------
+
+      .sequencer
+
+         border-collapse: initial
+         border-spacing: 4px
+
+         width: 100%
+
+         td
+            text-align: center
+            vertical-align: middle
+
+
+
+         .step
+
+            background: $red !important
+            min-width: $square-min-width
+            height: 5px
+
+
+
+
+         // Individual Tracks
+         // -----------------
+
+         .pattern-track
+
+
+            .instrument
+               color: $grey-dark
+               font-size: 20px
+               width: 50px
+               cursor: pointer
+
+               &.focus
+                  color: $red
+
+
+
+
+            // Individual Squares
+            // ------------------
+
+            .pattern-square
+               position: relative
+               background: $grey
+               cursor: pointer
+               text-align: center
+               vertical-align: bottom
+
+               min-width: $square-min-width
+               height: $square-height
+
+
+               .border-dark
+                  position: absolute
+                  top: 0
+                  width: 100%
+                  height: $square-height
+
+
+               .icon
+                  display: inline-block
+                  width: 20px
+                  height: 20px
+
+
+               .velocity-soft
+                  background: url("#{$images}/icon-beat-soft.svg") no-repeat
+
+
+               .velocity-medium
+                  background: url("#{$images}/icon-beat-medium.svg") no-repeat
+
+
+               .velocity-hard
+                  background: url("#{$images}/icon-beat-hard.svg") no-repeat
+
+
+
+
+         .mute
+
+            td
+               background: white !important
+               opacity: .6
+
+               &.pattern-square
+                  @extend .border
+
+
+         .focus
+            td
+
+
+         .defocused
+
+            td.pattern-square
+
+               background: white !important
+               @extend .border
+
+
+
+
+
+#pad
+   float: left
+
+   td
+      padding: 37px
+
+
+

@@ -47,7 +47,9 @@ class PatternSquare extends View
 
 
    events:
-      'touchend': 'onClick'
+      'mouseover':   'onMouseOver'
+      'mouseout':    'onMouseOut'
+      'touchend':    'onClick'
 
 
 
@@ -56,6 +58,12 @@ class PatternSquare extends View
 
    render: (options) ->
       super options
+
+      @$border = @$el.find '.border-dark'
+      @$icon   = @$el.find '.icon'
+
+      TweenMax.set @$border, autoAlpha: 0
+      TweenMax.set @$icon, autoAlpha: 0, scale: 0
 
       audioSrc = ''
 
@@ -67,7 +75,7 @@ class PatternSquare extends View
 
       @audioPlayback = new Howl
          volume: AppConfig.VOLUME_LEVELS.low
-         buffer: true
+         buffer: false
          urls: [audioSrc]
          onend: @onSoundEnd
 
@@ -116,21 +124,44 @@ class PatternSquare extends View
    play: ->
       @audioPlayback.play()
 
+      TweenMax.to @$icon, .3,
+         scale: 1.2
+         #rotation: 180
+         ease: Back.easeOut
+
+         onComplete: =>
+            TweenMax.to @$icon, .3,
+               scale: 1
+               #rotation: 0
+               ease: Back.easeOut
+
+
       TweenMax.to @$el, .2,
-         ease: Back.easeIn
-         scale: .5
+         backgroundColor: "#E41E2B"
 
          onComplete: =>
 
             TweenMax.to @$el, .2,
-               scale: 1
-               ease: Back.easeOut
+               backgroundColor: "#E5E5E5"
 
 
 
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   onMouseOver: (event) ->
+      TweenMax.to @$border, .2,
+         autoAlpha: .5
+
+
+
+   onMouseOut: (event) ->
+      TweenMax.to @$border, .2,
+         autoAlpha: 0
+
 
 
 
@@ -147,18 +178,57 @@ class PatternSquare extends View
    # @param {PatternSquareModel} model
 
    onVelocityChange: (model) ->
-      velocity = model.changed.velocity
 
-      @$el.removeClass 'velocity-low velocity-medium velocity-high'
+      removeClass = =>
+         @$icon.removeClass 'velocity-soft velocity-medium velocity-hard play'
+
+
+      addClass = =>
+         @$icon.addClass velocityClass
+
+
+      velocity = model.changed.velocity
 
       # Set visual indicator
       velocityClass = switch velocity
-         when 1 then 'velocity-low'
-         when 2 then 'velocity-medium'
-         when 3 then 'velocity-high'
+         when 1 then 'velocity-soft play'
+         when 2 then 'velocity-medium play'
+         when 3 then 'velocity-hard play'
          else ''
 
-      @$el.addClass velocityClass
+
+      # Animate in if the user is adding a pattern
+      if velocityClass isnt ''
+         removeClass()
+
+         if velocityClass is 'velocity-soft play'
+            TweenMax.set @$icon, autoAlpha: 0, scale: 0
+
+         rotation = switch velocity
+            when 1 then 90
+            when 2 then 180
+            when 3 then 270
+            else 0
+
+         TweenMax.to @$icon, .2,
+            autoAlpha: 1
+            scale: 1
+            rotation: rotation
+            ease: Expo.easeOut
+
+         addClass()
+
+      # User is removing the pattern, animate out
+      else
+         TweenMax.to @$icon, .2,
+            scale: 0
+            ease: Back.easeIn
+            onComplete: =>
+               TweenMax.set @$icon, rotation: 0
+               removeClass()
+
+      # Trigger mouse out to hide border
+      @onMouseOut()
 
 
       # Set audio volume

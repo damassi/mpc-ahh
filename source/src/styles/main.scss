@@ -9,7 +9,7 @@ matt@wintr.us @ WINTR
 /* Compass Imports
 --------------------------------------------- */
 
-//@import "compass/reset";
+@import "compass/reset";
 @import "compass/css3/box-shadow";
 @import "compass/css3/border-radius";
 @import "compass/css3/background-size";
@@ -19,12 +19,20 @@ matt@wintr.us @ WINTR
 /* Variables
 --------------------------------------------- */
 
-$base-color: #666666;
+$webfonts:  '../webfonts';
+$images:    '../images';
+
+$break-small:     785px;
+
+$base-color:      #000;
 $highlight-color: #ea2427;
+$red:             #E41E2B;
+$grey:            #E5E5E5;
+$grey-dark:       #A6A8AB;
+$black:           #000;
+$white:           #fff;
 
-$body-font: Helvetica, Arial, sans-serif;
-
-$break-small: 480px;
+$body-font: "misobold", Helvetica, Arial, sans-serif;
 
 
 /* Sprites
@@ -41,29 +49,17 @@ $break-small: 480px;
 @import "libs/hidpi";
 @import "libs/retina-sprites";
 @import "base";
-@import "grid";
 @import "utils";
-@import "views/sequencer";
-@import "views/instrument-selector";
-@import "views/pads";
-
-
-
-/* /////////////////////////////////////////////////////
-
-GLOBAL LAYOUT
-
-///////////////////////////////////////////////////// */
-
-#wrapper {
-  width: 960px;
-  margin: 0 auto;
-}
-
-.hidden {
-  display: none;
-}
-
-.selected {
-  color: red;
-}
+@import "utils/responsive";
+@import "fonts";
+@import "ui";
+@import "views/landing";
+@import "views/visualizer";
+@import "views/create/create";
+@import "views/create/bpm";
+@import "views/create/sequencer";
+@import "views/create/kit-selector";
+@import "views/create/instrument-selector";
+@import "views/create/pads";
+@import "views/share";
+@import "layout";

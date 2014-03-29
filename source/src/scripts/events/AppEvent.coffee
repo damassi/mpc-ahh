@@ -8,23 +8,28 @@
 
 AppEvent =
 
-   CHANGE_ACTIVE:     'change:active'
-   CHANGE_BPM:        'change:bpm'
-   CHANGE_DRAGGING:   'change:dragging'
-   CHANGE_DROPPED:    'change:dropped'
-   CHANGE_FOCUS:      'change:focus'
-   CHANGE_INSTRUMENT: 'change:currentInstrument'
-   CHANGE_KIT:        'change:kitModel'
-   CHANGE_MUTE:       'change:mute'
-   CHANGE_PLAYING:    'change:playing'
-   CHANGE_SHARE_ID:   'change:shareId'
-   CHANGE_TRIGGER:    'change:trigger'
-   CHANGE_VELOCITY:   'change:velocity'
+   BREAKPOINT_MATCH:   'breakpoint:match'
+   BREAKPOINT_UNMATCH: 'breakpoint:unmatch'
 
-   IMPORT_TRACK:      'onImportTrack'
-   EXPORT_TRACK:      'onExportTrack'
-   SAVE_TRACK:        'onSaveTrack'
+   CHANGE_ACTIVE:      'change:active'
+   CHANGE_BPM:         'change:bpm'
+   CHANGE_DRAGGING:    'change:dragging'
+   CHANGE_DROPPED:     'change:dropped'
+   CHANGE_FOCUS:       'change:focus'
+   CHANGE_INSTRUMENT:  'change:currentInstrument'
+   CHANGE_ISMOBILE:    'change:isMobile'
+   CHANGE_KIT:         'change:kitModel'
+   CHANGE_MUTE:        'change:mute'
+   CHANGE_PLAYING:     'change:playing'
+   CHANGE_SHARE_ID:    'change:shareId'
+   CHANGE_TRIGGER:     'change:trigger'
+   CHANGE_VELOCITY:    'change:velocity'
+   CHANGE_VIEW:        'change:view'
 
-   CLOSE_SHARE:       'onCloseShare'
+   IMPORT_TRACK:       'onImportTrack'
+   EXPORT_TRACK:       'onExportTrack'
+   SAVE_TRACK:         'onSaveTrack'
+
+   CLOSE_SHARE:        'onCloseShare'
 
 module.exports = AppEvent

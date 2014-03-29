@@ -13,6 +13,8 @@ template   = require './templates/share-template.hbs'
 class ShareView extends View
 
 
+   id: 'container-share'
+
    # The template
    # @type {Function}
 
@@ -49,7 +51,7 @@ class ShareView extends View
    # Removes the view
 
    remove: ->
-      @createView.remove()
+      @createView?.remove()
       super()
 
 

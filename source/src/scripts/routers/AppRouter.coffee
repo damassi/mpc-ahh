@@ -57,6 +57,7 @@ class AppRouter extends Backbone.Router
       '':             'landingRoute'
       'landing':      'landingRoute'
       'create':       'createRoute'
+      'share':       'shareRoute'
       'share/:id':    'shareRoute'
 
       # Component test routes
@@ -121,6 +122,8 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'view', view
 
+      @hideTop()
+
 
 
 
@@ -139,6 +142,8 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'view', view
 
+      @hideTop()
+
 
 
 
@@ -149,6 +154,8 @@ class AppRouter extends Backbone.Router
       view.render()
 
       @appModel.set 'view', view
+
+      @hideTop()
 
 
 
@@ -169,6 +176,8 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'view', view
 
+      @hideTop()
+
 
 
 
@@ -184,6 +193,8 @@ class AppRouter extends Backbone.Router
          patternSquareModel: new PatternSquareModel()
 
       @appModel.set 'view', view
+
+      @hideTop()
 
 
 
@@ -201,6 +212,8 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'view', view
 
+      @hideTop()
+
 
 
    sequencerRoute: ->
@@ -217,6 +230,8 @@ class AppRouter extends Backbone.Router
          collection: @kitCollection.at(0).get('instruments')
 
       @appModel.set 'view', view
+
+      @hideTop()
 
 
 
@@ -270,6 +285,8 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'view', fullSequencerView
 
+      @hideTop()
+
 
 
 
@@ -287,6 +304,8 @@ class AppRouter extends Backbone.Router
 
 
       @appModel.set 'view', view
+
+      @hideTop()
 
 
 
@@ -307,6 +326,8 @@ class AppRouter extends Backbone.Router
 
       @appModel.set 'view', view
 
+      @hideTop()
+
 
 
 
@@ -317,6 +338,13 @@ class AppRouter extends Backbone.Router
 
 
       @appModel.set 'view', view
+
+      @hideTop()
+
+
+
+   hideTop: ->
+      $('#container-main').hide()
 
 
 

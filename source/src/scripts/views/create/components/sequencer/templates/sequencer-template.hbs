@@ -1,11 +1,17 @@
-<table class='sequencer'>
-	<tr>
-		<th></th>
-		<th></th>
 
-		{{#repeat 8}}
-			<th class='stepper'></th>
-		{{/repeat}}
-	</tr>
+<div class='wrapper'>
+	<table class='sequencer'>
+		<tr>
 
-</table>
+			{{!-- .stepper th for instrument --}}
+			<th></th>
+
+			{{!-- .stepper th for hidden mute button --}}
+			<th style='display:none'></th>
+
+			{{#repeat 8}}
+				<th class='stepper'></th>
+			{{/repeat}}
+		</tr>
+	</table>
+</div>

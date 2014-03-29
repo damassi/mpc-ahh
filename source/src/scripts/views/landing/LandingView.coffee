@@ -14,11 +14,14 @@ template = require './templates/landing-template.hbs'
 class LandingView extends View
 
 
+   id: 'container-landing'
+
+
    template: template
 
 
    events:
-      'touchend .start-btn': 'onStartBtnClick'
+      'touchend .btn-start': 'onStartBtnClick'
 
 
    onStartBtnClick: (event) ->

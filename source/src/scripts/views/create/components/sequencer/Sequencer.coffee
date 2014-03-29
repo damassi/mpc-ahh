@@ -19,7 +19,7 @@ class Sequencer extends View
    # The name of the container class
    # @type {String}
 
-   className: 'sequencer-container'
+   id: 'container-sequencer'
 
 
    # The template
@@ -82,6 +82,7 @@ class Sequencer extends View
       @$thStepper = @$el.find 'th.stepper'
       @$sequencer = @$el.find '.sequencer'
 
+      #@$thStepper.hide()
       @renderTracks()
       @play()
 
@@ -108,7 +109,9 @@ class Sequencer extends View
       @listenTo @appModel,   AppEvent.CHANGE_BPM,     @onBPMChange
       @listenTo @appModel,   AppEvent.CHANGE_PLAYING, @onPlayingChange
       @listenTo @appModel,   AppEvent.CHANGE_KIT,     @onKitChange
+
       @listenTo @collection, AppEvent.CHANGE_FOCUS,   @onFocusChange
+      @listenTo @collection, AppEvent.CHANGE_MUTE,    @onMuteChange
 
       PubSub.on AppEvent.IMPORT_TRACK, @importTrack
       #PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
@@ -149,6 +152,7 @@ class Sequencer extends View
 
    updateTime: =>
       @$thStepper.removeClass 'step'
+      @$sequencer.find('td').removeClass 'step'
       @currBeatCellId = if @currBeatCellId < @numCells then @currBeatCellId += 1 else @currBeatCellId = 0
       $(@$thStepper[@currBeatCellId]).addClass 'step'
 
@@ -285,8 +289,6 @@ class Sequencer extends View
       @collection = model.changed.kitModel.get('instruments')
       @renderTracks()
 
-      console.log @collection.toJSON()
-
       # Export old pattern squares so the users pattern isn't blown away
       # when kit changes occur
 
@@ -362,10 +364,64 @@ class Sequencer extends View
    # @param {InstrumentModel} model
 
    onFocusChange: (model) =>
-      @collection.each (instrumentModel) =>
+      doFocus = model.changed.focus
+      selectedIndex = @collection.indexOf model
+
+      @collection.each (instrumentModel, index) =>
+
+         # Unset audio focus on other tracks
          if model.changed.focus is true
             if model.cid isnt instrumentModel.cid
-               instrumentModel.set 'focus', false
+               instrumentModel.set 'focus', false, {trigger: false }
+
+
+      @collection.each (instrumentModel, index) =>
+
+         # Update view representation for focus state
+         view = @patternTrackViews[index]
+
+         # Found instrument model
+         if model is instrumentModel
+
+            # Add focus
+            if doFocus is true
+               view.$el.removeClass('defocused')
+
+
+         # All the other tracks, remove focus if set
+         else
+
+            # Add defocused state
+            if doFocus is true
+               view.$el.addClass('defocused')
+
+            # Remove defocused state
+            else
+               view.$el.removeClass('defocused')
+
+
+
+
+   onMuteChange: (model) =>
+      selectedIndex = @collection.indexOf model
+
+      @collection.each (instrumentModel, index) =>
+         view = @patternTrackViews[index]
+
+         # Found instrument model
+         if selectedIndex is index
+
+            # Add mute
+            if model.changed.mute is true
+               view.$el.addClass 'mute'
+
+            # User unmuting track
+            else view.$el.removeClass 'mute'
+
+         # All the other tracks, remove mute if set
+         else
+            if view.$el.hasClass 'mute'
+               view.$el.removeClass 'mute'
 
 
 

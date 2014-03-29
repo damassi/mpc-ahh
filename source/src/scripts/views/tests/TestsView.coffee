@@ -11,6 +11,8 @@ template = require './tests-template.hbs'
 
 class TestsView extends View
 
+   id: 'container-development'
+
    template: template
 
 
