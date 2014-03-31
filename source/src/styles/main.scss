@@ -22,7 +22,8 @@ matt@wintr.us @ WINTR
 $webfonts:  '../webfonts';
 $images:    '../images';
 
-$break-small:     785px;
+//$break-small:     785px;
+$break-small:     285px;
 
 $base-color:      #000;
 $highlight-color: #ea2427;
@@ -48,8 +49,8 @@ $body-font: "misobold", Helvetica, Arial, sans-serif;
 
 @import "libs/hidpi";
 @import "libs/retina-sprites";
-@import "base";
 @import "utils";
+@import "base";
 @import "utils/responsive";
 @import "fonts";
 @import "ui";

@@ -229,6 +229,7 @@ class CreateView extends View
    # @param {MouseEvent} event
 
    onShareBtnClick: (event) =>
+      return
       @renderShareModal()
 
 
@@ -272,11 +273,6 @@ class CreateView extends View
          kitType:             @kitType
          patternSquareGroups: @patternSquareGroups
          visualization:       @appModel.get 'visualization'
-
-         # shareName:           @appModel.get 'shareName'
-         # shareTitle:          @appModel.get 'shareTitle'
-         # shareMessage:        @appModel.get 'shareMessage'
-         # shareLink:           @appModel.get 'shareLink'
 
       # Send the Parse model up the wire and save to DB
       @sharedTrackModel.save

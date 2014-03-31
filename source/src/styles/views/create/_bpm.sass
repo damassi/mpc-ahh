@@ -1,5 +1,7 @@
 
 #container-bpm
+   +disable-selection
+
    width: 100%
    padding-top: 28px
 
@@ -29,6 +31,7 @@
 
    .label-bpm, .bpm-value
       @extend .label
+      pointer-events: none
       z-index: 2
 
 
@@ -56,6 +59,7 @@
 
       background: $red
       color: $white
+      cursor: pointer
       font-size: 70px
       width: $size
       height: $size

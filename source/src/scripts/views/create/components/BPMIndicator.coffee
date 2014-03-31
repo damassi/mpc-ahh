@@ -62,6 +62,8 @@ class BPMIndicator extends View
       'touchstart .btn-decrease': 'onDecreaseBtnDown'
       'touchend   .btn-increase': 'onBtnUp'
       'touchend   .btn-decrease': 'onBtnUp'
+      'touchend   .wrapper':      'onBtnUp'
+      'mouseup    .wrapper':      'onBtnUp'
 
 
 
@@ -98,6 +100,8 @@ class BPMIndicator extends View
    # when the user releases the mouse
 
    increaseBPM: ->
+      clearInterval @updateInterval
+
       @updateInterval = setInterval =>
          bpm = @currBPM
 
@@ -109,7 +113,6 @@ class BPMIndicator extends View
 
          @currBPM = bpm
          @$bpmLabel.text @currBPM
-         #@appModel.set 'bpm', 60000 / @currBPM
 
       , @intervalUpdateTime
 
@@ -120,6 +123,8 @@ class BPMIndicator extends View
    # when the user releases the mouse
 
    decreaseBPM: ->
+      clearInterval @updateInterval
+
       @updateInterval = setInterval =>
          bpm = @currBPM
 
@@ -131,7 +136,6 @@ class BPMIndicator extends View
 
          @currBPM = bpm
          @$bpmLabel.text @currBPM
-         #@appModel.set 'bpm', 60000 / @currBPM
 
       , @intervalUpdateTime
 
@@ -172,8 +176,7 @@ class BPMIndicator extends View
       clearInterval @updateInterval
       @updateInterval = null
 
-      @appModel.set 'bpm', @currBPM
-      #@appModel.set 'bpm', 60000 / @currBPM
+      @appModel.set 'bpm', Math.floor(60000 / @currBPM)
 
 
 
@@ -182,7 +185,8 @@ class BPMIndicator extends View
    # kit selector
 
    onBPMChange: (model) ->
-
+      bpm = model.changed.bpm
+      #@$bpmLabel.text bpm
 
 
 

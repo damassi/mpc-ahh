@@ -18,6 +18,8 @@ html {
 }
 
 body {
+   @include disable-selection;
+
   font-size: 16px;
   line-height: 20px;
   color: $base-color;
