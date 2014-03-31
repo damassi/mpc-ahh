@@ -5,74 +5,110 @@
 
   "kits": [
     {
-      "label": "Jazz",
-      "folder": "jazz",
+      "label": "Hip-hop",
+      "folder": "hip-hop",
       "instruments": [
         {
-          "label": "FX",
-          "src": "FX_1.mp3",
-          "icon": "icon-fx"
+          "label": "Kick Drum 1",
+          "src": "HipHopKit_KickHard.mp3",
+          "icon": "icon-kit-0-kick1"
+        },
+        {
+          "label": "Kick Drum 2",
+          "src": "Cool_RnB_Kick_Hard.mp3",
+          "icon": "icon-kit-0-kick2"
         },
         {
           "label": "Closed HiHat",
-          "src": "HAT_1.mp3",
-          "icon": "icon-hihat-closed"
-        },
-        {
-          "label": "Kick Drum",
-          "src": "KIK_1.mp3",
-          "icon": "icon-kickdrum"
+          "src": "Cool_RnB_Hi-Hat_Closed_Hard.mp3",
+          "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "OP_HAT_7.mp3",
-          "icon": "icon-hihat-open"
-        },
-        {
-          "label": "Ride",
-          "src": "RIDE_CYM.mp3",
-          "icon": "icon-ride"
+          "src": "Cool_RnB_Hi-Hat_Open_Soft.mp3",
+          "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "SN_1.mp3",
-          "icon": "icon-snare"
+          "src": "HipHopKit_SnareHard.mp3",
+          "icon": "icon-kit-0-snare"
+        },
+        {
+          "label": "Voice",
+          "src": "0021_props_can_soda_open _01-1.mp3",
+          "icon": "icon-kit-0-voice"
         }
       ]
     },
     {
-      "label": "Hip Hop",
-      "folder": "hip-hop",
+      "label": "Dance",
+      "folder": "dance",
       "instruments": [
         {
-          "label": "Closed HiHat",
-          "src": "HAT_2.mp3",
-          "icon": "icon-hihat-closed"
+          "label": "Kick Drum 1",
+          "src": "kick_huge_09_n.mp3",
+          "icon": "icon-kit-0-kick1"
         },
         {
-          "label": "Kick Drum",
-          "src": "KIK_2.mp3",
-          "icon": "icon-kickdrum"
+          "label": "Kick Drum 2",
+          "src": "kick_soft_03_n.mp3",
+          "icon": "icon-kit-0-kick2"
+        },
+        {
+          "label": "Closed HiHat",
+          "src": "h_closed_small_10_n.mp3",
+          "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "OP_HAT_2.mp3",
-          "icon": "icon-hihat-open"
-        },
-        {
-          "label": "Ride",
-          "src": "RIDE_CYM.mp3",
-          "icon": "icon-ride"
+          "src": "h_open_big_08_n.mp3",
+          "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "SN_2.mp3",
-          "icon": "icon-snare"
+          "src": "snare_hard_04_n.mp3",
+          "icon": "icon-kit-0-snare"
         },
         {
-          "label": "Tamborine",
-          "src": "TAMB.mp3",
-          "icon": "icon-tamborine"
+          "label": "Voice",
+          "src": "000696990-soda-bottle.mp3",
+          "icon": "icon-kit-0-voice"
+        }
+      ]
+    },
+    {
+      "label": "Rock",
+      "folder": "rock",
+      "instruments": [
+        {
+          "label": "Kick Drum 1",
+          "src": "BB_Kick_Hard.mp3",
+          "icon": "icon-kit-0-kick1"
+        },
+        {
+          "label": "Kick Drum 2",
+          "src": "BB_Tom_Lo_Soft.mp3",
+          "icon": "icon-kit-0-kick2"
+        },
+        {
+          "label": "Closed HiHat",
+          "src": "BB_Hi_Hat_Closed_Hard.mp3",
+          "icon": "icon-kit-0-hihat-closed"
+        },
+        {
+          "label": "Open HiHat",
+          "src": "cymbal_ride_05_n.mp3",
+          "icon": "icon-kit-0-hihat-open"
+        },
+        {
+          "label": "Snare",
+          "src": "BB_Snare_Hard.mp3",
+          "icon": "icon-kit-0-snare"
+        },
+        {
+          "label": "Voice",
+          "src": "0021_props_can_soda_open _01-1.mp3",
+          "icon": "icon-kit-0-voice"
         }
       ]
     }
