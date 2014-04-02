@@ -186,6 +186,12 @@ module.exports = (grunt) ->
                   cwd: "#{sources}/assets"
                   src: ['**']
                   dest: "#{test}/html/assets"
+               },
+               {
+                  expand: true
+                  cwd: "#{sources}/statics"
+                  src: ['**']
+                  dest: "#{output}/statics"
                }
             ]
 
