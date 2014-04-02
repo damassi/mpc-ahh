@@ -61,6 +61,7 @@ $body-font: "misobold", Helvetica, Arial, sans-serif;
 @import "views/create/sequencer";
 @import "views/create/kit-selector";
 @import "views/create/instrument-selector";
-@import "views/create/pads";
+@import "views/create/live-pads";
+@import "views/create/share-modal";
 @import "views/share";
 @import "layout";

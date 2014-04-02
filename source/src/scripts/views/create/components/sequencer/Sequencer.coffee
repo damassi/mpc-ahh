@@ -420,8 +420,8 @@ class Sequencer extends View
 
          # All the other tracks, remove mute if set
          else
-            if view.$el.hasClass 'mute'
-               view.$el.removeClass 'mute'
+            #if view.$el.hasClass 'mute'
+            #   view.$el.removeClass 'mute'
 
 
 

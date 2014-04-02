@@ -1,14 +1,19 @@
+<div class="headline">
+	DRAG DRUM BELOW TO ASSIGN TO NEW PAD
+</div>
+
 {{#each instrumentTable}}
 	<div class='container-kit'>
-		<h3>
-			<b>{{{label}}}</b>
-		</h3>
+		<div class='kit-type'>
+			<span>{{{label}}}</span>
+		</div>
 
 		{{#each instruments}}
 
-			<div class='instrument {{#if dropped}} hidden {{/if}}' id="{{{id}}}">
-				{{{label}}}
+			<div class='instrument {{{icon}}} {{#if dropped}} hidden {{/if}}' id="{{{id}}}">
+
 			</div>
 		{{/each}}
+
 	</div>
 {{/each}}

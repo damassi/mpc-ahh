@@ -27,7 +27,7 @@ class LivePad extends View
    # The classname for the Live Pad
    # @type {String}
 
-   className: 'container-live-pad'
+   id: 'container-live-pad'
 
 
    # The template
@@ -237,6 +237,9 @@ class LivePad extends View
       # Silently update the position of the instrument
       $droppedInstrument.css 'position', 'absolute'
 
+      instrumentModel = @kitCollection.findInstrumentModel $droppedInstrument.attr('id')
+      #console.log instrumentModel
+
       # TODO: If Bounds are set on the original draggable then there's a weird
       # boundry offset that needs to be solved.  Reset in Draggable constructor
 
@@ -291,11 +294,17 @@ class LivePad extends View
 
                   # Prevent droppables on squares that already have instruments
                   if instrument is null or instrument is undefined
-                     $($droppables[i]).addClass 'highlight'
+                     TweenMax.to self.padSquareViews[i].$border, .2,
+                        autoAlpha: 1
+
+                     #$($droppables[i]).addClass 'highlight'
 
                # Remove if not over square
                else
-                  $($droppables[i]).removeClass 'highlight'
+                  TweenMax.to self.padSquareViews[i].$border, .2,
+                     autoAlpha: 0
+
+                  #$($droppables[i]).removeClass 'highlight'
 
 
          # Check to see if instrument is droppable; otherwise
@@ -317,6 +326,10 @@ class LivePad extends View
                      droppedProperly = true
                      self.onInstrumentDrop( this.target, $droppables[i], event )
 
+                     # Hide Border
+                     TweenMax.to self.padSquareViews[i].$border, .2,
+                        autoAlpha: 0
+
 
                   # Send instrument back
                   else
@@ -334,9 +347,9 @@ class LivePad extends View
    # @param {HTMLDomElement} dropped
 
    parseDraggedAndDropped: (dragged, dropped) =>
-      $dragged = $(dragged)
-      $dropped = $(dropped)
-      id = $dragged.attr 'id'
+      $dragged        = $(dragged)
+      $dropped        = $(dropped)
+      id              = $dragged.attr 'id'
       instrumentModel = @kitCollection.findInstrumentModel id
 
       return {
@@ -373,6 +386,7 @@ class LivePad extends View
 
             model = new PadSquareModel
                keycode: @KEYMAP[iterator]
+               index: iterator + 1
 
             padSquare = new PadSquare
                model: model
@@ -393,8 +407,8 @@ class LivePad extends View
             }
 
          rows.push {
-            'id': "pad-row-#{index}"
-            'tds': tds
+            'id':    "pad-row-#{index}"
+            'tds':    tds
          }
 
       padTable.rows = rows
@@ -422,6 +436,7 @@ class LivePad extends View
 
          return {
             'label':       kit.get 'label'
+            'icon':        kit.get 'icon'
             'instruments': instruments
          }
 

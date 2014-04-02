@@ -17,13 +17,7 @@ class PadSquare extends View
    # The delay time before drag functionality is initialized
    # @type {Number}
 
-   DRAG_TRIGGER_DELAY: 1000
-
-
-   # The tag to be rendered to the DOM
-   # @type {String}
-
-   tagName: 'div'
+   DRAG_TRIGGER_DELAY: 600
 
 
    # The classname for the Pad Square
@@ -70,8 +64,13 @@ class PadSquare extends View
    render: (options) ->
       super options
 
+      @$border        = @$el.find '.border-dark'
+      @$keycode       = @$el.find '.key-code'
       @$iconContainer = @$el.find '.container-icon'
       @$icon          = @$iconContainer.find '.icon'
+
+      TweenMax.set @$border, autoAlpha: 0
+      TweenMax.set @$keycode, scale: .7
 
       @
 
@@ -118,7 +117,6 @@ class PadSquare extends View
       unless instrument is null
          @currentIcon = instrument.get 'icon'
          @$icon.addClass @currentIcon
-         @$icon.text instrument.get 'label'
 
 
 
@@ -279,13 +277,14 @@ class PadSquare extends View
 
 
    # Handler for drop change events, which checks to see
-   # if its been dropped off the square amd clears
+   # if its been extracted from the pad square to be dropped
+   # back into the instrument group
    # @param {PadSquareModel} model
 
    onDroppedChange: (model) =>
       dropped = model.changed.dropped
 
-      unless dropped
+      if dropped is false
          @removeSoundAndClearPad()
 
 

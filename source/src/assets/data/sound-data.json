@@ -111,6 +111,42 @@
           "icon": "icon-kit-0-voice"
         }
       ]
+    },
+    {
+      "label": "NEEDED",
+      "folder": "hip-hop",
+      "instruments": [
+        {
+          "label": "Kick Drum 1",
+          "src": "HipHopKit_KickHard.mp3",
+          "icon": "icon-kit-0-kick1"
+        },
+        {
+          "label": "Kick Drum 2",
+          "src": "Cool_RnB_Kick_Hard.mp3",
+          "icon": "icon-kit-0-kick2"
+        },
+        {
+          "label": "Closed HiHat",
+          "src": "Cool_RnB_Hi-Hat_Closed_Hard.mp3",
+          "icon": "icon-kit-0-hihat-closed"
+        },
+        {
+          "label": "Open HiHat",
+          "src": "Cool_RnB_Hi-Hat_Open_Soft.mp3",
+          "icon": "icon-kit-0-hihat-open"
+        },
+        {
+          "label": "Snare",
+          "src": "HipHopKit_SnareHard.mp3",
+          "icon": "icon-kit-0-snare"
+        },
+        {
+          "label": "Voice",
+          "src": "0021_props_can_soda_open _01-1.mp3",
+          "icon": "icon-kit-0-voice"
+        }
+      ]
     }
   ]
 }

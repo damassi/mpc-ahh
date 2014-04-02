@@ -61,6 +61,8 @@
 
       @extend .button
       @extend .miso-regular
+      +btn-hover-transition
+
       $size: 50px
 
       color: $red
@@ -71,6 +73,10 @@
       top: 3px
       width: $size
       height: $size
+
+      &:hover
+         +btn-hover-transition
+         color: black
 
 
 

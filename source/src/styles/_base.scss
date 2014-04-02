@@ -27,9 +27,13 @@ body {
   letter-spacing: 1px;
   width: 100%;
   text-align: center;
+  overflow: hidden;
 }
 
-h1, h2, h3, h4, h5 {}
+h1, h2, h3, h4, h5 {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
 
 h1 {}
 h2 {}
@@ -61,5 +65,19 @@ form {}
 label {}
 input {}
 input[type=text] {}
+*:focus { outline: 0; }
 textarea {}
 select{}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #fff;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #fff;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #fff;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #fff;
+}

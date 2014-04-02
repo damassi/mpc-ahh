@@ -21,15 +21,54 @@ class Toggle extends View
 
 
    events:
-      'touchend .steps': 'onStepsBtnClick'
-      'touchend .pad':   'onPadBtnClick'
+      'touchend .btn-steps':  'onStepsBtnClick'
+      'touchend .btn-pads':   'onPadBtnClick'
+
+
+   render: (options) ->
+      super options
+
+      @$stepsBtn = @$el.find '.btn-steps'
+      @$padBtn   = @$el.find '.btn-pads'
+
+      @
+
+
+   addEventListeners: ->
+      @appModel.on 'change:showSequencer',   @onShowSequencerChange
+      @appModel.on 'change:showPad',         @onShowPadChange
+
+
 
 
    onStepsBtnClick: (event) =>
-      console.log 'steps click'
+      @appModel.set
+         'showSequencer':  true
+         'showPad':        false
+
 
 
    onPadBtnClick: (event) =>
+      @appModel.set
+         'showSequencer':  false
+         'showPad':        true
+
+
+
+
+   onShowSequencerChange: (model) =>
+      if model.changed.showSequencer
+         @$stepsBtn.addClass  'selected'
+         @$padBtn.removeClass 'selected'
+
+
+
+
+   onShowPadChange: (model) =>
+      if model.changed.showPad
+         @$stepsBtn.removeClass  'selected'
+         @$padBtn.addClass       'selected'
+
 
 
 module.exports = Toggle

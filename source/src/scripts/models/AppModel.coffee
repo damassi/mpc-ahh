@@ -22,6 +22,9 @@ class AppModel extends Model
       'shareId':           null
       'sharedTrackModel':  null
 
+      'showPad':       null
+      'showSequencer': null
+
       'view':          null
       'visualization': null
 

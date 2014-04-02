@@ -163,8 +163,21 @@ class PatternTrack extends View
       if @model.get('mute') is false and @model.get('focus') is false
 
          return @model.set
+            'mute':  true
+            'focus': false
+
+
+      # Focus state > Mute
+      if @model.get('mute')
+
+         return @model.set
             'mute':  false
-            'focus': true
+            'focus': false
+
+
+      # ONLY MUTE FOR NOW
+
+      return
 
       # Focus state > Mute
       if @model.get('focus')

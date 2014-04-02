@@ -12,8 +12,10 @@ SharedTrackModel        = require '../../models/SharedTrackModel.coffee'
 KitSelector             = require './components/KitSelector.coffee'
 PlayPauseBtn            = require './components/PlayPauseBtn.coffee'
 Toggle                  = require './components/Toggle.coffee'
+PatternSelector         = require './components/PatternSelector.coffee'
 InstrumentSelectorPanel = require './components/instruments/InstrumentSelectorPanel.coffee'
 Sequencer               = require './components/sequencer/Sequencer.coffee'
+LivePad                 = require './components/pad/LivePad.coffee'
 ShareModal              = require './components/share/ShareModal.coffee'
 BPMIndicator            = require './components/BPMIndicator.coffee'
 template                = require './templates/create-template.hbs'
@@ -51,23 +53,33 @@ class CreateView extends View
       @toggle = new Toggle
          appModel: @appModel
 
-      @$topContainer           = $('body').find '#container-top'
-      @$wrapper                = @$el.find '.wrapper'
-      @$kitSelectorContainer   = @$el.find '.container-kit-selector'
-      @$toggleContainer        = @$el.find '.container-toggle'
-      @$playPauseContainer     = @$el.find '.container-play-pause'
-      @$sequencerContainer     = @$el.find '.container-sequencer'
+      @$topContainer             = $('body').find '#container-top'
+      @$wrapper                  = @$el.find '.wrapper'
+      @$kitSelectorContainer     = @$el.find '#container-kit-selector'
+      @$toggleContainer          = @$el.find '.container-toggle'
+      @$playPauseContainer       = @$el.find '.container-play-pause'
+      @$sequencerContainer       = @$el.find '.container-sequencer'
+      @$patternSelectorContainer = @$el.find '.column-2'
+      @$bpmContainer             = @$el.find '.column-3'
+
       @$instrumentSelector     = @$sequencerContainer.find '.instrument-selector'
       @$sequencer              = @$sequencerContainer.find '.sequencer'
+      @$livePad                = @$sequencerContainer.find '.live-pad'
+      @$patternSelector        = @$sequencerContainer.find '.pattern-selector'
       @$bpm                    = @$sequencerContainer.find '.bpm'
       @$shareBtn               = @$sequencerContainer.find '.btn-share'
 
-      @$toggleContainer.html @toggle.render().el
-      @$playPauseContainer.html @playPauseBtn.render().el
+      @$toggleContainer.html     @toggle.render().el
+      @$playPauseContainer.html  @playPauseBtn.render().el
+
       @renderKitSelector()
       @renderSequencer()
+      @renderLivePad()
+      @renderPatternSelector()
       @renderBPM()
-      @toggle
+
+      @appModel.set 'showSequencer', true
+
 
       @$kitSelector = @$el.find '.kit-selector'
 
@@ -77,6 +89,9 @@ class CreateView extends View
          @$wrapper.hide()
          @importTrack shareId
          @appModel.set 'shareId', null
+
+         _.defer =>
+            TweenMax.set $('#container-visualizer').find('.wrapper'), top: 0
 
       @
 
@@ -88,6 +103,8 @@ class CreateView extends View
       @kitSelector.remove()
       @instrumentSelector.remove()
       @sequencer.remove()
+      @livePad.remove()
+      @patternSelector.remove()
       @bpm.remove()
       @shareModal?.remove()
       super()
@@ -98,6 +115,8 @@ class CreateView extends View
 
    addEventListeners: ->
       PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
+      @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
+      @listenTo @appModel, AppEvent.CHANGE_SHOW_PAD,       @onShowPadChange
 
 
 
@@ -143,7 +162,30 @@ class CreateView extends View
          appModel: @appModel
          collection: @kitCollection.at(0).get('instruments')
 
-      @$sequencer.html @sequencer.render().el
+      @$sequencer.prepend @sequencer.render().el
+
+
+
+
+   # Renders out the live pad player
+
+   renderLivePad: ->
+      @livePad = new LivePad
+         appModel: @appModel
+         kitCollection: @kitCollection
+
+      @$livePad.html @livePad.render().el
+
+
+
+
+   # Render the pre-populated pattern selector
+
+   renderPatternSelector: ->
+      @patternSelector = new PatternSelector
+         appModel: @appModel
+
+      @$patternSelector.html @patternSelector.render().el
 
 
 
@@ -166,7 +208,7 @@ class CreateView extends View
          appModel: @appModel
          sharedTrackModel: @sharedTrackModel
 
-      $('.wrapper').prepend @shareModal.render().el
+      $('body').prepend @shareModal.render().el
 
       @shareModal.show()
 
@@ -229,7 +271,7 @@ class CreateView extends View
    # @param {MouseEvent} event
 
    onShareBtnClick: (event) =>
-      return
+      @trigger AppEvent.OPEN_SHARE
       @renderShareModal()
 
 
@@ -239,13 +281,75 @@ class CreateView extends View
    # @param {MouseEvent} event
 
    onCloseShare: (event) =>
+      @trigger AppEvent.CLOSE_SHARE
       @stopListening @shareModal
 
 
 
 
+
+   onShowSequencerChange: (model) =>
+      if model.changed.showSequencer
+         @showSequencer()
+
+
+
+
+
+   onShowPadChange: (model) =>
+      if model.changed.showPad
+         @showLivePad()
+
+
+
    # PRIVATE METHODS
    # --------------------------------------------------------------------------------
+
+
+
+   # Swaps the live pad out with the sequencer
+
+   showSequencer: ->
+      tweenTime = .6
+
+      @$sequencer.removeClass 'hide'
+
+      TweenMax.to @$sequencer, tweenTime,
+         autoAlpha: 1
+         x: 0
+         ease: Expo.easeInOut
+         #delay: .2
+
+      TweenMax.to @$livePad, tweenTime,
+         autoAlpha: 0
+         x: 2000
+         ease: Expo.easeInOut
+         onComplete: =>
+            #@$livePad.addClass 'hide'
+
+
+
+   # Swaps the sequencer area out with the live pad
+
+   showLivePad: ->
+      tweenTime = .6
+
+      @$livePad.removeClass 'hide'
+
+      TweenMax.to @$sequencer, tweenTime,
+         autoAlpha: 0
+         x: -2000
+         ease: Expo.easeInOut
+         onComplete: =>
+            #@$sequencer.addClass 'hide'
+
+
+      TweenMax.to @$livePad, tweenTime,
+         autoAlpha: 1
+         x: 0
+         ease: Expo.easeInOut
+
+
 
 
    # Exports the current track conguration into a serializable,

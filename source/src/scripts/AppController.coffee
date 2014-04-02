@@ -77,6 +77,7 @@ class AppController extends View
 
       @$topContainer.append @visualizerView.render().el
       @$visualizerContainer = @$topContainer.find '#container-visualizer'
+      TweenMax.set @$visualizerContainer.find('.wrapper'), top: -190
 
       @
 
@@ -102,10 +103,15 @@ class AppController extends View
    # listening to view changes
 
    addEventListeners: ->
-      @listenTo @appModel, AppEvent.CHANGE_VIEW,         @onViewChange
-      @listenTo @appModel, AppEvent.CHANGE_ISMOBILE,     @onIsMobileChange
-      @listenTo @,         AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
-      @listenTo @,         AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
+      @listenTo @appModel,   AppEvent.CHANGE_VIEW,         @onViewChange
+      @listenTo @appModel,   AppEvent.CHANGE_ISMOBILE,     @onIsMobileChange
+
+      @listenTo @createView, AppEvent.OPEN_SHARE,          @onOpenShare
+      @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
+
+      @listenTo @,           AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
+      @listenTo @,           AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
+
 
 
 
@@ -115,19 +121,50 @@ class AppController extends View
 
 
 
+
    hideMainContainer: ->
       @$mainContainer.hide()
 
 
 
+
    expandVisualization: ->
-      TweenMax.to [@$topContainer, @$visualizerContainer], .4,
-         height: @$body.innerHeight()
+      @$bottom        = @$el.find '#container-bottom'
+      @$visualization = @$el.find '#container-visualizer'
+      @$kitSelector   = @$el.find '#container-kit-selector'
+
+      TweenMax.to @$bottom, .4,
+         y: 300
+         ease: Expo.easeOut
+
+      TweenMax.to @$kitSelector, .4,
+         y: -100
+         ease: Expo.easeOut
+
+      TweenMax.to @$visualization.find('.wrapper'), .8,
+         scale: 1.2
+         top: 0
+         ease: Expo.easeOut
+
+
+
 
 
    contractVisualization: ->
-      TweenMax.to [@$topContainer, @$visualizerContainer], .4,
-         height: 410
+      TweenMax.to @$bottom, .4,
+         y: 0
+         ease: Expo.easeOut
+         delay: .3
+
+      TweenMax.to @$kitSelector, .4,
+         y: 0
+         ease: Expo.easeOut
+         delay: .3
+
+      TweenMax.to @$visualization.find('.wrapper'), .8,
+         scale: 1
+         top: -190
+         ease: Expo.easeInOut
 
 
 
@@ -163,7 +200,8 @@ class AppController extends View
          $container = @$bottomContainer
 
       if currentView instanceof ShareView
-         @expandVisualization()
+         _.defer =>
+            @expandVisualization()
 
       $container.append currentView.render().el
 
@@ -194,6 +232,18 @@ class AppController extends View
 
 
    onBreakpointUnmatch: (breakpoint) ->
+
+
+
+
+   onOpenShare: =>
+      @expandVisualization()
+
+
+
+   onCloseShare: =>
+      @contractVisualization()
+
 
 
 

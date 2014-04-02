@@ -3,7 +3,6 @@
    +disable-selection
 
    width: 100%
-   padding-top: 28px
 
    $btn-left-pos: 66px
 
@@ -56,16 +55,20 @@
       @extend .button
       @extend .miso-regular
       +border-radius( $size, $size )
+      +btn-hover-transition
 
       background: $red
       color: $white
-      cursor: pointer
       font-size: 70px
       width: $size
       height: $size
       padding: $padding
       padding-top: $padding + 2
       position: relative
+
+      &:hover
+         +btn-hover-transition
+         background: black
 
 
 
