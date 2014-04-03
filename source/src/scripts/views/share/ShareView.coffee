@@ -51,8 +51,6 @@ class ShareView extends View
       @$playBtn  = @$el.find '.btn-play'
       @$startBtn = @$el.find '.btn-start'
 
-      @appModel.set 'shareId', null
-
       TweenMax.set @$textContainer, y: -300, autoAlpha: 0
       TweenMax.set @$startBtn,      y:  300, autoAlpha: 0
 
@@ -144,9 +142,12 @@ class ShareView extends View
 
          success: (sharedTrackModel) =>
 
+            console.log JSON.stringify sharedTrackModel.toJSON()
+
             @appModel.set
                'bpm':              sharedTrackModel.get 'bpm'
                'sharedTrackModel': sharedTrackModel
+               'shareId':          null
 
             # Import into sequencer
             @createView.sequencer.importTrack

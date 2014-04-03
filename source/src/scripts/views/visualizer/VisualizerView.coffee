@@ -103,6 +103,25 @@ class VisualizerView extends View
 
 
 
+   setShareViewPosition: ->
+      @isShareView = true
+
+      yPos = (@stage.canvas.height * .5) - (@container.getBounds().height * .5)
+
+      TweenMax.to @container, .8,
+         scaleX: 1
+         scaleY: 1
+         y: yPos
+         ease: Expo.easeInOut
+
+
+
+   resetPosition: ->
+      @isShareView = false
+      @onResize()
+
+
+
 
    buildBottles: =>
       @bottles = []
@@ -115,7 +134,6 @@ class VisualizerView extends View
          bottle = new @Library.bottle()
          bottle.bottle.gotoAndStop 0
          bottle.setBounds 0, 0, 66, 230
-         #bottle.scaleX = bottle.scaleY = 1.5
          bottle.x = (index * (window.innerWidth / @BOTTLE_NUM))
          bottle.y = 1000
 
@@ -175,8 +193,15 @@ class VisualizerView extends View
       _.each @container.children, (bottle, index) ->
          bottle.x = (index * ((window.innerWidth / itemNum) - 40))
 
-      @container.x = (@stage.canvas.width * .5)  - (@container.getBounds().width * .5)
-      @container.y = (@stage.canvas.height * .5) - (@container.getBounds().height * .5) - 100
+      yOffset = if @isShareView then 0 else 100
+
+      xPos = (@stage.canvas.width * .5)  - (@container.getBounds().width * .5)
+      yPos = (@stage.canvas.height * .5) - (@container.getBounds().height * .5) - yOffset
+
+      TweenMax.to @container, .8,
+         x: xPos
+         y: yPos
+         ease: Expo.easeInOut
 
 
 

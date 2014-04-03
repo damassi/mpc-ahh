@@ -357,7 +357,7 @@ class Sequencer extends View
          patternTrackView.collection.each (patternModel, index) ->
             patternModel.set patternSquareGroups[iterator][index]
 
-      callback()
+      if callback then callback()
 
 
 

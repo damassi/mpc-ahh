@@ -27,6 +27,9 @@ class AppController extends View
    id: 'wrapper'
 
 
+   visualizationRendered: false
+
+
    initialize: (options) ->
       super options
 
@@ -92,13 +95,10 @@ class AppController extends View
 
 
    renderVisualizationLayer: ->
-      @$mainContainer.prepend @visualizerView.render().el
-      #@$visualizerContainer = @$topContainer.find '.container-visualizer'
+      if @visualizationRendered is false
+         @visualizationRendered = true
+         @$mainContainer.prepend @visualizerView.render().el
 
-      return
-      TweenMax.to @$topContainer, .3,
-         autoAlpha: 1
-         delay: .2
 
 
 
@@ -220,6 +220,8 @@ class AppController extends View
          patternSquareGroups: @patternSquareGroups
          visualization:       @appModel.get 'visualization'
 
+      #console.log JSON.stringify @sharedTrackModel.toJSON()
+
       # Send the Parse model up the wire and save to DB
       @sharedTrackModel.save
 
@@ -234,6 +236,7 @@ class AppController extends View
          # their page
 
          success: (model) =>
+            console.log model.id
             @appModel.set 'shareId', model.id
 
 
@@ -262,11 +265,14 @@ class AppController extends View
 
       if currentView instanceof CreateView
          @renderVisualizationLayer()
+         @visualizerView.resetPosition()
          $container = @$bottomContainer
 
       if currentView instanceof ShareView
+         @renderVisualizationLayer()
+
          _.defer =>
-            @expandVisualization()
+            @visualizerView.setShareViewPosition()
 
       $container.append currentView.render().el
 

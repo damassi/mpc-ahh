@@ -190,7 +190,6 @@ class ShareModal extends View
 
       if @formValid() is false then return
 
-
       @$preloader.show()
 
       @$serviceBtn.addClass 'no-transition'

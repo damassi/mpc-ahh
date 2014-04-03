@@ -84,9 +84,6 @@ class CreateView extends View
       @renderPatternSelector()
       @renderBPM()
 
-      @showSequencer()
-      @toggle.$stepsBtn.trigger 'touchend'
-      @appModel.set 'showSequencer', true
 
       @$kitSelector = @$el.find '.kit-selector'
 
@@ -101,6 +98,12 @@ class CreateView extends View
          delay: .3
 
       @kitSelector.show()
+
+      @showSequencer()
+      _.defer =>
+         @toggle.$stepsBtn.trigger 'touchend'
+
+      @appModel.set 'showSequencer', true
 
       TweenMax.fromTo @$bottomContainer, .4, y: 300,
          autoAlpha: 1
@@ -247,6 +250,7 @@ class CreateView extends View
    renderPatternSelector: ->
       @patternSelector = new PatternSelector
          appModel: @appModel
+         sequencer: @sequencer
 
       @$patternSelector.html @patternSelector.render().el
 
