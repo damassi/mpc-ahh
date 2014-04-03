@@ -5,7 +5,9 @@
  * @date   3.18.14
 ###
 
+PubSub      = require '../../../../utils/PubSub'
 AppConfig   = require '../../../../config/AppConfig.coffee'
+PubEvent    = require '../../../../events/PubEvent.coffee'
 AppEvent    = require '../../../../events/AppEvent.coffee'
 View        = require '../../../../supers/View.coffee'
 template    = require './templates/pattern-square-template.hbs'
@@ -87,7 +89,8 @@ class PatternSquare extends View
    # Remove the view and destroy the audio playback
 
    remove: ->
-      @audioPlayback.unload()
+      @audioPlayback?.unload()
+      @audioPlayback = null
       super()
 
 
@@ -123,6 +126,8 @@ class PatternSquare extends View
 
    play: ->
       @audioPlayback.play()
+
+      PubSub.trigger PubEvent.BEAT, patternSquareModel: @patternSquareModel.toJSON()
 
       TweenMax.to @$icon, .3,
          scale: 1.2

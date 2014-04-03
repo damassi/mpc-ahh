@@ -13,7 +13,7 @@ template = require './templates/kit-selection-template.hbs'
 class KitSelector extends View
 
 
-   id: 'container-kit-selector'
+   className: 'container-kit-selector'
 
 
    # Ref to the main AppModel
@@ -64,6 +64,21 @@ class KitSelector extends View
 
       @
 
+
+
+
+   show: ->
+      TweenMax.fromTo @$el, .4, y: -100,
+         y: 0
+         ease: Expo.easeOut
+         delay: .3
+
+
+
+   hide: ->
+      TweenMax.fromTo @$el, .4, y: 0,
+         y: -100
+         ease: Expo.easeOut
 
 
 

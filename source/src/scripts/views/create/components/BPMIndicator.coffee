@@ -14,7 +14,7 @@ template  = require './templates/bpm-template.hbs'
 class BPMIndicator extends View
 
 
-   id: 'container-bpm'
+   className: 'container-bpm'
 
 
    # Ref to the main AppModel

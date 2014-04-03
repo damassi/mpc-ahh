@@ -7,9 +7,12 @@
 
 AppConfig         = require './config/AppConfig.coffee'
 AppEvent          = require './events/AppEvent.coffee'
+PubEvent          = require './events/PubEvent.coffee'
 AppModel          = require './models/AppModel.coffee'
+SharedTrackModel  = require './models/SharedTrackModel.coffee'
 AppRouter         = require './routers/AppRouter.coffee'
 BreakpointManager = require './utils/BreakpointManager.coffee'
+PubSub            = require './utils/PubSub'
 LandingView       = require './views/landing/LandingView.coffee'
 CreateView        = require './views/create/CreateView.coffee'
 ShareView         = require './views/share/ShareView.coffee'
@@ -38,6 +41,8 @@ class AppController extends View
       @appModel = new AppModel
          'kitModel': @kitCollection.at(0)
 
+      @sharedTrackModel = new SharedTrackModel
+
       @landingView = new LandingView
          appModel: @appModel
 
@@ -46,10 +51,12 @@ class AppController extends View
 
       @createView = new CreateView
          appModel: @appModel
+         sharedTrackModel: @sharedTrackModel
          kitCollection: @kitCollection
 
       @shareView = new ShareView
          appModel: @appModel
+         sharedTrackModel: @sharedTrackModel
          kitCollection: @kitCollection
 
       @appRouter = new AppRouter
@@ -75,14 +82,23 @@ class AppController extends View
       @$topContainer    = @$el.find '#container-top'
       @$bottomContainer = @$el.find '#container-bottom'
 
-      @$topContainer.append @visualizerView.render().el
-      @$visualizerContainer = @$topContainer.find '#container-visualizer'
-      TweenMax.set @$visualizerContainer.find('.wrapper'), top: -190
-
-      @
+      TweenMax.set @$bottomContainer, y: 300
 
       Backbone.history.start
          pushState: false
+
+      @
+
+
+
+   renderVisualizationLayer: ->
+      @$mainContainer.prepend @visualizerView.render().el
+      #@$visualizerContainer = @$topContainer.find '.container-visualizer'
+
+      return
+      TweenMax.to @$topContainer, .3,
+         autoAlpha: 1
+         delay: .2
 
 
 
@@ -108,6 +124,7 @@ class AppController extends View
 
       @listenTo @createView, AppEvent.OPEN_SHARE,          @onOpenShare
       @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
+      @listenTo @createView, AppEvent.SAVE_TRACK,          @onSaveTrack
 
       @listenTo @,           AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
       @listenTo @,           AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
@@ -116,32 +133,19 @@ class AppController extends View
 
 
 
-   showMainContainer: ->
-      @$mainContainer.show()
-
-
-
-
-   hideMainContainer: ->
-      @$mainContainer.hide()
-
-
-
-
    expandVisualization: ->
-      @$bottom        = @$el.find '#container-bottom'
-      @$visualization = @$el.find '#container-visualizer'
-      @$kitSelector   = @$el.find '#container-kit-selector'
+      if @appModel.get('view') instanceof CreateView
+         @createView.hide()
 
-      TweenMax.to @$bottom, .4,
-         y: 300
-         ease: Expo.easeOut
+      @visualizerView.scaleUp()
 
-      TweenMax.to @$kitSelector, .4,
-         y: -100
-         ease: Expo.easeOut
+      return
+      console.log ''
 
-      TweenMax.to @$visualization.find('.wrapper'), .8,
+      TweenMax.to @$visualizerContainer,
+         autoAlpha: 1
+
+      TweenMax.to @$visualizerContainer.find('.wrapper'), .8,
          scale: 1.2
          top: 0
          ease: Expo.easeOut
@@ -151,17 +155,14 @@ class AppController extends View
 
 
    contractVisualization: ->
-      TweenMax.to @$bottom, .4,
-         y: 0
-         ease: Expo.easeOut
-         delay: .3
+      if @appModel.get('view') instanceof CreateView
+         @createView.show()
 
-      TweenMax.to @$kitSelector, .4,
-         y: 0
-         ease: Expo.easeOut
-         delay: .3
+      @visualizerView.scaleDown()
 
-      TweenMax.to @$visualization.find('.wrapper'), .8,
+      return
+
+      TweenMax.to @$visualizerContainer.find('.wrapper'), .8,
          scale: 1
          top: -190
          ease: Expo.easeInOut
@@ -169,6 +170,71 @@ class AppController extends View
 
 
 
+
+
+   # Handler for PubSub EXPORT_TRACK events.  Prepares the data in a way that
+   # is savable, exportable, and importable
+   # @param {Function} callback
+
+   exportTrackAndSaveToParse: =>
+
+      patternSquareGroups = []
+      patternSquares      = []
+
+      instruments = @appModel.export().kitModel.instruments
+      kit         = @appModel.get('kitModel').toJSON()
+
+      # Iterate over each instrument and clean values that are unneeded
+      instruments = instruments.map (instrument) =>
+         instrument.patternSquares.forEach (patternSquare) =>
+            delete patternSquare.instrument
+            patternSquares.push patternSquare
+
+         instrument
+
+      # Break the patternSquares into groups of tracks
+      while (patternSquares.length > 0)
+         patternSquareGroups.push patternSquares.splice(0, 8)
+
+      # Store results
+      @kitType = @appModel.get('kitModel').get('label')
+      @instruments = instruments
+      @patternSquareGroups = patternSquareGroups
+
+      # Save track
+      @saveTrack()
+
+
+
+
+   # Create a new Parse model and pass in params that
+   # have been retrieved, via PubSub from the Sequencer view
+
+   saveTrack: =>
+
+      @sharedTrackModel.set
+
+         bpm:                 @appModel.get 'bpm'
+         instruments:         @instruments
+         kitType:             @kitType
+         patternSquareGroups: @patternSquareGroups
+         visualization:       @appModel.get 'visualization'
+
+      # Send the Parse model up the wire and save to DB
+      @sharedTrackModel.save
+
+         error: (object, error) =>
+            console.error object, error
+            @appModel.set 'shareId', 'error'
+
+
+
+         # Handler for success events.  Create a new
+         # visual success message and pass user on to
+         # their page
+
+         success: (model) =>
+            @appModel.set 'shareId', model.id
 
 
 
@@ -191,12 +257,11 @@ class AppController extends View
 
       $container = @$el
 
-      # Section specific settings
       if currentView instanceof LandingView
-         @hideMainContainer()
+         console.log ''
 
       if currentView instanceof CreateView
-         @showMainContainer()
+         @renderVisualizationLayer()
          $container = @$bottomContainer
 
       if currentView instanceof ShareView
@@ -205,7 +270,8 @@ class AppController extends View
 
       $container.append currentView.render().el
 
-      currentView.show()
+      unless currentView instanceof ShareView
+         currentView.show()
 
 
 
@@ -241,8 +307,22 @@ class AppController extends View
 
 
 
+
    onCloseShare: =>
       @contractVisualization()
+
+
+
+
+   # Handler for PubSub SAVE_TRACK events.  Exports the track, calls a pubsub to the
+   # export function, then prepares it for import
+   # @param {Function} callback
+
+   onSaveTrack: (params) =>
+      {@sharedTrackModel} = params
+
+      @exportTrackAndSaveToParse()
+
 
 
 

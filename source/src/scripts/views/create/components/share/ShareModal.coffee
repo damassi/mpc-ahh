@@ -25,7 +25,7 @@ class ShareModal extends View
    # The container element id
    # @type {String}
 
-   id: 'container-share'
+   className: 'container-share'
 
 
    # The template
@@ -177,8 +177,6 @@ class ShareModal extends View
             @$serviceBtn.attr 'style', ''
             TweenMax.to @$serviceText, .2, autoAlpha: 1
 
-            model.set 'shareId', null
-
             @renderServiceOptions()
 
 
@@ -237,7 +235,7 @@ class ShareModal extends View
 
          @tweeningCopyText = true
 
-         $btn   = $(event.currentTarget)
+         $btn   = @$copyBtn
          $text  = $btn.find '.text'
 
          btnHtml   = $btn.html()
@@ -337,6 +335,10 @@ class ShareModal extends View
                x: 0
                ease: Expo.easeOut
 
+            # Add in lib for copying to clipboard
+            @createClipboardListeners()
+
+
             @$backBtn.on 'touchend', @onBackBtnClick
             @$copyBtn.on 'touchend', @onCopyBtnClick
 
@@ -379,6 +381,40 @@ class ShareModal extends View
          'encodedUrl':     encodeURIComponent shareLink
 
       @showPreview()
+      @appModel.set 'shareId', null
+
+
+
+
+   createClipboardListeners: =>
+      @clipboardClient = new ZeroClipboard( @$copyBtn )
+
+
+      @clipboardClient.on 'load', (client) ->
+
+
+      @clipboardClient.on 'datarequested', (client) ->
+         @clipboardClient.setText(this.innerHTML)
+
+
+      @clipboardClient.on 'complete', (client, args) ->
+         console.log("Copied text to clipboard: " + args.text )
+
+
+      @clipboardClient.on 'wrongflash noflash', ->
+         ZeroClipboard.destroy()
+
+
+      @clipboardClient.on 'mouseover', (client, args) =>
+         @$copyBtn.addClass 'mouseover'
+
+
+      @clipboardClient.on 'mouseout', (client, args) =>
+         @$copyBtn.removeClass 'mouseover'
+
+
+      @clipboardClient.on 'mouseup', (client, args) =>
+         @onCopyBtnClick()
 
 
 

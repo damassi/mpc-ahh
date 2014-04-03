@@ -28,9 +28,7 @@ AppEvent =
    CHANGE_VELOCITY       : 'change:velocity'
    CHANGE_VIEW           : 'change:view'
 
-   IMPORT_TRACK          : 'onImportTrack'
-   EXPORT_TRACK          : 'onExportTrack'
-   SAVE_TRACK            : 'onSaveTrack'
+   SAVE_TRACK:             'onSaveTrack'
 
    OPEN_SHARE            : 'onOpenShare'
    CLOSE_SHARE           : 'onCloseShare'

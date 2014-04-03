@@ -8,7 +8,13 @@
 
 PubSub =
 
-   ROUTE: 'onRouteChange'
+   ROUTE:            'onRouteChange'
+
+   BEAT:             'onBeat'
+
+   IMPORT_TRACK:     'onImportTrack'
+   EXPORT_TRACK:     'onExportTrack'
+   SAVE_TRACK:       'onSaveTrack'
 
 
 module.exports = PubSub

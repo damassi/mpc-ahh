@@ -59,6 +59,7 @@ class View extends Backbone.View
    # @param {Object} options
 
    show: (options) ->
+      return
       TweenMax.set @$el, { autoAlpha: 1 }
 
 
@@ -68,7 +69,8 @@ class View extends Backbone.View
    # @param {Object} options
 
    hide: (options) ->
-      TweenMax.set @$el,
+
+      TweenMax.to @$el, 0,
          autoAlpha: 0
          onComplete: =>
             if options?.remove

@@ -106,6 +106,9 @@ class PatternTrack extends View
          @collection.add new PatternSquareModel { instrument: @model }
 
       @collection.each (model) =>
+
+         model.set 'orderIndex', @orderIndex
+
          patternSquare = new PatternSquare
             patternSquareModel: model
 

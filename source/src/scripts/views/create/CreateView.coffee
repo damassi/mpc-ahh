@@ -8,6 +8,7 @@
 PubSub                  = require '../../utils/PubSub'
 View                    = require '../../supers/View.coffee'
 AppEvent                = require '../../events/AppEvent.coffee'
+PubEvent                = require '../../events/PubEvent.coffee'
 SharedTrackModel        = require '../../models/SharedTrackModel.coffee'
 KitSelector             = require './components/KitSelector.coffee'
 PlayPauseBtn            = require './components/PlayPauseBtn.coffee'
@@ -24,7 +25,7 @@ template                = require './templates/create-template.hbs'
 class CreateView extends View
 
 
-   id: 'container-create'
+   className: 'container-create'
 
    # The template
    # @type {Function}
@@ -37,6 +38,10 @@ class CreateView extends View
       'touchend .btn-export': 'onExportBtnClick'
 
 
+   initialize: (options) ->
+      super options
+
+
 
    # Renders the view and all of the individual components.  Also checks
    # for a `shareId` on the AppModel and hides elements appropriately
@@ -45,17 +50,16 @@ class CreateView extends View
    render: (options) ->
       super options
 
-      @sharedTrackModel = new SharedTrackModel
-
       @playPauseBtn = new PlayPauseBtn
          appModel: @appModel
 
       @toggle = new Toggle
          appModel: @appModel
 
-      @$topContainer             = $('body').find '#container-top'
+      @$mainContainer            = $('body').find '#container-main'
+      @$bottomContainer          = $('body').find '#container-bottom'
       @$wrapper                  = @$el.find '.wrapper'
-      @$kitSelectorContainer     = @$el.find '#container-kit-selector'
+      @$kitSelectorContainer     = @$el.find '.container-kit-selector'
       @$toggleContainer          = @$el.find '.container-toggle'
       @$playPauseContainer       = @$el.find '.container-play-pause'
       @$sequencerContainer       = @$el.find '.container-sequencer'
@@ -72,41 +76,102 @@ class CreateView extends View
       @$toggleContainer.html     @toggle.render().el
       @$playPauseContainer.html  @playPauseBtn.render().el
 
+      TweenMax.set @$bottomContainer, y: 300
+
       @renderKitSelector()
       @renderSequencer()
       @renderLivePad()
       @renderPatternSelector()
       @renderBPM()
 
+      @showSequencer()
+      @toggle.$stepsBtn.trigger 'touchend'
       @appModel.set 'showSequencer', true
-
 
       @$kitSelector = @$el.find '.kit-selector'
 
-      # Check if the user is importing a track
-      shareId = @appModel.get 'shareId'
-      if shareId isnt null and shareId isnt '' and shareId isnt undefined
-         @$wrapper.hide()
-         @importTrack shareId
-         @appModel.set 'shareId', null
-
-         _.defer =>
-            TweenMax.set $('#container-visualizer').find('.wrapper'), top: 0
-
       @
+
+
+
+
+   show: =>
+      TweenMax.fromTo @$el, .3, autoAlpha: 0,
+         autoAlpha: 1
+         delay: .3
+
+      @kitSelector.show()
+
+      TweenMax.fromTo @$bottomContainer, .4, y: 300,
+         autoAlpha: 1
+         y: 0
+         ease: Expo.easeOut
+         delay: .3
+
+
+
+
+   hide: (options) =>
+      TweenMax.fromTo @$el, .3, autoAlpha: 1,
+         autoAlpha: 0
+
+      @kitSelector.hide()
+
+
+      if @$bottomContainer.length
+
+         TweenMax.fromTo @$bottomContainer, .4, y: 0,
+            y: 300
+            ease: Expo.easeOut
+            onComplete: =>
+
+               @appModel.set
+                  'showSequencer': null
+                  'showPad': null
+
+               if options?.remove
+                  @remove()
+
 
 
 
    # Removes the view
 
    remove: ->
+      @playPauseBtn.remove()
+      @playPauseBtn = null
+
+      @toggle.remove()
+      @toggle = null
+
       @kitSelector.remove()
-      @instrumentSelector.remove()
+      @kitSelector = null
+
       @sequencer.remove()
+      @sequencer = null
+
       @livePad.remove()
+      @livePad = null
+
       @patternSelector.remove()
+      @patternSelector = null
+
       @bpm.remove()
+      @bpm = null
+
+      @instrumentSelector?.remove()
+      @instrumentSelector = null
+
       @shareModal?.remove()
+      @shareModal = null
+
+      @appModel.set 'playing', false
+
+      $('.container-kit-selector').remove()
+
+      # Reset model if leaving the view but keep the view prop
+      #@resetModel()
+
       super()
 
 
@@ -114,7 +179,6 @@ class CreateView extends View
    # Adds listeners related to exporting the track pattern
 
    addEventListeners: ->
-      PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
       @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
       @listenTo @appModel, AppEvent.CHANGE_SHOW_PAD,       @onShowPadChange
 
@@ -124,7 +188,6 @@ class CreateView extends View
    # Removes listeners
 
    removeEventListeners: ->
-      PubSub.off AppEvent.EXPORT_TRACK
       super()
 
 
@@ -137,7 +200,7 @@ class CreateView extends View
          appModel: @appModel
          kitCollection: @kitCollection
 
-      @$topContainer.append @kitSelector.render().el
+      @$mainContainer.prepend @kitSelector.render().el
 
 
 
@@ -219,6 +282,14 @@ class CreateView extends View
 
 
 
+   resetModel: ->
+      defaults = @appModel.defaults
+      defaults.view = @appModel.get 'view'
+      @appModel.set(defaults)
+
+
+
+
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
 
@@ -227,41 +298,8 @@ class CreateView extends View
    # Handler for saving, sharing and posting a track
 
    onSaveTrack: =>
-      @exportTrack =>
-         @saveTrack()
+      @trigger AppEvent.SAVE_TRACK, sharedTrackModel: @sharedTrackModel
 
-
-
-   # Handler for PubSub EXPORT_TRACK events.  Prepares the data in a way that
-   # is savable, exportable, and importable
-   # @param {Function} callback
-
-   onExportTrack: (callback) =>
-
-      patternSquareGroups = []
-      patternSquares      = []
-
-      instruments = @appModel.export().kitModel.instruments
-      kit         = @appModel.get('kitModel').toJSON()
-
-      # Iterate over each instrument and clean values that are unneeded
-      instruments = instruments.map (instrument) =>
-         instrument.patternSquares.forEach (patternSquare) =>
-            delete patternSquare.instrument
-            patternSquares.push patternSquare
-
-         instrument
-
-      # Break the patternSquares into groups of tracks
-      while (patternSquares.length > 0)
-         patternSquareGroups.push patternSquares.splice(0, 8)
-
-      # Pass parsable values back to callee
-      callback {
-         kitType: @appModel.get('kitModel').get('label')
-         instruments: instruments
-         patternSquareGroups: patternSquareGroups
-      }
 
 
 
@@ -348,93 +386,6 @@ class CreateView extends View
          autoAlpha: 1
          x: 0
          ease: Expo.easeInOut
-
-
-
-
-   # Exports the current track conguration into a serializable,
-   # savable format which is then posted to Parse or later retrieval
-
-   exportTrack: (callback) =>
-      PubSub.trigger AppEvent.EXPORT_TRACK, (params) =>
-
-         {@kitType, @instruments, @patternSquareGroups} = params
-
-         if callback then callback()
-
-
-
-
-   # Create a new Parse model and pass in params that
-   # have been retrieved, via PubSub from the Sequencer view
-
-   saveTrack: =>
-
-      @sharedTrackModel.set
-
-         bpm:                 @appModel.get 'bpm'
-         instruments:         @instruments
-         kitType:             @kitType
-         patternSquareGroups: @patternSquareGroups
-         visualization:       @appModel.get 'visualization'
-
-      # Send the Parse model up the wire and save to DB
-      @sharedTrackModel.save
-
-         error: (object, error) =>
-            console.error object, error
-            @appModel.set 'shareId', 'error'
-
-
-
-         # Handler for success events.  Create a new
-         # visual success message and pass user on to
-         # their page
-
-         success: (response) =>
-            @appModel.set 'shareId', response.id
-
-
-
-
-   # Import the shared track by requesting the data from parse
-   # Once imported
-
-   importTrack: (shareId) =>
-
-      query = new Parse.Query SharedTrackModel
-
-      # Create request to fetch data from the Parse DB
-      query.get shareId,
-
-         error: (object, error) =>
-            console.error object, error
-
-
-         # Handler for success events.  Returns the saved model which is then
-         # dispatched, via PubSub, to the Sequencer view for playback and render
-         # @param {SharedTrackModel}
-
-         success: (sharedTrackModel) =>
-
-            console.log sharedTrackModel
-
-            @appModel.set
-               'bpm':              sharedTrackModel.get 'bpm'
-               'sharedTrackModel': sharedTrackModel
-
-            PubSub.trigger AppEvent.IMPORT_TRACK,
-
-               kitType:             sharedTrackModel.get 'kitType'
-               instruments:         sharedTrackModel.get 'instruments'
-               patternSquareGroups: sharedTrackModel.get 'patternSquareGroups'
-
-
-               # Handler for callbacks once the track has been imported and
-               # rendered.  Displays the Share view and begins playback
-               # @param {Object} response
-
-               callback: (response) ->
 
 
 

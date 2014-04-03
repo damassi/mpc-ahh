@@ -93,10 +93,11 @@ class Sequencer extends View
    # the ticker interval
 
    remove: ->
+      console.log 'firing remove SEQUENCER'
       _.each @patternTrackViews, (track) =>
          track.remove()
 
-      @pause()
+      window.clearInterval @bpmInterval
 
       super()
 
@@ -119,10 +120,10 @@ class Sequencer extends View
 
 
    removeEventListeners: ->
-      super()
-
       PubSub.off AppEvent.IMPORT_TRACK
       PubSub.off AppEvent.EXPORT_TRACK
+
+      super()
 
 
 
@@ -135,12 +136,13 @@ class Sequencer extends View
 
       @patternTrackViews = []
 
-      @collection.each (model) =>
+      @collection.each (model, index) =>
 
          patternTrack = new PatternTrack
             appModel: @appModel
             collection: model.get 'patternSquares'
             model: model
+            orderIndex: index
 
          @patternTrackViews.push patternTrack
          @$sequencer.append patternTrack.render().el
@@ -151,6 +153,7 @@ class Sequencer extends View
    # Update the ticker time, and advances the beat
 
    updateTime: =>
+      #console.log 'BEAT!'
       @$thStepper.removeClass 'step'
       @$sequencer.find('td').removeClass 'step'
       @currBeatCellId = if @currBeatCellId < @numCells then @currBeatCellId += 1 else @currBeatCellId = 0
@@ -250,9 +253,9 @@ class Sequencer extends View
    # @param {AppModel} model
 
    onBPMChange: (model) =>
-      clearInterval @bpmInterval
+      window.clearInterval @bpmInterval
       @updateIntervalTime = model.changed.bpm
-      @bpmInterval = setInterval @updateTime, @updateIntervalTime
+      @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
 
 
 
@@ -265,10 +268,11 @@ class Sequencer extends View
       playing = model.changed.playing
 
       if playing
-         @bpmInterval = setInterval @updateTime, @updateIntervalTime
+         @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
 
       else
-         clearInterval @bpmInterval
+         console.log 'clearing interval....'
+         window.clearInterval @bpmInterval
          @bpmInterval = null
 
 

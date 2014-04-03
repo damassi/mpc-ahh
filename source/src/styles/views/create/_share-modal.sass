@@ -1,5 +1,5 @@
 
-#container-share
+.container-share
 
 
    .btn-close
@@ -43,6 +43,12 @@
          width: 420px
 
 
+      .mouseover
+         +btn-hover-transition
+         background: white !important
+         color: black !important
+
+
       .btn-back, .btn-select-service, .btn-copy-url
          @extend .button
          @extend .miso-bold
@@ -63,7 +69,6 @@
 
          &:hover
             +btn-hover-transition
-
             background: white
             color: black
 

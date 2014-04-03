@@ -27,7 +27,7 @@ class LivePad extends View
    # The classname for the Live Pad
    # @type {String}
 
-   id: 'container-live-pad'
+   className: 'container-live-pad'
 
 
    # The template
@@ -99,6 +99,17 @@ class LivePad extends View
       @addEventListeners()
 
       @
+
+
+
+
+   remove: (options) ->
+      _.each @padSquareViews, (view) =>
+         view.remove()
+
+      @$padsContainer.remove()
+      super()
+
 
 
 

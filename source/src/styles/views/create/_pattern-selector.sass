@@ -1,0 +1,38 @@
+
+.container-pattern-selector
+
+   > .wrapper
+
+      padding-top: 10px
+
+
+      .label
+         font-size: 16px
+
+
+      .container-btns
+         margin-top: 3px
+
+
+      .btn
+         $size: 40px
+         @extend .button
+         @extend .miso-bold
+         +border-radius( $size, $size )
+         +btn-hover-transition
+
+         background: $white
+         border: 2px solid $grey
+         color: black
+         font-size: 24px
+         width: $size
+         height: $size
+         padding: 8px
+         margin-bottom: 7px
+
+         &.selected
+            +btn-hover-transition
+
+            background: $red !important
+            border: 2px solid $red
+            color: white
