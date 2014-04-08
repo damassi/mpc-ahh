@@ -1,22 +1,30 @@
-<div class='btn-close'>
-	X
-</div>
-
 <div class='wrapper'>
 
+	{{#if isDesktop}}
+		<div class='btn-close'>
+			X
+		</div>
+	{{/if}}
+
 	<div class='form-wrapper'>
+
+		{{#unless isDesktop}}
+			<div class='btn-close-share'>
+				&lt; Back
+			</div>
+		{{/unless}}
 
 		<h1>
 			Share Your Beat
 		</h1>
 
 		<div class='container-form'>
-			<div class='input-group'>
+			<div class='input-group text-input t'>
 				<span class='label-input'>Title</span>
 				<input class='input-title' placeholder='title' />
 			</div>
 
-			<div class='input-group'>
+			<div class='input-group text-input n'>
 				<span class='label-input'>Name</span>
 				<input class='input-name' placeholder='name' />
 			</div>

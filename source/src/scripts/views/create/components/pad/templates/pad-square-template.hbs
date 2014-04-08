@@ -1,16 +1,18 @@
 <div class='border-dark' />
 
-<div class='pad-number'>
-	<span class='text'>
-		PAD {{{index}}}
-	</span>
-</div>
+{{#if isDesktop}}
+	<div class='pad-number'>
+		<span class='text'>
+			PAD {{{index}}}
+		</span>
+	</div>
 
-<div class='key-code'>
-	<span class='text'>
-		{{{keycode}}}
-	</span>
-</div>
+	<div class='key-code'>
+		<span class='text'>
+			{{{keycode}}}
+		</span>
+	</div>
+{{/if}}
 
 <div class='container-icon'>
 	<div class='icon'>

@@ -20,7 +20,7 @@
 <div class='services'>
 	<span>
 		Select a Service
-	</spam>
+	</span>
 
 	<div class='service-btns'>
 		<div class='btn-facebook icon-facebook icon'
@@ -41,13 +41,15 @@
 	</div>
 </div>
 
-<div class='btn-copy-url' data-clipboard-text='{{{shareLink}}}'>
-	<div class='text'>
-		<div class='url'>
-			http://bit.ly/1c1HY4c
-		</div>
-		<div class='copy'>
-			COPY
+{{#if isDesktop}}
+	<div class='btn-copy-url' data-clipboard-text='{{{shareLink}}}'>
+		<div class='text'>
+			<div class='url'>
+				http://bit.ly/1c1HY4c
+			</div>
+			<div class='copy'>
+				COPY
+			</div>
 		</div>
 	</div>
-</div>
+{{/if}}

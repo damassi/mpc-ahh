@@ -202,6 +202,12 @@ class PadSquare extends View
    onPress: (event) =>
       @model.set 'trigger', true
 
+      TweenMax.to @$el, .2,
+         backgroundColor: '#E41E2B'
+         onComplete: =>
+            TweenMax.to @$el, .2,
+               backgroundColor: '#e5e5e5'
+
       @dragTimeout = setTimeout =>
          @model.set 'dragging', true
 

@@ -10,6 +10,7 @@ PadSquareCollection = require '../../../../models/pad/PadSquareCollection.coffee
 PadSquareModel      = require '../../../../models/pad/PadSquareModel.coffee'
 View                = require '../../../../supers/View.coffee'
 PadSquare           = require './PadSquare.coffee'
+PlayPauseBtn        = require '../PlayPauseBtn.coffee'
 padsTemplate        = require './templates/pads-template.hbs'
 instrumentsTemplate = require './templates/instruments-template.hbs'
 template            = require './templates/live-pad-template.hbs'
@@ -75,6 +76,15 @@ class LivePad extends View
 
 
 
+   events:
+      'touchend .btn-edit': 'onEditBtnClick'
+      'touchend .tab':      'onTabClick'
+
+      # Mobile only
+      'touchend .btn-back': 'onBackBtnClick'
+
+
+
 
    # Render the view and and parse the collection into a displayable
    # instrument / pad table
@@ -95,8 +105,29 @@ class LivePad extends View
          id = padSquare.model.get 'id'
          @$el.find("##{id}").html padSquare.render().el
 
+
+      # Setup mobile layout
+      if @isMobile
+         @playPauseBtn = new PlayPauseBtn
+            appModel: @appModel
+
+         @$playPauseContainer = @$el.find '.container-play-pause'
+         @$playLabel          = @$playPauseContainer.find '.label-btn'
+         @$instructions       = @$el.find '.instructions'
+         @$tabs               = @$el.find '.tab'
+         @$kits               = @$el.find '.container-kit'
+
+         @$playPauseContainer.html @playPauseBtn.render().el
+         @$playLabel.text 'PAUSE SEQUENCE'
+
+         _.delay =>
+            $(@$tabs[0]).trigger 'touchend'
+         , 100
+
+
       @setDragAndDrop()
       @addEventListeners()
+
 
       @
 
@@ -118,6 +149,7 @@ class LivePad extends View
    renderPads: ->
       @$padsContainer.html padsTemplate {
          padTable: @returnPadTableData()
+         isDesktop: ! @isMobile
       }
 
 
@@ -128,7 +160,12 @@ class LivePad extends View
    renderInstruments: ->
       @$instrumentsContainer.html instrumentsTemplate {
          instrumentTable: @returnInstrumentTableData()
+         isDesktop: ! @isMobile
       }
+
+      if @isMobile
+         @$kits = @$el.find '.container-kit'
+         @$tabs = @$el.find '.tab'
 
 
 
@@ -153,6 +190,34 @@ class LivePad extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+
+   onEditBtnClick: (event) ->
+      @$instructions.hide()
+      @$instrumentsContainer.show()
+
+
+
+
+   onTabClick: (event) =>
+      @$kits.hide()
+      @$tabs.removeClass 'selected'
+      $tab  = $(event.currentTarget)
+      @selectedIndex = $tab.index()
+
+      $tab.addClass 'selected'
+      $(@$kits[@selectedIndex]).show()
+
+
+
+   # Mobile only. Trigger sequencer show back on CreateView
+   # @param {MouseEvent} event
+
+   onBackBtnClick: (event) =>
+      @appModel.set 'showSequencer', true
+
 
 
 
@@ -207,6 +272,10 @@ class LivePad extends View
          @renderInstruments()
          @setDragAndDrop()
 
+         # Hide everything and reselect tab
+         if @isMobile
+            @reselectMobileTab()
+
 
 
 
@@ -224,6 +293,9 @@ class LivePad extends View
       _.defer =>
          @renderInstruments()
          @setDragAndDrop()
+
+         if @isMobile
+            @reselectMobileTab()
 
 
 
@@ -452,6 +524,14 @@ class LivePad extends View
          }
 
       instrumentTable
+
+
+
+
+   reselectMobileTab: ->
+      @$kits.hide()
+      $(@$kits[@selectedIndex]).show()
+      $(@$tabs[@selectedIndex]).addClass 'selected'
 
 
 

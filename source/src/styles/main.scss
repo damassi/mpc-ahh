@@ -1,7 +1,7 @@
 /* /////////////////////////////////////////////////////
 
-PROJECT NAME
-matt@wintr.us @ WINTR
+MPC Ahh
+chris@wintr.us @ WINTR
 
 ///////////////////////////////////////////////////// */
 
@@ -23,7 +23,7 @@ $webfonts:  '../webfonts';
 $images:    '../images';
 
 //$break-small:     785px;
-$break-small:     285px;
+$break-small:     600px;
 
 $base-color:      #000;
 $highlight-color: #ea2427;
@@ -32,6 +32,9 @@ $grey:            #E5E5E5;
 $grey-dark:       #A6A8AB;
 $black:           #000;
 $white:           #fff;
+
+$mobile-width: 100%;
+$mobile-height: 320px;
 
 $body-font: "misobold", Helvetica, Arial, sans-serif;
 
@@ -56,6 +59,7 @@ $body-font: "misobold", Helvetica, Arial, sans-serif;
 @import "ui";
 @import "views/landing";
 @import "views/visualizer";
+@import "views/create/play-pause-btn";
 @import "views/create/create";
 @import "views/create/bpm";
 @import "views/create/sequencer";

@@ -18,6 +18,8 @@ class AppModel extends Model
       'kitModel':      null
       'playing':       null
 
+      'pageFocus':     true
+
       # Share id returned from parse
       'shareId':           null
       'sharedTrackModel':  null

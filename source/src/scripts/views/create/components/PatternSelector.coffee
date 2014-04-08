@@ -32,8 +32,6 @@ class PatternSelector extends View
       @presetModels = _.map presets, (preset) ->
          new SharedTrackModel preset.track
 
-      console.log @presetModels
-
 
    render: (options) ->
       super options
@@ -71,7 +69,6 @@ class PatternSelector extends View
 
 
    importTrack: ->
-      console.log @selectedIndex
 
       if @selectedIndex isnt -1
 

@@ -1,34 +1,80 @@
-<div class='wrapper'>
 
-	<div class='container-sequencer'>
 
-		<div class='column-0'>
-			{{!-- <img style='position:relative;' src='/assets/images/placeholders/desktop/placeholder-leftcol.png' /> --}}
+{{!-- DESKTOP VIEW --}}
 
-			<div class='container-toggle'></div>
-			<div class='container-play-pause'></div>
-		</div>
+{{#if isDesktop}}
 
-		<div class='column-1'>
-			<div class='sequencer'>
+	<div class='wrapper'>
 
-				<div class='pattern-selector'>
-					Pattern Selector
-				</div>
+		<div class='container-sequencer'>
 
+			<div class='column-0'>
+				<div class='container-toggle'></div>
+				<div class='container-play-pause'></div>
 			</div>
-			<div class='live-pad'>LivePad</div>
-		</div>
 
-		<div class='column-3'>
-			<div class='bpm'>BPM</div>
-		</div>
+			<div class='column-1'>
+				<div class='sequencer'>
 
-		<div class="column-4">
-			<div class='btn-share'>
-				SHARE
+					<div class='pattern-selector'>
+						Pattern Selector
+					</div>
+
+				</div>
+				<div class='live-pad'>LivePad</div>
+			</div>
+
+			<div class='column-3'>
+				<div class='bpm'>BPM</div>
+			</div>
+
+			<div class="column-4">
+				<div class='btn-share'>
+					SHARE
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
+
+
+
+{{!-- MOBILE VIEW --}}
+
+{{else}}
+	<div class='wrapper'>
+
+		<div class='container-sequencer'>
+			{{!-- Pause btn, BPM, Share btn --}}
+			<div class='row-1'>
+				<div class='container-play-pause'></div>
+				<div class='btn-share'>
+					SHARE
+				</div>
+			</div>
+
+			{{!-- Kit selector, pattern selector --}}
+			<div class='row-2'>
+
+			</div>
+
+			{{!-- Instrument Selector, Livepad toggle --}}
+			<div class='row-3'>
+				<div class='btn-jam-live'>
+					JAM LIVE &gt;
+				</div>
+			</div>
+
+			{{!-- Sequencer --}}
+			<div class='row-4'>
+
+			</div>
+		</div>
+
+		<div class='container-live-pad'>
+			LIVE PAD
+		</div>
+
+	</div>
+
+{{/if}}

@@ -127,7 +127,8 @@ class PatternSquare extends View
    play: ->
       @audioPlayback.play()
 
-      PubSub.trigger PubEvent.BEAT, patternSquareModel: @patternSquareModel.toJSON()
+      unless @isMobile
+         PubSub.trigger PubEvent.BEAT, patternSquareModel: @patternSquareModel.toJSON()
 
       TweenMax.to @$icon, .3,
          scale: 1.2

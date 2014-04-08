@@ -8,7 +8,6 @@
 AppConfig         = require './config/AppConfig.coffee'
 AppEvent          = require './events/AppEvent.coffee'
 PubEvent          = require './events/PubEvent.coffee'
-AppModel          = require './models/AppModel.coffee'
 SharedTrackModel  = require './models/SharedTrackModel.coffee'
 AppRouter         = require './routers/AppRouter.coffee'
 BreakpointManager = require './utils/BreakpointManager.coffee'
@@ -41,15 +40,9 @@ class AppController extends View
          breakpoints: AppConfig.BREAKPOINTS
          scope: @
 
-      @appModel = new AppModel
-         'kitModel': @kitCollection.at(0)
-
       @sharedTrackModel = new SharedTrackModel
 
       @landingView = new LandingView
-         appModel: @appModel
-
-      @visualizerView = new VisualizerView
          appModel: @appModel
 
       @createView = new CreateView
@@ -66,11 +59,13 @@ class AppController extends View
          appController: @
          appModel: @appModel
 
-      @addEventListeners()
+      @isMobile = @$body.hasClass 'mobile'
 
-      # Check current mobile status
-      if @$window.innerWidth() < AppConfig.BREAKPOINTS.desktop.min
-         @appModel.set 'isMobile', true
+      unless @isMobile
+         @visualizerView = new VisualizerView
+            appModel: @appModel
+
+      @addEventListeners()
 
 
 
@@ -79,13 +74,19 @@ class AppController extends View
    # off backbones history
 
    render: ->
-      @$body.append @$el.html mainTemplate()
+      @$body.append @$el.html mainTemplate
+         isDesktop: @$body.hasClass 'desktop'
 
       @$mainContainer   = @$el.find '#container-main'
       @$topContainer    = @$el.find '#container-top'
       @$bottomContainer = @$el.find '#container-bottom'
 
       TweenMax.set @$bottomContainer, y: 300
+
+      if @isMobile
+         TweenMax.set $('.top-bar'), autoAlpha: 0
+
+         TweenMax.set @$mainContainer, y: (window.innerHeight * .5 - @$mainContainer.height() * .5) - 25
 
       Backbone.history.start
          pushState: false
@@ -95,6 +96,8 @@ class AppController extends View
 
 
    renderVisualizationLayer: ->
+      if @appModel.get('isMobile') then return
+
       if @visualizationRendered is false
          @visualizationRendered = true
          @$mainContainer.prepend @visualizerView.render().el
@@ -121,6 +124,7 @@ class AppController extends View
    addEventListeners: ->
       @listenTo @appModel,   AppEvent.CHANGE_VIEW,         @onViewChange
       @listenTo @appModel,   AppEvent.CHANGE_ISMOBILE,     @onIsMobileChange
+      @listenTo @appModel,   AppEvent.CHANGE_PAGE_FOCUS,   @onPageFocusChange
 
       @listenTo @createView, AppEvent.OPEN_SHARE,          @onOpenShare
       @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
@@ -130,43 +134,35 @@ class AppController extends View
       @listenTo @,           AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
 
 
+      $(window).on 'resize', @onResize
+
+
+
+
+   removeEventListeners: ->
+      $(window).off 'resize', @onResize
+      super()
+
 
 
 
    expandVisualization: ->
-      if @appModel.get('view') instanceof CreateView
-         @createView.hide()
+      unless @isMobile
+         if @appModel.get('view') instanceof CreateView
+            @createView.hide()
 
-      @visualizerView.scaleUp()
-
-      return
-      console.log ''
-
-      TweenMax.to @$visualizerContainer,
-         autoAlpha: 1
-
-      TweenMax.to @$visualizerContainer.find('.wrapper'), .8,
-         scale: 1.2
-         top: 0
-         ease: Expo.easeOut
+         @visualizerView.scaleUp()
 
 
 
 
 
    contractVisualization: ->
-      if @appModel.get('view') instanceof CreateView
-         @createView.show()
+      unless @isMobile
+         if @appModel.get('view') instanceof CreateView
+            @createView.show()
 
-      @visualizerView.scaleDown()
-
-      return
-
-      TweenMax.to @$visualizerContainer.find('.wrapper'), .8,
-         scale: 1
-         top: -190
-         ease: Expo.easeInOut
-
+         @visualizerView.scaleDown()
 
 
 
@@ -220,7 +216,6 @@ class AppController extends View
          patternSquareGroups: @patternSquareGroups
          visualization:       @appModel.get 'visualization'
 
-      #console.log JSON.stringify @sharedTrackModel.toJSON()
 
       # Send the Parse model up the wire and save to DB
       @sharedTrackModel.save
@@ -248,6 +243,53 @@ class AppController extends View
 
 
 
+   onResize: (event) =>
+      if @isMobile
+
+         $deviceOrientation = $('.device-orientation')
+
+         # Reset position
+         TweenMax.to $('body'), 0,
+            scrollTop: 0
+            scrollLeft: 0
+
+         # User is in Portrait
+         if window.innerHeight > window.innerWidth
+
+            TweenMax.set $('#wrapper'), autoAlpha: 0
+
+            TweenMax.fromTo $deviceOrientation, .2, autoAlpha: 0,
+               autoAlpha: 1
+               delay: 0
+
+            TweenMax.fromTo $deviceOrientation.find('img'), .3, scale: 0,
+               scale: 1
+               ease: Back.easeOut
+               delay: .6
+
+            $deviceOrientation.show()
+
+         # User is in landscape -- all good
+         else
+
+            TweenMax.to $deviceOrientation.find('img'), .3,
+               scale: 0
+               ease: Back.easeIn
+               delay: .3
+
+            TweenMax.to $deviceOrientation, .2,
+               autoAlpha: 0
+               delay: .6
+
+               onComplete: =>
+
+                  # Fade the interface back in
+                  TweenMax.to $('#wrapper'), .4, autoAlpha: 1, delay: .3
+                  $deviceOrientation.hide()
+
+
+
+
    # Handler for showing / hiding / disposing of primary views
    # @param {AppModel} model
 
@@ -260,19 +302,23 @@ class AppController extends View
 
       $container = @$el
 
-      if currentView instanceof LandingView
-         console.log ''
 
       if currentView instanceof CreateView
          @renderVisualizationLayer()
-         @visualizerView.resetPosition()
-         $container = @$bottomContainer
+         @visualizerView?.resetPosition()
+
+         if @isMobile
+            $container = @$mainContainer
+         else
+            $container = @$bottomContainer
+
 
       if currentView instanceof ShareView
          @renderVisualizationLayer()
 
          _.defer =>
-            @visualizerView.setShareViewPosition()
+            @visualizerView?.setShareViewPosition()
+
 
       $container.append currentView.render().el
 
@@ -300,10 +346,21 @@ class AppController extends View
    onBreakpointMatch: (breakpoint) ->
       @appModel.set 'isMobile', ( if breakpoint is 'mobile' then true else false )
 
+      _.delay ->
+         window.location.reload()
+      , 100
+
 
 
 
    onBreakpointUnmatch: (breakpoint) ->
+
+
+
+
+
+   onPageFocusChange: (model) ->
+      console.log model.changed.pageFocus
 
 
 

@@ -1,0 +1,51 @@
+
+.container-play-pause
+
+   position: relative
+   height: 80px
+   margin-top: 20px
+   overflow: hidden
+
+   +respond-mobile
+      float: left
+      margin: 0
+      text-align: left
+      width: 125px
+      height: 65px
+
+
+   .btn-play, .btn-pause
+
+      +btn-hover-transition
+      color: $red
+      font-size: 80px
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+
+      +respond-mobile
+         font-size: 52px
+         top: 6px
+         left: 10px
+
+      &:hover
+         +btn-hover-transition
+         color: black
+
+
+
+   .btn-play
+
+
+
+
+   .btn-pause
+
+
+   // Mobile style
+   .label-btn
+      text-align: right
+      padding-top: 23px
+      font-size: 22px
+      color: $red

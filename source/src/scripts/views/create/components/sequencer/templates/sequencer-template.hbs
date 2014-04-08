@@ -3,8 +3,11 @@
 	<table class='sequencer'>
 		<tr>
 
-			{{!-- .stepper th for instrument --}}
-			<th></th>
+			{{#if isDesktop}}
+				{{!-- .stepper th for instrument --}}
+				<th></th>
+			{{/if}}
+
 
 			{{!-- .stepper th for hidden mute button --}}
 			<th style='display:none'></th>

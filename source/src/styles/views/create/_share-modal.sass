@@ -1,6 +1,11 @@
 
 .container-share
 
+   +respond-mobile
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
 
    .btn-close
       @extend .button
@@ -12,9 +17,22 @@
       font-size: 50px
       font-weight: light
 
+
       &:hover
          +btn-hover-transition
          color: white
+
+         +respond-mobile
+            color: $red
+
+   // MOBILE Only
+   .btn-close-share
+      font-size: 15px
+      z-index: 10
+      display: inline-block
+      float: left
+      text-transform: uppercase
+      padding-left: 10px
 
 
    > .wrapper
@@ -32,15 +50,30 @@
       height: 473px
       padding-top: 15px
 
+      +respond-mobile
+         position: absolute
+         top: 0
+         left: 0
+
+         width: 100% !important
+         height: 240px
 
       h1
          @extend .miso-bold
          font-size: 48px
 
+         +respond-mobile
+            font-size: 30px
+            display: inline-block
+            margin-left: -50px
+
 
       .form-wrapper
          display: inline-block
          width: 420px
+
+         +respond-mobile
+            width: 96%
 
 
       .mouseover
@@ -67,10 +100,25 @@
          position: relative
          text-transform: uppercase
 
+         +respond-mobile
+            background: white
+            border: 2px solid $red
+            color: $red
+            font-size: 22px
+            height: 40px
+            padding-top: 9px
+
+
          &:hover
             +btn-hover-transition
             background: white
             color: black
+
+            +respond-mobile
+
+               background: black
+               color: white
+               border: 2px solid black
 
 
       .btn-select-service
@@ -97,6 +145,11 @@
             width: 20%
 
 
+         +respond-mobile
+            position: relative
+            top: 50px
+
+
 
       .btn-back
          +btn-hover-transition
@@ -107,9 +160,16 @@
          padding: 16px
          width: 170px
 
+         +respond-mobile
+            float: none
+            color: black
+
          &:hover
             +btn-hover-transition
             color: black
+
+            +respond-mobile
+               color: $red
 
 
 
@@ -117,6 +177,9 @@
 
       .container-form, .container-preview
          margin-top: 46px
+
+         +respond-mobile
+            margin-top: 10px
 
 
 
@@ -132,7 +195,6 @@
             height: $form-height
             opacity: 1
             border: $form-border
-
 
             .label-input
                @extend .label
@@ -174,6 +236,80 @@
                   text-transform: none !important
 
 
+         +respond-mobile
+
+            .input-group
+               .label-input
+                  font-family: misobold
+                  font-size: 22px
+                  height: 35px
+                  padding: 6px
+
+
+            .text-input, .textarea
+               border: 2px solid black
+               background: white
+
+            .text-input
+               display: inline-block
+               width: 49%
+               height: 35px
+
+               &.t
+                  position: relative
+                  left: -3px
+
+               &.n
+                  position: relative
+                  right: -3px
+
+               input
+                  display: inline-block
+                  width: 74%
+                  font-size: 22px
+                  height: 31px
+                  float: none
+                  margin: 0
+                  color: black
+                  position: relative
+                  top: -1px
+
+
+            .input-group.textarea
+               height: 95px
+               display: block
+               width: 100%
+
+               .label-input
+                  height: 23px
+
+
+               textarea
+                  margin: 0
+                  width: 100%
+                  height: 68px
+                  padding-left: 5px
+                  color: black
+
+
+            /* WebKit browsers */
+            ::-webkit-input-placeholder
+               color:    #000
+
+            /* Mozilla Firefox 4 to 18 */
+            :-moz-placeholder
+               color:    #000
+
+            /* Mozilla Firefox 19+ */
+            ::-moz-placeholder
+               color:    #000
+
+            /* Internet Explorer 10+ */
+            :-ms-input-placeholder
+               color:    #000
+
+
+
 
 
       // Second, landing screen after form input has
@@ -187,6 +323,11 @@
          height: 320px
          position: relative
 
+         +respond-mobile
+            background: white
+            width: 100%
+            height: 100%
+
 
          .track-data
 
@@ -196,15 +337,34 @@
             padding-top: 23px
             min-height: 276px
 
+            +respond-mobile
+               color: black
+               min-height: 90px
+               padding-top: 0
+               display: none
+
+
             h1, h3
                @extend .miso-regular
                font-weight: normal
 
+               +respond-mobile
+                  margin-left: 0
+                  display: block
+
             h1
                font-size: 60px
 
+               +respond-mobile
+                  font-size: 45px
+                  display: inline-block
+
             h3
                font-size: 24px
+
+               +respond-mobile
+                  font-size: 22px
+                  display: inline-block
 
             p
                line-height: 18px
@@ -221,9 +381,25 @@
             text-align: center
             width: 100%
 
+            +respond-mobile
+               width: 100%
+               bottom: 0px
+               height: 0px
+
             span
                @extend .label
                font-size: 16px
+
+               +respond-mobile
+                  display: inline-block
+                  position: relative
+                  top: -11px
+
+
+
+            .service-btns
+               +respond-mobile
+                  display: inline-block
 
 
             .icon
@@ -233,6 +409,8 @@
                font-size: 38px
                padding: 6px
                cursor: pointer
+
+               color: $red
 
                &:hover
                   +btn-hover-transition

@@ -33,7 +33,13 @@ class View extends Backbone.View
          if @model instanceof Backbone.Model
             templateData = @model.toJSON()
 
+         # Pass in desktop to render seperate mobile conditional templates
+         templateData.isDesktop = if $('body').hasClass('desktop') then true else false
+
          @$el.html @template (templateData)
+
+      # Add flag so view can check against stuff
+      @isMobile = if $('body').hasClass('mobile') then true else false
 
       @delegateEvents()
       @addEventListeners()

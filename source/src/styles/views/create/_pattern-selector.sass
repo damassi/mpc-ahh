@@ -4,18 +4,35 @@
    > .wrapper
 
       padding-top: 10px
+      display: inline-block
+
+      +respond-mobile
+         display: inline-block
+         padding-top: 2px
+         width: 248px
+         float: right
 
 
       .label
          font-size: 16px
 
+         +respond-mobile
+            display: inline-block
+            font-size: 15px
+            top: -3px
+
 
       .container-btns
          margin-top: 3px
 
+         +respond-mobile
+            display: inline-block
+
 
       .btn
+
          $size: 40px
+
          @extend .button
          @extend .miso-bold
          +border-radius( $size, $size )
@@ -29,6 +46,13 @@
          height: $size
          padding: 8px
          margin-bottom: 7px
+
+         +respond-mobile
+            $size: 36
+            +border-radius( $size, $size )
+            width: $size
+            height: $size
+            margin-right: 3px
 
          &.selected
             +btn-hover-transition

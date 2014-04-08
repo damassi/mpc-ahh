@@ -5,16 +5,27 @@
 
    z-index: 2
 
+   +respond-mobile
+      float: left
+      width: 230px
+
 
    > .wrapper
 
       +disable-selection
 
-      //background: url("#{$images}/placeholders/desktop/placeholder-kitselector.png") no-repeat
       width: 240px
       height: 94px
       margin: auto
       padding-top: 10px
+
+      +respond-mobile
+         width: 240px
+         height: 40px
+         padding-top: 0
+         margin-left: 0
+         //border: 2px solid red
+
 
 
 
@@ -41,7 +52,7 @@
 
 
    .label-kit
-
+      +gpu
       @extend .label
       font-size: 30px
       height: 24px
@@ -51,6 +62,14 @@
 
       div
          position: relative
+
+
+      +respond-mobile
+         font-size: 40px
+         width: 130px
+         height: 31px
+         top: 0
+         padding-top: 7px
 
 
 
@@ -80,15 +99,27 @@
          +btn-hover-transition
          color: black
 
+      +respond-mobile
+         //padding-top: 0
+         // top: -3px
+         // top: 14px
+         top: 0
+
 
 
    .btn-left
       left: $arrow-margin
 
+      +respond-mobile
+         left: -10px
+
 
 
    .btn-right
       left: -$arrow-margin
+
+      +respond-mobile
+         left: 0
 
 
 

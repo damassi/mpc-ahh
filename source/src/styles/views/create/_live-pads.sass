@@ -4,14 +4,29 @@
    $square-min-width: 30px
    $square-height:    45px
 
+   display: inline-block
+   width: 100%
+
+   +gpu
+
+   +respond-mobile
+      position: absolute
+      top: 0px
+      left: 0
+      width: 100%
+
 
    > .wrapper
 
       width: 100%
-      min-width: 618px
+      min-width: 552px
       padding-left: 22px
       position: relative
       top: 8px
+
+      +respond-mobile
+         padding-left: 0
+         min-width: 480px
 
 
       .headline
@@ -28,19 +43,54 @@
          width: 273px
 
 
+         +respond-mobile
+
+            font-size: 13px
+            color: $grey-dark
+            border: 0
+            margin: 0
+            width: 100%
+
+
+
       .left,
          float: left
-         width: 50%
+         width: 100%
          text-align: left
-         padding-right: 24px
+         padding-right: 5px
+
+         +respond-mobile
+            width: 100%
+
 
       .right
          display: inline-block
          width: 38%
          vertical-align: top
+         min-width: 280px
+
+         +respond-mobile
+            position: relative
+            height: 228px
+            float: right
+            width: 46px
+            min-width: 220px
+            margin-right: 10px
+
+
+      .left-wrapper
+         margin-right: 370px
+         width: 46%
+
+         +respond-mobile
+            width: 50%
+            margin-left: 10px
+            margin-right: 220px
+
 
       .container-pads
          width: 90%
+
 
 
       .container-instruments
@@ -54,8 +104,7 @@
 
          border-collapse: initial
          border-spacing: 4px
-         width: 110%
-
+         width: 100%
 
          td
             text-align: center
@@ -73,12 +122,18 @@
             min-width: $square-min-width
             height: $square-height
 
+            +respond-mobile
+               height: 53px
+
 
             .border-dark
                position: absolute
                top: 0
                width: 100%
                height: $square-height
+
+               +respond-mobile
+                  height: 53px
 
 
             .container-icon
@@ -87,6 +142,10 @@
                top: 11px
                left: 10px
                font-size: 22px
+
+               +respond-mobile
+                  top: 15px
+                  left: auto
 
 
             .pad-number
@@ -168,3 +227,92 @@
 
       .highlight
          border: 2px solid red
+
+
+
+
+      // MOBILE STYLES
+      // -----------------------------------------------------------
+
+
+
+
+      .container-play-pause
+         float: none
+
+
+
+      .instructions
+         text-align: left
+         text-transform: uppercase
+         font-size: 18px
+
+
+      .container-tabs
+         display: block
+         height: 36px
+
+         .tab
+            cursor: pointer
+            font-size: 15px
+            text-transform: uppercase
+            letter-spacing: 0
+            float: left
+            overflow: hidden
+            width: 56px
+            height: 30px
+            position: relative
+            margin-left: -2px
+            padding-top: 4px
+
+            border: 2px solid $grey
+
+            &:first-child
+               margin-left: 0
+
+            &.selected
+               color: $red
+               background: transparent !important
+               border-bottom: 0
+
+
+
+      .bottom
+         border: 2px solid $grey
+         width: 100px
+         height: 45px
+         position: absolute
+         bottom: 0
+
+
+         .btn
+            @extend .miso-bold
+            float: left
+            font-size: 22px
+            color: $red
+            width: 98px
+            height: 43px
+            overflow: hidden
+            text-transform: uppercase
+            padding-top: 10px
+
+         .btn-back
+            border-right: 2px solid $grey
+            cursor: pointer
+
+
+         .btn-edit
+            padding-right 50px
+
+            .icon-gear
+               display: inline-block
+               float: left
+               text-align: center
+               overflow: hidden
+               padding-left: 16px
+
+
+
+
+
+

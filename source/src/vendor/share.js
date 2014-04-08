@@ -49,6 +49,7 @@
           return function(e) {
             var $this, left, link, top, url;
             e.preventDefault();
+            console.log('firing!')
             $this = $(e.currentTarget);
             left = (screen.width / 2) - 400.;
             top = (screen.height / 2) - 200.;

@@ -22,7 +22,7 @@ AppConfig =
    # The BPM tempo
    # @type {Number}
 
-   BPM: 320
+   BPM: 120
 
 
    # The max BPM
@@ -36,11 +36,11 @@ AppConfig =
 
    BREAKPOINTS:
       mobile:
-            min: null
-            max: 784
+         min: null
+         max: 650
 
       desktop:
-         min: 785
+         min: 651
          max: null
 
 

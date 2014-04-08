@@ -64,7 +64,7 @@ class InstrumentSelectorPanel extends View
    render: (options) ->
       super options
 
-      @$container = @$el.find '.container-instruments'
+      @$container = @$el.find '.instruments'
 
       @renderInstruments()
 

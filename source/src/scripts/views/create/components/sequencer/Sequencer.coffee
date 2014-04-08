@@ -71,6 +71,12 @@ class Sequencer extends View
    collection: null
 
 
+   # Collection of instruments
+   # @type {KitCollection}
+
+   kitCollection: null
+
+
 
 
    # Renders the view
@@ -81,6 +87,8 @@ class Sequencer extends View
 
       @$thStepper = @$el.find 'th.stepper'
       @$sequencer = @$el.find '.sequencer'
+
+      $(@$thStepper[0]).addClass 'step'
 
       #@$thStepper.hide()
       @renderTracks()
@@ -111,11 +119,13 @@ class Sequencer extends View
       @listenTo @appModel,   AppEvent.CHANGE_PLAYING, @onPlayingChange
       @listenTo @appModel,   AppEvent.CHANGE_KIT,     @onKitChange
 
+      @listenTo @appModel.get('kitModel'), AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
+
       @listenTo @collection, AppEvent.CHANGE_FOCUS,   @onFocusChange
       @listenTo @collection, AppEvent.CHANGE_MUTE,    @onMuteChange
 
       PubSub.on AppEvent.IMPORT_TRACK, @importTrack
-      #PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
+
 
 
 
@@ -286,10 +296,43 @@ class Sequencer extends View
 
 
 
+
+   # MOBILE ONLY.  Swaps out the currently visible pattern track with the one
+   # corresponding to the selected instrument
+   # @param {InstrumentModel} model
+
+   onInstrumentChange: (model) =>
+      selectedInstrument = model.changed.currentInstrument
+      iconClass = selectedInstrument.get 'icon'
+      $patternTracks = @$el.find '.pattern-track'
+
+      $patternTracks.each ->
+         $track = $(this)
+
+         # Found the proper track, show it
+         if $track.find('.instrument').hasClass iconClass
+            $track.show()
+
+            TweenMax.fromTo $track, .6, y: 100,
+               immediateRender: true
+               y: 0
+               ease: Expo.easeInOut
+
+         # Hide old track
+         else
+            $track.hide()
+
+
+
+
+
+
+
    # Handler for kit changes, as set from the KitSelector
    # @param {KitModel} model
 
    onKitChange: (model) =>
+      @removeEventListeners()
       @collection = model.changed.kitModel.get('instruments')
       @renderTracks()
 
@@ -333,10 +376,15 @@ class Sequencer extends View
                patternSquare.set oldPatternSquare.toJSON()
 
 
+      @addEventListeners()
+
+
 
 
    importTrack: (params) =>
-      {callback, patternSquareGroups, instruments} = params
+      {callback, patternSquareGroups, instruments, kitType} = params
+
+      @appModel.set 'kitModel', @kitCollection.findWhere( label: kitType )
 
       @renderTracks()
 

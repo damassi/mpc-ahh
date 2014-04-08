@@ -1,22 +1,53 @@
 
+
+
 <div class='wrapper'>
 
-	<div class='bg-circle' />
 
-	<div class='btn-increase btn-circle'>
-		+
-	</div>
+	{{!-- DESKTOP Styles --}}
 
-	<div class='label-bpm'>
-		BPM
-	</div>
+	{{#if isDesktop}}
 
-	<div class='bpm-value'>
-		0
-	</div>
+		<div class='bg-circle' />
 
-	<div class='btn-decrease btn-circle'>
-		-
-	</div>
+		<div class='btn-increase btn-circle'>
+			+
+		</div>
+
+		<div class='label-bpm'>
+			BPM
+		</div>
+
+		<div class='bpm-value'>
+			0
+		</div>
+
+		<div class='btn-decrease btn-circle'>
+			-
+		</div>
+
+
+
+
+	{{!-- MOBILE Styles --}}
+
+	{{else}}
+		<div class='label-bpm'>
+			BPM
+		</div>
+
+		<div class='btn-decrease'>
+			-
+		</div>
+
+		<div class='bpm-value'>
+			0
+		</div>
+
+		<div class='btn-increase'>
+			+
+		</div>
+
+	{{/if}}
 
 </div>

@@ -8,7 +8,7 @@
         <meta name="description" content="Your AHH-inspiring idea could become the next AHH website. Submit your idea here.">
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
         <meta property="og:title" content="Own an AHH"/>
         <meta property="og:type" content="website"/>
         <meta property="og:url" content="http://www.ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.com"/>
@@ -88,11 +88,12 @@
 
         var AhhGlobal = (function() {
             // The assigned Ahh ID for this experience.  Appears as the number in the global navigation.
-            var ahhid = 38,
+            var ahhid = 33,
             // Google Analytics ID.  If left blank, the global analytics ID will be used.
-            gaid = 'UA-39021710-45';
+            gaid = 'UA-39021710-41';
 
             function togglePause(toggle) {
+                window.game_paused = !window.game_paused;
 
                 /**
                  * Global pause/mute toggle.  Insert any custom code needed to interact with this experience
@@ -111,11 +112,11 @@
             var ahhembed = document.createElement('script');
             ahhembed.type = 'text/javascript';
             ahhembed.async = true;
-            ahhembed.src = '//db7hcvo99m9jo.cloudfront.net/src/embed/nav.embed.js';
+            //original nav
+ahhembed.src = '//www.ahh.com/embed/js/ahh.embed.js';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ahhembed, s);
         }());
-
 
         </script>
         <!-- End global navigation embed -->

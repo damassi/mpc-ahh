@@ -1,19 +1,60 @@
-<div class="headline">
-	DRAG DRUM BELOW TO ASSIGN TO NEW PAD
-</div>
 
-{{#each instrumentTable}}
-	<div class='container-kit'>
-		<div class='kit-type'>
-			<span>{{{label}}}</span>
+
+{{!-- DESKTOP Styles --}}
+
+{{#if isDesktop}}
+
+	<div class="headline">
+		DRAG DRUM BELOW TO ASSIGN TO NEW PAD
+	</div>
+
+	{{#each instrumentTable}}
+		<div class='container-kit'>
+			<div class='kit-type'>
+				<span>{{{label}}}</span>
+			</div>
+
+			{{#each instruments}}
+
+				<div class='instrument {{{icon}}} {{#if dropped}} hidden {{/if}}' id="{{{id}}}">
+
+				</div>
+			{{/each}}
+
 		</div>
+	{{/each}}
 
-		{{#each instruments}}
 
-			<div class='instrument {{{icon}}} {{#if dropped}} hidden {{/if}}' id="{{{id}}}">
 
+
+{{!-- MOBILE Styles --}}
+{{else}}
+
+	<div class="headline">
+		DRAG DRUM BELOW TO ASSIGN TO NEW PAD
+	</div>
+
+	<div class='container-tabs'>
+		{{#each instrumentTable}}
+			<div class='tab'>
+				<div class='kit-type'>
+					<span>{{{label}}}</span>
+				</div>
 			</div>
 		{{/each}}
-
 	</div>
-{{/each}}
+
+	{{#each instrumentTable}}
+		<div class='container-kit'>
+
+			{{#each instruments}}
+
+				<div class='instrument {{{icon}}} {{#if dropped}} hidden {{/if}}' id="{{{id}}}">
+
+				</div>
+			{{/each}}
+
+		</div>
+	{{/each}}
+
+{{/if}}

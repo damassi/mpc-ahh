@@ -45,8 +45,15 @@ class ShareModal extends View
       'click .btn-link':            'onLinkBtnClick'
       'click .btn-select-service':  'onSelectYourServiceBtnClick'
       'touchend .btn-close':        'onCloseBtnClick'
-      'click':                      'onCloseBtnClick'
+      #'click':                      'onCloseBtnClick'
       'click .wrapper':             'onWrapperClick'
+
+      # Mobile only
+      'touchend .btn-close-share':  'onCloseBtnClick'
+      'keypress .input-message':    'onInputKeyPress'
+      'blur .input-name':           'onInputBlur'
+      'blur .input-title':          'onInputBlur'
+      'blur .input-message':        'onInputBlur'
 
 
 
@@ -77,8 +84,11 @@ class ShareModal extends View
       TweenMax.set @$preloader, autoAlpha: 0, scale:  0
       TweenMax.set @$closeBtn,  autoAlpha: 0, scaleX: 1.7
 
-      _.defer =>
-         Share.init()
+      if @isMobile
+         TweenMax.set @$preloader, autoAlpha: 1, scale:  0, y: -12
+
+         _.each [@$nameInput, @$titleInput, @$messageInput], ($input) ->
+            $input.attr 'placeholder', ''
 
       @
 
@@ -105,17 +115,30 @@ class ShareModal extends View
    # Shows the view
 
    show: ->
-      TweenMax.fromTo @$el, @FORM_TWEEN_TIME + .1, y: 2000,
-         y: 0
-         autoAlpha: 1
-         ease: Expo.easeOut,
+
+      if @isMobile
+         TweenMax.fromTo @$el, .6, y: window.innerHeight,
+            y: 0
+            autoAlpha: 1
+            ease: Expo.easeInOut
+            onComplete: =>
+               TweenMax.to @$closeBtn, .3,
+                  autoAlpha: 1
+                  ease: Linear.easeNone
+
+      else
+
+         TweenMax.fromTo @$el, @FORM_TWEEN_TIME + .1, y: 2000,
+            y: 0
+            autoAlpha: 1
+            ease: Expo.easeOut,
 
 
-         onComplete: =>
+            onComplete: =>
 
-            TweenMax.to @$closeBtn, .3,
-               autoAlpha: 1
-               ease: Linear.easeNone
+               TweenMax.to @$closeBtn, .3,
+                  autoAlpha: 1
+                  ease: Linear.easeNone
 
 
 
@@ -123,19 +146,31 @@ class ShareModal extends View
    # Hides the view
 
    hide: ->
+      console.log 'here?'
       @trigger AppEvent.CLOSE_SHARE
 
-      TweenMax.to @$closeBtn, .2,
-         autoAlpha: 0
+      if @isMobile
+         TweenMax.to @$el, .6,
+            y: window.innerHeight
+            autoAlpha: 0
+            ease: Expo.easeInOut
+            onComplete: =>
+               @remove()
 
-      TweenMax.to @$el, @FORM_TWEEN_TIME + .1,
-         y: 2000
-         autoAlpha: 0
-         ease: Expo.easeIn
-         delay: .1
 
-         onComplete: =>
-            @remove()
+      else
+
+         TweenMax.to @$closeBtn, .2,
+            autoAlpha: 0
+
+         TweenMax.to @$el, @FORM_TWEEN_TIME + .1,
+            y: 2000
+            autoAlpha: 0
+            ease: Expo.easeIn
+            delay: .1
+
+            onComplete: =>
+               @remove()
 
 
 
@@ -152,6 +187,25 @@ class ShareModal extends View
       console.log 'link btn'
 
 
+
+   onInputKeyPress: (event) =>
+
+      if @isMobile
+         key = event.which or event.keyCode
+
+         if key is 13
+            event.preventDefault()
+            document.activeElement.blur()
+            @onInputBlur()
+
+
+
+   onInputBlur: (event) =>
+
+      if @isMobile
+          TweenMax.to $('body'), 0,
+            scrollTop: 0
+            scrollLeft: 0
 
 
    # Handler for model `shareId` changes which triggers the
@@ -198,7 +252,7 @@ class ShareModal extends View
 
       TweenMax.to @$preloader,   .2,
          autoAlpha: 1
-         scale: 1
+         scale: if @isMobile then .7 else 1
          ease: Back.easeOut
          delay: .1
 
@@ -241,8 +295,6 @@ class ShareModal extends View
          tweenTime = .2
          delay     = 1
 
-         #$btn.addClass 'no-transition'
-
          TweenMax.fromTo $text, tweenTime, autoAlpha: 1,
             autoAlpha: 0
 
@@ -282,8 +334,14 @@ class ShareModal extends View
    # @param {MouseEvent} event
 
    onWrapperClick: (event) =>
+      $target = $(event.target)
+
+      if $target.hasClass('icon')
+         $target.trigger('click')
+
       event.stopImmediatePropagation()
       return false
+
 
 
 
@@ -294,14 +352,13 @@ class ShareModal extends View
 
 
    formValid: ->
-      if @$nameInput.val() is ''
-         @$nameInput.attr 'placeholder', 'Please enter name'
-         return false
-
       if @$titleInput.val() is ''
          @$titleInput.attr 'placeholder', 'Please enter title'
          return false
 
+      if @$nameInput.val() is ''
+         @$nameInput.attr 'placeholder', 'Please enter name'
+         return false
 
       if @$messageInput.val() is ''
          @$messageInput.attr 'placeholder', 'Please enter message'
@@ -381,6 +438,11 @@ class ShareModal extends View
 
       @showPreview()
       @appModel.set 'shareId', null
+
+      _.delay =>
+         console.log $(document).find '[data-share-facebook]'
+         Share.init()
+      , 500
 
 
 

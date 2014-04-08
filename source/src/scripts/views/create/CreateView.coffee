@@ -37,6 +37,10 @@ class CreateView extends View
       'touchend .btn-share':  'onShareBtnClick'
       'touchend .btn-export': 'onExportBtnClick'
 
+      # Mobile only
+      'touchend .btn-jam-live': 'onJamLiveBtnClick'
+
+
 
    initialize: (options) ->
       super options
@@ -56,13 +60,16 @@ class CreateView extends View
       @toggle = new Toggle
          appModel: @appModel
 
-      @$mainContainer            = $('body').find '#container-main'
-      @$bottomContainer          = $('body').find '#container-bottom'
+      @$body = $('body')
+
+      @$mainContainer            = @$body.find '#container-main'
+      @$bottomContainer          = @$body.find '#container-bottom'
       @$wrapper                  = @$el.find '.wrapper'
       @$kitSelectorContainer     = @$el.find '.container-kit-selector'
       @$toggleContainer          = @$el.find '.container-toggle'
       @$playPauseContainer       = @$el.find '.container-play-pause'
       @$sequencerContainer       = @$el.find '.container-sequencer'
+      @$livePadContainer         = @$el.find '.container-live-pad'
       @$patternSelectorContainer = @$el.find '.column-2'
       @$bpmContainer             = @$el.find '.column-3'
 
@@ -73,8 +80,32 @@ class CreateView extends View
       @$bpm                    = @$sequencerContainer.find '.bpm'
       @$shareBtn               = @$sequencerContainer.find '.btn-share'
 
-      @$toggleContainer.html     @toggle.render().el
       @$playPauseContainer.html  @playPauseBtn.render().el
+
+      unless @isMobile
+         @$toggleContainer.html @toggle.render().el
+
+
+      if @isMobile
+
+         # Pause btn, BPM, Share btn
+         @$row1 = @$el.find '.row-1'
+
+         # Kit selector, pattern selector
+         @$row2 = @$el.find '.row-2'
+
+         # Instrument Selector, Livepad toggle
+         @$row3 = @$el.find '.row-3'
+
+         # Sequencer
+         @$row4 = @$el.find '.row-4'
+
+         @renderInstrumentSelector()
+
+         _.defer =>
+            @appModel.set 'showSequencer', true
+            #@appModel.set 'playing', false
+
 
       TweenMax.set @$bottomContainer, y: 300
 
@@ -98,12 +129,21 @@ class CreateView extends View
          delay: .3
 
       @kitSelector.show()
-
       @showSequencer()
-      _.defer =>
-         @toggle.$stepsBtn.trigger 'touchend'
-
       @appModel.set 'showSequencer', true
+
+      if @isMobile
+         TweenMax.to $('.top-bar'), .3, autoAlpha: 1
+
+         TweenMax.fromTo @$mainContainer, .4, y: 1000,
+            immediateRender: true
+            y: 0
+            ease: Expo.easeOut
+            delay: 1
+
+      else
+         _.defer =>
+            @toggle.$stepsBtn.trigger 'touchend'
 
       TweenMax.fromTo @$bottomContainer, .4, y: 300,
          autoAlpha: 1
@@ -120,6 +160,8 @@ class CreateView extends View
 
       @kitSelector.hide()
 
+      if @isMobile
+         TweenMax.to $('.top-bar'), .3, autoAlpha: 0
 
       if @$bottomContainer.length
 
@@ -185,6 +227,9 @@ class CreateView extends View
       @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
       @listenTo @appModel, AppEvent.CHANGE_SHOW_PAD,       @onShowPadChange
 
+      # if @isMobile
+      #    $(window).on 'resize', @onResize
+
 
 
 
@@ -203,7 +248,12 @@ class CreateView extends View
          appModel: @appModel
          kitCollection: @kitCollection
 
-      @$mainContainer.prepend @kitSelector.render().el
+      html = @kitSelector.render().el
+
+      if @isMobile
+         @$row2.append html
+      else
+         @$mainContainer.prepend html
 
 
 
@@ -216,7 +266,7 @@ class CreateView extends View
          appModel: @appModel
          kitCollection: @kitCollection
 
-      @$instrumentSelector.html @instrumentSelector.render().el
+      @$row3.prepend @instrumentSelector.render().el
 
 
 
@@ -226,9 +276,15 @@ class CreateView extends View
    renderSequencer: ->
       @sequencer = new Sequencer
          appModel: @appModel
+         kitCollection: @kitCollection
          collection: @kitCollection.at(0).get('instruments')
 
-      @$sequencer.prepend @sequencer.render().el
+      html = @sequencer.render().el
+
+      if @isMobile
+         @$row4.html html
+      else
+         @$sequencer.prepend html
 
 
 
@@ -240,7 +296,12 @@ class CreateView extends View
          appModel: @appModel
          kitCollection: @kitCollection
 
-      @$livePad.html @livePad.render().el
+      html = @livePad.render().el
+
+      if @isMobile
+         @$livePadContainer.html html
+      else
+         @$livePad.html html
 
 
 
@@ -252,7 +313,12 @@ class CreateView extends View
          appModel: @appModel
          sequencer: @sequencer
 
-      @$patternSelector.html @patternSelector.render().el
+      html = @patternSelector.render().el
+
+      if @isMobile
+         @$row2.append html
+      else
+         @$patternSelector.html html
 
 
 
@@ -263,7 +329,12 @@ class CreateView extends View
       @bpm = new BPMIndicator
          appModel: @appModel
 
-      @$bpm.html @bpm.render().el
+      html = @bpm.render().el
+
+      if @isMobile
+         @$row1.append html
+      else
+         @$bpm.html html
 
 
 
@@ -275,7 +346,16 @@ class CreateView extends View
          appModel: @appModel
          sharedTrackModel: @sharedTrackModel
 
-      $('body').prepend @shareModal.render().el
+      if @isMobile
+         @$mainContainer.append @shareModal.render().el
+
+         # Slide main container up and then open share
+         TweenMax.to @$sequencerContainer, .6,
+            y: -window.innerHeight
+            ease: Expo.easeInOut
+
+      else
+         @$body.prepend @shareModal.render().el
 
       @shareModal.show()
 
@@ -326,6 +406,11 @@ class CreateView extends View
       @trigger AppEvent.CLOSE_SHARE
       @stopListening @shareModal
 
+      if @isMobile
+         TweenMax.to @$sequencerContainer, .6,
+            y: 0
+            ease: Expo.easeInOut
+
 
 
 
@@ -334,6 +419,8 @@ class CreateView extends View
       if model.changed.showSequencer
          @showSequencer()
 
+         @appModel.set 'showPad', false
+
 
 
 
@@ -341,6 +428,30 @@ class CreateView extends View
    onShowPadChange: (model) =>
       if model.changed.showPad
          @showLivePad()
+
+         @appModel.set 'showSequencer', false
+
+
+
+
+   onJamLiveBtnClick: (event) =>
+      @appModel.set 'showPad', true
+
+
+
+
+   # MOBILE ONLY.  Handler for window resize events.  Updates the spacing between
+   # the rows so that the view fills the screen
+   # @param {MouseEvent} event
+
+   onResize: (event) =>
+      if window.innerHeight > 320
+         rowHeight = window.innerHeight / 6
+
+         _.each [@$row1, @$row2, @$row3, @$row4], ($row) ->
+            $row.height rowHeight
+
+
 
 
 
@@ -352,44 +463,66 @@ class CreateView extends View
    # Swaps the live pad out with the sequencer
 
    showSequencer: ->
+
       tweenTime = .6
 
-      @$sequencer.removeClass 'hide'
+      if @isMobile
 
-      TweenMax.to @$sequencer, tweenTime,
-         autoAlpha: 1
-         x: 0
-         ease: Expo.easeInOut
-         #delay: .2
+         TweenMax.to @$sequencerContainer, tweenTime,
+            x: 0
+            autoAlpha: 1
+            ease: Expo.easeInOut
 
-      TweenMax.to @$livePad, tweenTime,
-         autoAlpha: 0
-         x: 2000
-         ease: Expo.easeInOut
-         onComplete: =>
-            #@$livePad.addClass 'hide'
+         TweenMax.to @$livePadContainer, tweenTime,
+            x: window.innerWidth
+            autoAlpha: 0
+            ease: Expo.easeInOut
+
+
+      else
+
+         TweenMax.to @$sequencer, tweenTime,
+            autoAlpha: 1
+            x: 0
+            ease: Expo.easeInOut
+
+         TweenMax.to @$livePad, tweenTime,
+            autoAlpha: 0
+            x: 2000
+            ease: Expo.easeInOut
 
 
 
    # Swaps the sequencer area out with the live pad
 
    showLivePad: ->
+
       tweenTime = .6
 
-      @$livePad.removeClass 'hide'
+      if @isMobile
 
-      TweenMax.to @$sequencer, tweenTime,
-         autoAlpha: 0
-         x: -2000
-         ease: Expo.easeInOut
-         onComplete: =>
-            #@$sequencer.addClass 'hide'
+         TweenMax.to @$sequencerContainer, tweenTime,
+            autoAlpha: 0
+            x: -window.innerWidth
+            ease: Expo.easeInOut
+
+         TweenMax.fromTo @$livePadContainer, tweenTime, x: window.innerWidth,
+            autoAlpha: 1
+            x: 0
+            ease: Expo.easeInOut
+
+      else
+
+         TweenMax.to @$sequencer, tweenTime,
+            autoAlpha: 0
+            x: -2000
+            ease: Expo.easeInOut
 
 
-      TweenMax.to @$livePad, tweenTime,
-         autoAlpha: 1
-         x: 0
-         ease: Expo.easeInOut
+         TweenMax.to @$livePad, tweenTime,
+            autoAlpha: 1
+            x: 0
+            ease: Expo.easeInOut
 
 
 

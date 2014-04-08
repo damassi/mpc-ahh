@@ -17,7 +17,7 @@ class LandingView extends View
    # The time before the view first appears
    # @type {Number}
 
-   SHOW_DELAY: .5
+   SHOW_DELAY: 1
 
 
    className: 'container-landing'
@@ -137,6 +137,9 @@ class LandingView extends View
 
 
    onStartBtnClick: (event) =>
+      snd = new Audio('assets/audio/hip-hop/HipHopKit_KickHard.mp3')
+      snd.volume = .1
+      snd.play()
       @hide()
 
 

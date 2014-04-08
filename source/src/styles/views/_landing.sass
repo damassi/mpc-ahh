@@ -1,14 +1,20 @@
 
 .container-landing
 
+
    background: white
-   z-index: 1
+   z-index: 1 !important
 
    > .wrapper
 
       +center-everywhere
       width: 458px
       height: 273px
+
+
+      +respond-mobile
+         width: 360px
+         height: 170px
 
 
    .logo
@@ -19,6 +25,11 @@
       height: 60px
       margin-bottom: 45px
 
+      +respond-mobile
+         width: 180px
+         height: 30px
+         margin-bottom: 15px
+
 
    .message
 
@@ -27,6 +38,11 @@
       line-height: 28px
       color: $black
       margin-bottom: 50px
+
+      +respond-mobile
+         font-size: 22px
+         margin-bottom: 25px
+         line-height: 22px
 
 
    .btn-start
@@ -38,3 +54,10 @@
       padding: 15px
       font-size: 26px
       letter-spacing: 1px
+
+      +respond-mobile
+         width: 210px
+         height: 40px
+         font-size: 22px
+         padding: 8px
+

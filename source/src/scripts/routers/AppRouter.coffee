@@ -73,6 +73,8 @@ class AppRouter extends Backbone.Router
       'live-pad':             'livePadRoute'
       'share-modal':          'shareModalRoute'
 
+      'mobile-mpc':           'mobileMpcRoute'
+
 
 
    initialize: (options) ->
@@ -323,7 +325,6 @@ class AppRouter extends Backbone.Router
          appModel: @appModel
          kitCollection: @kitCollection
 
-
       @appModel.set 'view', view
 
       @hideTop()
@@ -345,6 +346,12 @@ class AppRouter extends Backbone.Router
 
    hideTop: ->
       $('#container-main').hide()
+
+
+
+
+   mobileMpcRoute: ->
+      @appModel.set 'view', @appController.createView
 
 
 

@@ -149,6 +149,8 @@ class ShareView extends View
                'sharedTrackModel': sharedTrackModel
                'shareId':          null
 
+            console.log sharedTrackModel.get 'kitType'
+
             # Import into sequencer
             @createView.sequencer.importTrack
 

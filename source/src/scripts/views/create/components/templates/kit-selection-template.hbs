@@ -1,22 +1,50 @@
 
-<div class='wrapper'>
 
-	<div class='bg-half-circle' />
+{{!-- DESKTOP View --}}
 
-	<div class='label-select'>
-		Select Kit
-	</div>
+{{#if isDesktop}}
 
-	<div class='btn-left'>
-		&lt;
-	</div>
-	<div class='label-kit'>
-		<div>
-			DRUM KIT
+	<div class='wrapper'>
+
+		<div class='bg-half-circle' />
+
+		<div class='label-select'>
+			Select Kit
+		</div>
+
+		<div class='btn-left'>
+			&lt;
+		</div>
+		<div class='label-kit'>
+			<div>
+				DRUM KIT
+			</div>
+		</div>
+
+		<div class='btn-right'>
+			&gt;
 		</div>
 	</div>
 
-	<div class='btn-right'>
-		&gt;
+
+
+
+{{!-- MOBILE View --}}
+{{else}}
+
+	<div class='wrapper'>
+		<div class='btn-left'>
+			&lt;
+		</div>
+		<div class='label-kit'>
+			<div>
+				DRUM KIT
+			</div>
+		</div>
+
+		<div class='btn-right'>
+			&gt;
+		</div>
 	</div>
-</div>
+
+{{/if}}

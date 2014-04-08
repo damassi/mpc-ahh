@@ -1,2 +1,15 @@
-<div class='btn-play icon-play'></div>
-<div class='btn-pause icon-pause'></div>
+
+{{#if isDesktop}}
+
+	<div class='btn-play icon-play'></div>
+	<div class='btn-pause icon-pause'></div>
+
+{{else}}
+
+	<div class='btn-play icon-play'></div>
+	<div class='btn-pause icon-pause'></div>
+	<div class='label-btn'>
+		PAUSE
+	</div>
+
+{{/if}}
