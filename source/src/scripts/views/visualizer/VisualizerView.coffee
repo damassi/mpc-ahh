@@ -5,11 +5,12 @@
  * @date   3.27.14
 ###
 
-PubSub   = require '../../utils/PubSub'
-PubEvent = require '../../events/PubEvent.coffee'
-View     = require '../../supers/View.coffee'
-Library  = require './movieclips/Library'
-template = require './templates/visualizer-template.hbs'
+PubSub        = require '../../utils/PubSub'
+RetinaEaselJs = require '../../utils/RetinaEaselJs.coffee'
+PubEvent      = require '../../events/PubEvent.coffee'
+View          = require '../../supers/View.coffee'
+Library       = require './movieclips/Library'
+template      = require './templates/visualizer-template.hbs'
 
 c = createjs
 
@@ -154,6 +155,8 @@ class VisualizerView extends View
 
    onBeat: (params) =>
       {patternSquareModel} = params
+
+      console.log 'firing beat....'
 
       frame = switch patternSquareModel.velocity
          when 1 then 33 + Math.random() * 20

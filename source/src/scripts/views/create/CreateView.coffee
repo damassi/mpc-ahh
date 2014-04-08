@@ -82,10 +82,16 @@ class CreateView extends View
 
       @$playPauseContainer.html  @playPauseBtn.render().el
 
+      # Fix viewport if on Tablet
+      TweenMax.to @$body, 0,
+         scrollTop:  0
+         scrollLeft: 0
+
+      # No toggle on mobile
       unless @isMobile
          @$toggleContainer.html @toggle.render().el
 
-
+      # Build out rows for new layout
       if @isMobile
 
          # Pause btn, BPM, Share btn
@@ -227,9 +233,6 @@ class CreateView extends View
       @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
       @listenTo @appModel, AppEvent.CHANGE_SHOW_PAD,       @onShowPadChange
 
-      # if @isMobile
-      #    $(window).on 'resize', @onResize
-
 
 
 
@@ -285,6 +288,9 @@ class CreateView extends View
          @$row4.html html
       else
          @$sequencer.prepend html
+
+
+      @listenTo @sequencer, PubEvent.BEAT, @onBeat
 
 
 
@@ -376,6 +382,13 @@ class CreateView extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   onBeat: (params) =>
+      @trigger PubEvent.BEAT, params
+
+
 
 
 

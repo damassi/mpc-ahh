@@ -48,12 +48,13 @@ class ShareModal extends View
       #'click':                      'onCloseBtnClick'
       'click .wrapper':             'onWrapperClick'
 
-      # Mobile only
-      'touchend .btn-close-share':  'onCloseBtnClick'
       'keypress .input-message':    'onInputKeyPress'
       'blur .input-name':           'onInputBlur'
       'blur .input-title':          'onInputBlur'
       'blur .input-message':        'onInputBlur'
+
+      # Mobile only
+      'touchend .btn-close-share':  'onCloseBtnClick'
 
 
 
@@ -188,24 +189,22 @@ class ShareModal extends View
 
 
 
+
    onInputKeyPress: (event) =>
+      key = event.which or event.keyCode
 
-      if @isMobile
-         key = event.which or event.keyCode
+      if key is 13
+         event.preventDefault()
+         document.activeElement.blur()
+         @onInputBlur()
 
-         if key is 13
-            event.preventDefault()
-            document.activeElement.blur()
-            @onInputBlur()
 
 
 
    onInputBlur: (event) =>
-
-      if @isMobile
-          TweenMax.to $('body'), 0,
-            scrollTop: 0
-            scrollLeft: 0
+       TweenMax.to $('body'), 0,
+         scrollTop: 0
+         scrollLeft: 0
 
 
    # Handler for model `shareId` changes which triggers the

@@ -6,6 +6,7 @@
 ###
 
 AppEvent                = require '../../../../events/AppEvent.coffee'
+PubEvent                = require '../../../../events/PubEvent.coffee'
 PatternSquareCollection = require '../../../../models/sequencer/PatternSquareCollection.coffee'
 PatternSquareModel      = require '../../../../models/sequencer/PatternSquareModel.coffee'
 PatternSquare           = require './PatternSquare.coffee'
@@ -116,6 +117,8 @@ class PatternTrack extends View
          @$el.append patternSquare.render().el
          @patternSquareViews.push patternSquare
 
+         @listenTo patternSquare, PubEvent.BEAT, @onBeat
+
       # Set the squares on the Instrument model to track against state
       @model.set 'patternSquares', @collection
 
@@ -140,6 +143,11 @@ class PatternTrack extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   onBeat: (params) =>
+      @trigger PubEvent.BEAT, params
 
 
 

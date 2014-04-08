@@ -129,6 +129,7 @@ class AppController extends View
       @listenTo @createView, AppEvent.OPEN_SHARE,          @onOpenShare
       @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
       @listenTo @createView, AppEvent.SAVE_TRACK,          @onSaveTrack
+      @listenTo @createView, PubEvent.BEAT,                @onBeat
 
       @listenTo @,           AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
       @listenTo @,           AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
@@ -240,6 +241,13 @@ class AppController extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   onBeat: (params) ->
+      @visualizerView.onBeat params
+
+
 
 
 

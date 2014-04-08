@@ -8,6 +8,7 @@
 PatternTrack = require './PatternTrack.coffee'
 PubSub       = require '../../../../utils/PubSub'
 AppEvent     = require '../../../../events/AppEvent.coffee'
+PubEvent     = require '../../../../events/PubEvent.coffee'
 View         = require '../../../../supers/View.coffee'
 helpers      = require '../../../../helpers/handlebars-helpers'
 template     = require './templates/sequencer-template.hbs'
@@ -157,6 +158,8 @@ class Sequencer extends View
          @patternTrackViews.push patternTrack
          @$sequencer.append patternTrack.render().el
 
+         @listenTo patternTrack, PubEvent.BEAT, @onBeat
+
 
 
 
@@ -256,6 +259,12 @@ class Sequencer extends View
 
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   onBeat: (params) =>
+      @trigger PubEvent.BEAT, params
+
 
 
 

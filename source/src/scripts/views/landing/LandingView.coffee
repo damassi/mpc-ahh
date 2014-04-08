@@ -137,10 +137,12 @@ class LandingView extends View
 
 
    onStartBtnClick: (event) =>
-      snd = new Audio('assets/audio/hip-hop/HipHopKit_KickHard.mp3')
+      snd = createjs.Sound.createInstance('assets/audio/hip-hop/HipHopKit_KickHard.mp3')
       snd.volume = .1
       snd.play()
       @hide()
+
+
 
 
 module.exports = LandingView

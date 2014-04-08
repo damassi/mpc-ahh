@@ -124,7 +124,7 @@ class PadSquare extends View
    # Sets the current sound and enables audio playback
 
    setSound: ->
-      @audioPlayback?.unload()
+      #@audioPlayback?.unload()
 
       instrument = @model.get 'currentInstrument'
 
@@ -134,11 +134,16 @@ class PadSquare extends View
          # TODO: Test methods
          #if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
 
-         @audioPlayback = new Howl
-            volume: AppConfig.VOLUME_LEVELS.medium
-            buffer: false
-            urls: [audioSrc]
-            onend: @onSoundEnd
+         # @audioPlayback = new Howl
+         #    volume: AppConfig.VOLUME_LEVELS.medium
+         #    buffer: false
+         #    urls: [audioSrc]
+         #    onend: @onSoundEnd
+         #    autoplay: false
+
+         @audioPlayback = createjs.Sound.createInstance audioSrc
+         @audioPlayback.volume = AppConfig.VOLUME_LEVELS.high
+         @audioPlayback.addEventListener 'complete', @onSoundEnd
 
 
 
@@ -159,7 +164,6 @@ class PadSquare extends View
       if @model.get('currentInstrument') is null
          return
 
-      @audioPlayback?.unload()
       @audioPlayback = null
 
       currentInstrument = @model.get 'currentInstrument'
@@ -208,10 +212,10 @@ class PadSquare extends View
             TweenMax.to @$el, .2,
                backgroundColor: '#e5e5e5'
 
-      @dragTimeout = setTimeout =>
-         @model.set 'dragging', true
+      # @dragTimeout = setTimeout =>
+      #    @model.set 'dragging', true
 
-      , @DRAG_TRIGGER_DELAY
+      # , @DRAG_TRIGGER_DELAY
 
 
 

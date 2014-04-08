@@ -50,9 +50,22 @@ $ ->
       $('.device-orientation').show()
 
 
-   # Kick off app
-   appController = new AppController
-      appModel: appModel
-      kitCollection: kitCollection
+   onLoad = ->
+      createjs.Sound.removeEventListener 'fileload', onLoad
 
-   appController.render()
+      # Fix viewport if on Tablet
+      TweenMax.to $('body'), 0,
+         scrollTop:  0
+         scrollLeft: 0
+
+      # Kick off app
+      appController = new AppController
+         appModel: appModel
+         kitCollection: kitCollection
+
+      appController.render()
+
+   # To initialize mobile playback, a sound must be loaded and triggered by user interaction
+   createjs.Sound.addEventListener 'fileload', onLoad
+   sndPath = 'assets/audio/hip-hop/HipHopKit_KickHard.mp3'
+   createjs.Sound.registerSound sndPath, sndPath

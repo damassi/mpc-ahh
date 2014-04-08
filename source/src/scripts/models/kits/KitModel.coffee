@@ -33,8 +33,10 @@ class KitModel extends Model
 
    parse: (response) ->
       _.each response.instruments, (instrument) ->
+
          instrument.id = _.uniqueId 'instrument-'
          instrument.src = response.path + '/' + instrument.src
+         createjs.Sound.registerSound instrument.src, instrument.src
 
       response.instruments = new InstrumentCollection response.instruments
 

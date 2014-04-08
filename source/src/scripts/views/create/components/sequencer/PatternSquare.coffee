@@ -70,16 +70,13 @@ class PatternSquare extends View
       audioSrc = ''
 
       if @patternSquareModel.get('instrument')
-         audioSrc = @patternSquareModel.get('instrument').get 'src'
+         @audioSrc = audioSrc = @patternSquareModel.get('instrument').get 'src'
 
       # TODO: Test methods
       #if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
 
-      @audioPlayback = new Howl
-         volume: AppConfig.VOLUME_LEVELS.low
-         buffer: false
-         urls: [audioSrc]
-         onend: @onSoundEnd
+      @audioPlayback = createjs.Sound.createInstance audioSrc
+      @audioPlayback.addEventListener 'complete', @onSoundEnd
 
       @
 
@@ -89,7 +86,6 @@ class PatternSquare extends View
    # Remove the view and destroy the audio playback
 
    remove: ->
-      @audioPlayback?.unload()
       @audioPlayback = null
       super()
 
@@ -128,7 +124,7 @@ class PatternSquare extends View
       @audioPlayback.play()
 
       unless @isMobile
-         PubSub.trigger PubEvent.BEAT, patternSquareModel: @patternSquareModel.toJSON()
+         @trigger PubEvent.BEAT, patternSquareModel: @patternSquareModel.toJSON()
 
       TweenMax.to @$icon, .3,
          scale: 1.2
@@ -244,7 +240,7 @@ class PatternSquare extends View
          when 3 then AppConfig.VOLUME_LEVELS.high
          else ''
 
-      @audioPlayback.volume( volume )
+      @audioPlayback.volume = volume
 
 
 

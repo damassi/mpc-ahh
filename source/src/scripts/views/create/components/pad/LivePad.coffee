@@ -126,7 +126,7 @@ class LivePad extends View
 
 
       @setDragAndDrop()
-      @addEventListeners()
+      #@addEventListeners()
 
 
       @
@@ -174,14 +174,23 @@ class LivePad extends View
    addEventListeners: ->
       $(document).on 'mousemove', @onMouseMove
 
+      # Setup livepad keys
+      _.each @KEYMAP, (key) =>
+         $(document).on 'keydown', null, key, @onKeyPress
+
+
 
 
    # Removes event listeners
 
    removeEventListeners: ->
       $(document).off 'mousemove', @onMouseMove
-      @stopListening()
 
+      # Remove livepad keys
+      _.each @KEYMAP, (key) =>
+         $(document).off 'keydown', null, key, @onKeyPress
+
+      @stopListening()
 
 
 
@@ -191,6 +200,12 @@ class LivePad extends View
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
 
+
+
+   onKeyPress: (event) =>
+      key = event.handleObj.data
+      index = _.indexOf @KEYMAP, key
+      @padSquareViews[index].onPress()
 
 
 

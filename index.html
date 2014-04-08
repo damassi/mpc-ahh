@@ -28,9 +28,11 @@
     <body>
 
         <script>
-            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
-                document.getElementById("android-space").style.height = "66px";
-            }
+            try {
+                if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+                    document.getElementById("android-space").style.height = "66px";
+                }
+            } catch (e) {}
         </script>
         <!-- UGC pages javascript -->
         <!-- Listens for a message from ePrize iFrame -->
