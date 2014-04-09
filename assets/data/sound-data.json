@@ -10,32 +10,32 @@
       "instruments": [
         {
           "label": "Kick Drum 1",
-          "src": "HipHopKit_KickHard.mp3",
+          "src": "01___Kick_hard.mp3",
           "icon": "icon-kit-0-kick1"
         },
         {
           "label": "Kick Drum 2",
-          "src": "Cool_RnB_Kick_Hard.mp3",
+          "src": "02___HipHopKit_KickHard.mp3",
           "icon": "icon-kit-0-kick2"
         },
         {
           "label": "Closed HiHat",
-          "src": "Cool_RnB_Hi-Hat_Closed_Hard.mp3",
+          "src": "04___HipHopKit_Hi_HatClosedHard.mp3",
           "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "Cool_RnB_Hi-Hat_Open_Soft.mp3",
+          "src": "03___HipHopKit_Hi_HatOpenHard.mp3",
           "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "HipHopKit_SnareHard.mp3",
+          "src": "05___Snare1_hard.mp3",
           "icon": "icon-kit-0-snare"
         },
         {
           "label": "Voice",
-          "src": "0021_props_can_soda_open _01-1.mp3",
+          "src": "06___male_ahhh_01.mp3",
           "icon": "icon-kit-0-voice"
         }
       ]
@@ -46,32 +46,32 @@
       "instruments": [
         {
           "label": "Kick Drum 1",
-          "src": "kick_huge_09_n.mp3",
+          "src": "01___kick_soft_03_n.mp3",
           "icon": "icon-kit-0-kick1"
         },
         {
           "label": "Kick Drum 2",
-          "src": "kick_soft_03_n.mp3",
+          "src": "02___snare_fx_06_n.mp3",
           "icon": "icon-kit-0-kick2"
         },
         {
           "label": "Closed HiHat",
-          "src": "h_closed_small_10_n.mp3",
+          "src": "03___cymbal_splash_02_n.mp3",
           "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "h_open_big_08_n.mp3",
+          "src": "04___snare_hard_04_n.mp3",
           "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "snare_hard_04_n.mp3",
+          "src": "05___hand_clap.mp3",
           "icon": "icon-kit-0-snare"
         },
         {
           "label": "Voice",
-          "src": "000696990-soda-bottle.mp3",
+          "src": "06___female_ahhh_01.mp3",
           "icon": "icon-kit-0-voice"
         }
       ]
@@ -82,69 +82,69 @@
       "instruments": [
         {
           "label": "Kick Drum 1",
-          "src": "BB_Kick_Hard.mp3",
+          "src": "01___BB_Kick_Hard.mp3",
           "icon": "icon-kit-0-kick1"
         },
         {
           "label": "Kick Drum 2",
-          "src": "BB_Tom_Lo_Soft.mp3",
+          "src": "02___BB_Snare_Hard.mp3",
           "icon": "icon-kit-0-kick2"
         },
         {
           "label": "Closed HiHat",
-          "src": "BB_Hi_Hat_Closed_Hard.mp3",
+          "src": "03___BB_Tom_Lo_Hard.mp3",
           "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "cymbal_ride_05_n.mp3",
+          "src": "04___h_closed_big_01_n.mp3",
           "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "BB_Snare_Hard.mp3",
+          "src": "05___cymbal_ride_01_n.mp3",
           "icon": "icon-kit-0-snare"
         },
         {
           "label": "Voice",
-          "src": "0021_props_can_soda_open _01-1.mp3",
+          "src": "06___coke_cowbell.mp3",
           "icon": "icon-kit-0-voice"
         }
       ]
     },
     {
-      "label": "NEEDED",
-      "folder": "hip-hop",
+      "label": "COKE",
+      "folder": "coke",
       "instruments": [
         {
           "label": "Kick Drum 1",
-          "src": "HipHopKit_KickHard.mp3",
+          "src": "01___000696990-soda-bottle.mp3",
           "icon": "icon-kit-0-kick1"
         },
         {
-          "label": "Kick Drum 2",
-          "src": "Cool_RnB_Kick_Hard.mp3",
-          "icon": "icon-kit-0-kick2"
-        },
-        {
           "label": "Closed HiHat",
-          "src": "Cool_RnB_Hi-Hat_Closed_Hard.mp3",
+          "src": "03___coke_cowbell.mp3",
           "icon": "icon-kit-0-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "Cool_RnB_Hi-Hat_Open_Soft.mp3",
+          "src": "04___male_ahhh_01.mp3",
           "icon": "icon-kit-0-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "HipHopKit_SnareHard.mp3",
+          "src": "05___female_ahhh_01.mp3",
           "icon": "icon-kit-0-snare"
         },
         {
           "label": "Voice",
-          "src": "0021_props_can_soda_open _01-1.mp3",
+          "src": "05___female_ahhh_02.mp3",
           "icon": "icon-kit-0-voice"
+        },
+        {
+          "label": "Kick Drum 2",
+          "src": "02___0021_props_can_beer_open _01.mp3",
+          "icon": "icon-kit-0-kick2"
         }
       ]
     }
