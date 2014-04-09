@@ -110,7 +110,6 @@ class CreateView extends View
 
          _.defer =>
             @appModel.set 'showSequencer', true
-            #@appModel.set 'playing', false
 
 
       TweenMax.set @$bottomContainer, y: 300
@@ -121,7 +120,6 @@ class CreateView extends View
       @renderPatternSelector()
       @renderBPM()
 
-
       @$kitSelector = @$el.find '.kit-selector'
 
       @
@@ -130,11 +128,12 @@ class CreateView extends View
 
 
    show: =>
-      TweenMax.fromTo @$el, .3, autoAlpha: 0,
-         autoAlpha: 1
-         delay: .3
+      # TweenMax.fromTo @$el, .3, autoAlpha: 0,
+      #    autoAlpha: 1
+      #    delay: .3
 
-      @kitSelector.show()
+      #@kitSelector.show()
+      @showUI()
       @showSequencer()
       @appModel.set 'showSequencer', true
 
@@ -151,11 +150,11 @@ class CreateView extends View
          _.defer =>
             @toggle.$stepsBtn.trigger 'touchend'
 
-      TweenMax.fromTo @$bottomContainer, .4, y: 300,
-         autoAlpha: 1
-         y: 0
-         ease: Expo.easeOut
-         delay: .3
+      # TweenMax.fromTo @$bottomContainer, .4, y: 300,
+      #    autoAlpha: 1
+      #    y: 0
+      #    ease: Expo.easeOut
+      #    delay: .3
 
 
 
@@ -182,6 +181,35 @@ class CreateView extends View
 
                if options?.remove
                   @remove()
+
+
+
+
+   showUI: ->
+      @kitSelector.show()
+
+      TweenMax.fromTo @$el, .3, autoAlpha: 0,
+         autoAlpha: 1
+         delay: .3
+
+      TweenMax.fromTo @$bottomContainer, .4, y: 300,
+         autoAlpha: 1
+         y: 0
+         ease: Expo.easeOut
+         delay: .3
+
+
+
+
+   hideUI: ->
+      @kitSelector.hide()
+
+      TweenMax.fromTo @$el, .3, autoAlpha: 1,
+         autoAlpha: 0
+
+      TweenMax.fromTo @$bottomContainer, .4, y: 0,
+         y: 300
+         ease: Expo.easeOut
 
 
 

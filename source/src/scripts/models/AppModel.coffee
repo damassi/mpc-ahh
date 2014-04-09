@@ -25,7 +25,7 @@ class AppModel extends Model
       'sharedTrackModel':  null
 
       'showPad':       null
-      'showSequencer': null
+      'showSequencer': true
 
       'view':          null
       'visualization': null

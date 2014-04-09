@@ -31,6 +31,8 @@ class Toggle extends View
       @$stepsBtn = @$el.find '.btn-steps'
       @$padBtn   = @$el.find '.btn-pads'
 
+      @$stepsBtn.addClass  'selected'
+
       @
 
 

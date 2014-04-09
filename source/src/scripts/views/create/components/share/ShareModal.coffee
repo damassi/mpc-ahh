@@ -45,7 +45,7 @@ class ShareModal extends View
       'click .btn-link':            'onLinkBtnClick'
       'click .btn-select-service':  'onSelectYourServiceBtnClick'
       'touchend .btn-close':        'onCloseBtnClick'
-      #'click':                      'onCloseBtnClick'
+      'click':                      'onCloseBtnClick'
       'click .wrapper':             'onWrapperClick'
 
       'keypress .input-message':    'onInputKeyPress'
@@ -147,7 +147,6 @@ class ShareModal extends View
    # Hides the view
 
    hide: ->
-      console.log 'here?'
       @trigger AppEvent.CLOSE_SHARE
 
       if @isMobile
@@ -276,7 +275,8 @@ class ShareModal extends View
    # @param {MouseEvent} event
 
    onCloseBtnClick: (event) =>
-      @hide()
+      unless @isMobile
+         @hide()
 
 
 

@@ -5,6 +5,7 @@
  * @date   3.17.14
 ###
 
+Visibility        = require 'visibilityjs'
 AppConfig         = require './config/AppConfig.coffee'
 AppEvent          = require './events/AppEvent.coffee'
 PubEvent          = require './events/PubEvent.coffee'
@@ -125,6 +126,7 @@ class AppController extends View
       @listenTo @appModel,   AppEvent.CHANGE_VIEW,         @onViewChange
       @listenTo @appModel,   AppEvent.CHANGE_ISMOBILE,     @onIsMobileChange
       @listenTo @appModel,   AppEvent.CHANGE_PAGE_FOCUS,   @onPageFocusChange
+      @listenTo @appModel,   AppEvent.CHANGE_PLAYING,      @onPlayingChange
 
       @listenTo @createView, AppEvent.OPEN_SHARE,          @onOpenShare
       @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
@@ -134,6 +136,7 @@ class AppController extends View
       @listenTo @,           AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
       @listenTo @,           AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
 
+      Visibility.change @onVisibilityChange
 
       $(window).on 'resize', @onResize
 
@@ -150,7 +153,7 @@ class AppController extends View
    expandVisualization: ->
       unless @isMobile
          if @appModel.get('view') instanceof CreateView
-            @createView.hide()
+            @createView.hideUI()
 
          @visualizerView.scaleUp()
 
@@ -161,7 +164,7 @@ class AppController extends View
    contractVisualization: ->
       unless @isMobile
          if @appModel.get('view') instanceof CreateView
-            @createView.show()
+            @createView.showUI()
 
          @visualizerView.scaleDown()
 
@@ -239,15 +242,9 @@ class AppController extends View
 
 
 
+   # --------------------------------------------------------------------------------
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
-
-
-
-   onBeat: (params) ->
-      @visualizerView.onBeat params
-
-
 
 
 
@@ -294,6 +291,28 @@ class AppController extends View
                   # Fade the interface back in
                   TweenMax.to $('#wrapper'), .4, autoAlpha: 1, delay: .3
                   $deviceOrientation.hide()
+
+
+
+   onBeat: (params) ->
+      @visualizerView.onBeat params
+
+
+
+
+
+   onVisibilityChange: (event, state) =>
+      if state is 'visible'
+         if @appModel._previousAttributes.playing is  true
+            @appModel.set 'playing', true
+      else
+         @appModel.set 'playing', false
+
+
+
+
+   onPlayingChange: (model) =>
+      @isPlaying = model.changed.playing
 
 
 

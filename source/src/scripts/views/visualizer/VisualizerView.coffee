@@ -11,8 +11,8 @@ PubEvent      = require '../../events/PubEvent.coffee'
 View          = require '../../supers/View.coffee'
 Library       = require './movieclips/Library'
 template      = require './templates/visualizer-template.hbs'
-
 c = createjs
+
 
 class VisualizerView extends View
 
@@ -20,23 +20,26 @@ class VisualizerView extends View
    BOTTLE_NUM: 6
 
 
+   # The classname for the container
+   # @type {String}
+
    className: 'container-visualizer'
 
+
+   # HTML Template
+   # @type {Function}
 
    template: template
 
 
+
+   # Renders the view and builds out the bottles
+   # @param {Object} options
+
    render: (options) ->
       super options
 
-      @$canvas = @$el.find 'canvas'
-
-      @stage = new c.Stage @$canvas[0]
-      @stage.mouseEventsEnabled = false
-      @stage.snapToPixelEnabled = true
-      c.Ticker.setFPS 60
-
-      @Library = new Library({}, createjs)
+      @$bottlesContainer = @$el.find '.container-bottles'
 
       @show()
 
@@ -44,25 +47,25 @@ class VisualizerView extends View
 
 
 
+   # Add listeners
+
    addEventListeners: ->
-      c.Ticker.addEventListener( 'tick', this.onTick )
       window.addEventListener('resize', @onResize, false);
       PubSub.on PubEvent.BEAT, @onBeat
 
 
 
+   # Remove listeners
 
    removeEventListeners: ->
-      c.Ticker.addEventListener( 'tick', this.onTick )
+      PubSub.off PubEvent.BEAT, @onBeat
       super()
 
 
 
+   # Show the view and build out the bottles
 
    show: =>
-      @$canvas[0].width  = window.innerWidth
-      @$canvas[0].height = window.innerHeight
-
       @buildBottles()
 
       TweenMax.to @$el.find('.wrapper'), .3,
@@ -71,6 +74,8 @@ class VisualizerView extends View
 
 
 
+   # Hide the view
+
    hide: ->
       TweenMax.to @$el.find('.wrapper'), .3,
          autoAlpha: 0
@@ -78,31 +83,35 @@ class VisualizerView extends View
 
 
 
+   # Scale up the view.  Called when the user clicks
+   # share when on Desktop
 
    scaleUp: ->
-      @prevX = @container.x
-      @prevY = @container.y
+      @prevX = GreenProp.x @$bottlesContainer
+      @prevY = GreenProp.y @$bottlesContainer
 
-      TweenMax.to @container, .8,
+      TweenMax.to @$bottlesContainer, .8,
          scaleX: 1.3
          scaleY: 1.3
-         x: (@container.getBounds().width * .05)
-         y: @prevY + 50
+         x: (@containerWidth * .25)
+         y: @prevY + 65
          ease: Expo.easeOut
 
 
 
-   scaleDown: ->
+   # Scale down the view close share
 
-      TweenMax.to @container, .8,
+   scaleDown: ->
+      TweenMax.to @$bottlesContainer, .8,
          scaleX: 1
          scaleY: 1
          x: @prevX
          y: @prevY
          ease: Expo.easeInOut
-         #delay: .2
 
 
+
+   # Sets the position  when the share view appears
 
    setShareViewPosition: ->
       @isShareView = true
@@ -117,33 +126,31 @@ class VisualizerView extends View
 
 
 
+   # Resets the position of the bottles
+
    resetPosition: ->
       @isShareView = false
       @onResize()
 
 
 
+   # Construct the bottles and set up positioning and width
 
    buildBottles: =>
       @bottles = []
-      @container = new c.Container()
+      @widths  = []
 
-
-      # Iterate over bottles
       _(@BOTTLE_NUM).times (index) =>
+         $bottle = @$el.find "#bottle-#{index+1}"
 
-         bottle = new @Library.bottle()
-         bottle.bottle.gotoAndStop 0
-         bottle.setBounds 0, 0, 66, 230
-         bottle.x = (index * (window.innerWidth / @BOTTLE_NUM))
-         bottle.y = 1000
+         TweenMax.set $bottle,
+            transformOrigin: 'center middle'
+            scale: 1
+            x: ~~(index * ((window.innerWidth * .8) / @BOTTLE_NUM))
+            y: 1000
 
-         @bottles.push bottle
-         @container.addChild bottle
-
-
-      @stage.addChild @container
-      @onResize()
+         TweenMax.set $bottle.find('.bottle-bg'), scaleY: 0
+         @bottles.push $bottle
 
       TweenMax.staggerTo @bottles, .7,
          y: 0
@@ -153,66 +160,69 @@ class VisualizerView extends View
 
 
 
-   onBeat: (params) =>
-      {patternSquareModel} = params
 
-      console.log 'firing beat....'
-
-      frame = switch patternSquareModel.velocity
-         when 1 then 33 + Math.random() * 20
-         when 2 then 66 + Math.random() * 20
-         when 3 then 95
-
-      tweenTime = .2
-
-      bottle = @bottles[patternSquareModel.orderIndex]
-
-      # Add setters and getters to obj to make it compa with tweenMax
-      bottle.bottle.setFrame = (frame) ->
-         bottle.bottle.gotoAndStop frame
-
-      bottle.bottle.getFrame = ->
-         return bottle.bottle.currentFrame
-
-      # Tween frame
-      TweenMax.to bottle.bottle, .1,
-         setFrame: ~~frame,
-         ease: Linear.easeNone
-
-         onComplete: =>
-            TweenMax.to bottle.bottle, 1,
-               setFrame: 0
-               ease: Quart.easeOut
+   # --------------------------------------------------------------------------------
+   # EVENT HANDLERS
+   # --------------------------------------------------------------------------------
 
 
 
+   # Handler for resize events.  Repositions bottles across width and
+   # centers container
 
    onResize: =>
-      @$canvas[0].width = window.innerWidth
-      @$canvas[0].height = window.innerHeight
 
-      itemNum = @container.children.length
+      len = @bottles.length
+      @widths = []
 
-      _.each @container.children, (bottle, index) ->
-         bottle.x = (index * ((window.innerWidth / itemNum) - 40))
+      _.each @bottles, ($bottle, index) =>
+         xPos = ~~(index * ((window.innerWidth * .8 / @BOTTLE_NUM) ))
+
+         TweenMax.set $bottle,
+            transformOrigin: 'center'
+            x: xPos
+            ease: Expo.easeOut
+
+         @widths.push (GreenProp.x($bottle) + $bottle.width())
+
+      @containerWidth  = @widths[@widths.length - 1]
+      containerHeight = ~~@$bottlesContainer.height()
 
       yOffset = if @isShareView then 0 else 100
 
-      xPos = (@stage.canvas.width * .5)  - (@container.getBounds().width * .5)
-      yPos = (@stage.canvas.height * .5) - (@container.getBounds().height * .5) - yOffset
+      xPos = (window.innerWidth  * .5) - (@containerWidth * .5)
+      yPos = (window.innerHeight * .5) - (containerHeight * .5) - yOffset
 
-      TweenMax.to @container, .8,
-         x: xPos
-         y: yPos
-         ease: Expo.easeInOut
-
+      TweenMax.set @$bottlesContainer,
+         x: ~~xPos
+         y: ~~yPos
 
 
 
-   onTick: =>
-      @stage.update()
+   # Handler for "Beat" events, dispatched from the PatternSquareView
+   # @param {Object} param
 
+   onBeat: (params) =>
+      {patternSquareModel} = params
 
+      frame = switch patternSquareModel.velocity
+         when 1 then .33 + Math.random() * .20
+         when 2 then .66 + Math.random() * .20
+         when 3 then .95
+
+      tweenTime = .2
+
+      bottle = @bottles[patternSquareModel.orderIndex].find('.bottle-bg')
+
+      TweenMax.to bottle, .1,
+         transformOrigin: 'center bottom'
+         scaleY: frame
+         ease: Linear.easeNone
+
+         onComplete: =>
+            TweenMax.to bottle, 1,
+               scaleY: 0
+               ease: Quart.easeOut
 
 
 module.exports = VisualizerView

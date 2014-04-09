@@ -50,6 +50,11 @@ $ ->
       $('.device-orientation').show()
 
 
+   # Create mock preloader for any image assets
+   _.each ['velocity-soft', 'velocity-medium', 'velocity-hard'], (className) ->
+      $('<div />', { class: "preload #{className}"}).appendTo 'body'
+
+
    onLoad = ->
       createjs.Sound.removeEventListener 'fileload', onLoad
 
@@ -57,6 +62,8 @@ $ ->
       TweenMax.to $('body'), 0,
          scrollTop:  0
          scrollLeft: 0
+
+      $('body').find('.preload').remove()
 
       # Kick off app
       appController = new AppController

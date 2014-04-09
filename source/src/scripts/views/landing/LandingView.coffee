@@ -40,6 +40,7 @@ class LandingView extends View
       @$message  = @$el.find '.message'
       @$startBtn = @$el.find '.btn-start'
 
+      TweenMax.set $('#container-main'), autoAlpha: 0
       TweenMax.set @$el, autoAlpha: 0
 
       @
@@ -141,6 +142,8 @@ class LandingView extends View
       snd.volume = .1
       snd.play()
       @hide()
+
+      TweenMax.set $('#container-main'), autoAlpha: 1
 
 
 

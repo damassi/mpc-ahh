@@ -90,8 +90,6 @@ class Sequencer extends View
       @$sequencer = @$el.find '.sequencer'
 
       $(@$thStepper[0]).addClass 'step'
-
-      #@$thStepper.hide()
       @renderTracks()
       @play()
 
@@ -274,7 +272,9 @@ class Sequencer extends View
    onBPMChange: (model) =>
       window.clearInterval @bpmInterval
       @updateIntervalTime = model.changed.bpm
-      @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
+
+      if @appModel.get('playing')
+         @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
 
 
 

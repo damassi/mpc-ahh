@@ -31,10 +31,12 @@ class ShareView extends View
    createView: null
 
 
+
    events:
       'mouseover .btn-start':  'onMouseOver'
       'mouseout  .btn-start':  'onMouseOut'
       'touchend  .btn-start':  'onStartBtnClick'
+
 
 
    # Renders the view
@@ -70,7 +72,6 @@ class ShareView extends View
 
 
    show: ->
-
       delay = .5
 
       TweenMax.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
