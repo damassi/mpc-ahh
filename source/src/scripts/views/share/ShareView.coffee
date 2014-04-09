@@ -9,6 +9,7 @@ PubSub           = require '../../utils/PubSub'
 PubEvent         = require '../../events/PubEvent.coffee'
 SharedTrackModel = require '../../models/SharedTrackModel.coffee'
 CreateView       = require '../create/CreateView.coffee'
+PlayPauseBtn     = require '../create/components/PlayPauseBtn.coffee'
 Sequencer        = require '../create/components/sequencer/Sequencer.coffee'
 View             = require '../../supers/View.coffee'
 template         = require './templates/share-template.hbs'
@@ -45,6 +46,7 @@ class ShareView extends View
    render: (options) ->
       super options
 
+
       @$textContainer = @$el.find '.container-text'
 
       @$name     = @$el.find '.name'
@@ -61,6 +63,13 @@ class ShareView extends View
          sharedTrackModel: @sharedTrackModel
          kitCollection: @kitCollection
 
+      if @isMobile
+         @playPauseBtn = new PlayPauseBtn
+            appModel: @appModel
+
+         @$el.find('.container-btn').append @playPauseBtn.render().el
+         @playPauseBtn.$el.find('.label-btn').hide()
+
       @$el.append @createView.render().el
       @createView.$el.hide()
       @createView.kitSelector.remove()
@@ -74,36 +83,77 @@ class ShareView extends View
    show: ->
       delay = .5
 
-      TweenMax.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
-         autoAlpha: 1
-         y: 0
-         ease: Expo.easeOut,
-         delay: delay + .3
+      console.log @isMobile
 
-      TweenMax.fromTo @$startBtn, .4, y: 300, autoAlpha: 0,
-         autoAlpha: 1
-         y: 0
-         ease: Expo.easeOut,
-         delay: delay + .3
+      if @isMobile
+
+         @$message.hide()
+
+         TweenMax.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+            autoAlpha: 1
+            y: 10
+            ease: Expo.easeOut,
+            delay: delay + .3
+
+         TweenMax.fromTo @$startBtn, .4, y: 1000, autoAlpha: 0,
+            autoAlpha: 1
+            y: 140
+            ease: Expo.easeOut,
+            delay: delay + .3
+
+      else
+
+
+         TweenMax.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+            autoAlpha: 1
+            y: 0
+            ease: Expo.easeOut,
+            delay: delay + .3
+
+         TweenMax.fromTo @$startBtn, .4, y: 300, autoAlpha: 0,
+            autoAlpha: 1
+            y: -80
+            ease: Expo.easeOut,
+            delay: delay + .3
+
+
 
 
 
 
    hide: (options) ->
-      TweenMax.to @$startBtn, .3,
-         scale: 0
-         autoAlpha: 0
-         ease: Back.easeIn
 
-      TweenMax.to @$el, .4,
-         autoAlpha: 0
+      if @isMobile
+         TweenMax.to @$el, .4,
+            autoAlpha: 0
 
-         onComplete: =>
-            if options?.remove
+            onComplete: =>
+               if options?.remove
 
-               _.delay =>
-                  @remove()
-               , 300
+                  _.delay =>
+                     @remove()
+                  , 300
+
+
+      else
+
+         TweenMax.to @$startBtn, .3,
+            scale: 0
+            autoAlpha: 0
+            ease: Back.easeIn
+
+         TweenMax.to @$el, .4,
+            autoAlpha: 0
+
+            onComplete: =>
+               if options?.remove
+
+                  _.delay =>
+                     @remove()
+                  , 300
+
+
+
 
 
 
@@ -196,8 +246,11 @@ class ShareView extends View
       @createView.remove()
       $('.container-kit-selector').remove()
 
+      @appModel.set
+         'bpm':              120
+         'sharedTrackModel': null
+
       window.location.hash = 'create'
-      #@hide remove: true
 
 
 

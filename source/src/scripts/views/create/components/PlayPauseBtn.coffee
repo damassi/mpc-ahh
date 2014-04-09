@@ -27,8 +27,9 @@ class PlayPauseBtn extends View
    render: (options) ->
       super options
 
-      @$playBtn = @$el.find '.btn-play'
+      @$playBtn  = @$el.find '.btn-play'
       @$pauseBtn = @$el.find '.btn-pause'
+      @$label    = @$el.find '.label-btn'
 
       TweenMax.set @$playBtn, autoAlpha: 0
 
@@ -48,10 +49,12 @@ class PlayPauseBtn extends View
       if playing
          TweenMax.set @$playBtn, autoAlpha: 0
          TweenMax.set @$pauseBtn, autoAlpha: 1
+         @$label.text 'PAUSE'
 
       else
          TweenMax.set @$playBtn, autoAlpha: 1
          TweenMax.set @$pauseBtn, autoAlpha: 0
+         @$label.text 'PLAY'
 
 
 

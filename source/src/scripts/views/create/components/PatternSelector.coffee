@@ -88,7 +88,7 @@ class PatternSelector extends View
 
       else
          @appModel.set
-            'bpm':              187
+            'bpm':              120
             'sharedTrackModel': null
 
          @sequencer.renderTracks()

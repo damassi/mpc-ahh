@@ -275,8 +275,8 @@ class ShareModal extends View
    # @param {MouseEvent} event
 
    onCloseBtnClick: (event) =>
-      unless @isMobile
-         @hide()
+      #unless @isMobile
+      @hide()
 
 
 
@@ -379,8 +379,11 @@ class ShareModal extends View
 
             @$form.hide()
 
+            data = @sharedTrackModel.toJSON()
+            data.isDesktop = ! @isMobile
+
             # Render out the template
-            @$preview.html previewTemplate @sharedTrackModel.toJSON()
+            @$preview.html previewTemplate data
 
             @$backBtn = @$preview.find '.btn-back'
             @$copyBtn = @$preview.find '.btn-copy-url'

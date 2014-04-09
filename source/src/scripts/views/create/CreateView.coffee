@@ -36,6 +36,7 @@ class CreateView extends View
    events:
       'touchend .btn-share':  'onShareBtnClick'
       'touchend .btn-export': 'onExportBtnClick'
+      'touchend .btn-clear':  'onResetBtnClick'
 
       # Mobile only
       'touchend .btn-jam-live': 'onJamLiveBtnClick'
@@ -110,6 +111,7 @@ class CreateView extends View
 
          _.defer =>
             @appModel.set 'showSequencer', true
+            @instrumentSelector.instrumentViews[0].onClick()
 
 
       TweenMax.set @$bottomContainer, y: 300
@@ -150,11 +152,6 @@ class CreateView extends View
          _.defer =>
             @toggle.$stepsBtn.trigger 'touchend'
 
-      # TweenMax.fromTo @$bottomContainer, .4, y: 300,
-      #    autoAlpha: 1
-      #    y: 0
-      #    ease: Expo.easeOut
-      #    delay: .3
 
 
 
@@ -436,6 +433,16 @@ class CreateView extends View
    onShareBtnClick: (event) =>
       @trigger AppEvent.OPEN_SHARE
       @renderShareModal()
+
+
+
+
+   onResetBtnClick: (event) =>
+      @appModel.set
+         'bpm':              320
+         'sharedTrackModel': null
+
+      @sequencer.renderTracks()
 
 
 

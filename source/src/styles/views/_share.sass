@@ -25,6 +25,10 @@
          color: white
          text-transform: uppercase
 
+         +respond-mobile
+            font-size: 45px
+            height: 30px
+
 
       .name
          font-size: 30px
@@ -32,11 +36,16 @@
          color: white
          text-transform: uppercase
 
+         +respond-mobile
+            font-size: 22px
+            height: 30px
+
 
       .message
          font-size: 18px
          color: white
          margin-top: -10px
+
 
 
       .btn-start
@@ -51,6 +60,29 @@
          bottom: 0px
          left: 50%
          margin-left: -128px
+
+         +respond-mobile
+            width: 210px
+            height: 40px
+            font-size: 22px
+            padding: 7px
+            margin-left: -110px
+            top: 0
+
+
+
+      .container-btn
+         top: -23px
+         display: inline-block
+         margin-left: -44px
+         position: relative
+
+         .icon-play, .icon-pause
+            font-size: 40px
+            color: white
+            position: absolute
+            top: 0
+            cursor: pointer
 
 
 

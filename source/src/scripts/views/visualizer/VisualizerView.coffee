@@ -6,12 +6,9 @@
 ###
 
 PubSub        = require '../../utils/PubSub'
-RetinaEaselJs = require '../../utils/RetinaEaselJs.coffee'
 PubEvent      = require '../../events/PubEvent.coffee'
 View          = require '../../supers/View.coffee'
-Library       = require './movieclips/Library'
 template      = require './templates/visualizer-template.hbs'
-c = createjs
 
 
 class VisualizerView extends View
@@ -91,11 +88,11 @@ class VisualizerView extends View
       @prevY = GreenProp.y @$bottlesContainer
 
       TweenMax.to @$bottlesContainer, .8,
-         scaleX: 1.3
-         scaleY: 1.3
-         x: (@containerWidth * .25)
+         scale: 1.3
+         x: (@containerWidth * .26)
          y: @prevY + 65
          ease: Expo.easeOut
+         roundProps: ['scale', 'x', 'y']
 
 
 
@@ -116,9 +113,13 @@ class VisualizerView extends View
    setShareViewPosition: ->
       @isShareView = true
 
-      yPos = (@stage.canvas.height * .5) - (@container.getBounds().height * .5)
+      @onResize()
 
-      TweenMax.to @container, .8,
+      return
+
+      yPos = (window.innerHeight * .5) - (@containerHeight  * .5)
+
+      TweenMax.to @$bottlesContainer, .8,
          scaleX: 1
          scaleY: 1
          y: yPos
@@ -153,7 +154,7 @@ class VisualizerView extends View
          @bottles.push $bottle
 
       TweenMax.staggerTo @bottles, .7,
-         y: 0
+         y: -10
          ease: Back.easeOut
          delay: .5
       , .1
@@ -186,12 +187,12 @@ class VisualizerView extends View
          @widths.push (GreenProp.x($bottle) + $bottle.width())
 
       @containerWidth  = @widths[@widths.length - 1]
-      containerHeight = ~~@$bottlesContainer.height()
+      @containerHeight = ~~@$bottlesContainer.height()
 
       yOffset = if @isShareView then 0 else 100
 
       xPos = (window.innerWidth  * .5) - (@containerWidth * .5)
-      yPos = (window.innerHeight * .5) - (containerHeight * .5) - yOffset
+      yPos = (window.innerHeight * .5) - (@containerHeight  * .5) - yOffset
 
       TweenMax.set @$bottlesContainer,
          x: ~~xPos

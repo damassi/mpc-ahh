@@ -30,26 +30,36 @@
 
 
       .vis-bottle
-         background: white
+         background: $red
          position: absolute
-         z-index: 100
+         z-index: 10
          padding: 0
          margin: 0
-         width: 70px
+         width: 72px
          height: 234px
+
+         .bottle-bg-white
+            background: white
+            width: 68px
+            height: 231px
+            position: absolute
+            left: 2px
+            top: 3px
+
 
          .bottle-bg
             background: #8F0B04
-            width: 70px
+            width: 67px
             height: 234px
             position: absolute
+            left: 2px
 
             +gpu
 
 
          .bottle-mask
             background: url("#{$images}/bottle-mask.png") no-repeat
-            background-size: 72px 236px
+            background-size: 72px 239px
             width: 72px
             height: 236px
             position: absolute

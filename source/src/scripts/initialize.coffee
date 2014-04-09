@@ -17,6 +17,7 @@ helpers          = require './helpers/handlebars-helpers'
 
 $ ->
 
+   # Initialize app-side utilities
    Touch.translateTouchEvents()
    attachFastClick document.body
    Parse.initialize( "oZgOktrcDXEetGBjCGI6qqRLNbJ7j8GTDMmPyrxb", "U6b0hDT2Isb5blCVd0WU41NJ0EOFgY0Fx7orql4Q" )
@@ -26,6 +27,8 @@ $ ->
    $(document).on 'touchmove', (event) ->
       event.preventDefault()
 
+
+   # Build out the kit-collection, which is the basis for all other models
    kitCollection = new KitCollection
       parse: true
 
@@ -33,9 +36,13 @@ $ ->
       async: false
       url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
+
+   # Create the primary application model which handles state
    appModel = new AppModel
       'kitModel': kitCollection.at(0)
 
+
+   # Begin setting up viewport-related components
    $body = $('body')
 
    # Check current mobile status
@@ -46,8 +53,8 @@ $ ->
    else
       $body.addClass 'desktop'
 
-   if window.innerHeight > window.innerWidth
-      $('.device-orientation').show()
+   # if window.innerHeight > window.innerWidth
+   #    $('.device-orientation').show()
 
 
    # Create mock preloader for any image assets
@@ -55,6 +62,7 @@ $ ->
       $('<div />', { class: "preload #{className}"}).appendTo 'body'
 
 
+   # Handler for audio load events, which is required for mobile (iOS) audio playback
    onLoad = ->
       createjs.Sound.removeEventListener 'fileload', onLoad
 

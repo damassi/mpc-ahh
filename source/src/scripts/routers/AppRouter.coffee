@@ -54,11 +54,12 @@ class AppRouter extends Backbone.Router
 
 
    routes:
-      '':             'landingRoute'
-      'landing':      'landingRoute'
-      'create':       'createRoute'
-      'share':       'shareRoute'
-      'share/:id':    'shareRoute'
+      '':              'landingRoute'
+      'landing':       'landingRoute'
+      'create':        'createRoute'
+      'share':         'shareRoute'
+      'share/:id':     'shareRoute'
+      'not-supported': 'notSupportedRoute'
 
       # Component test routes
       'development':          'tests'
@@ -107,6 +108,11 @@ class AppRouter extends Backbone.Router
       @appModel.set
          'view': @appController.shareView
          'shareId': shareId
+
+
+
+   notSupportedRoute: ->
+      @appModel.set 'view', @appController.notSupportedView
 
 
 

@@ -13,8 +13,8 @@
       +btn-hover-transition
       position: absolute
       right: 14px
-      top: 20px
-      font-size: 50px
+      top: 15px
+      font-size: 30px
       font-weight: light
 
 
@@ -252,16 +252,17 @@
 
             .text-input
                display: inline-block
-               width: 49%
+               width: 48%
                height: 35px
 
                &.t
                   position: relative
-                  left: -3px
+                  left: -5px
 
                &.n
                   position: relative
-                  right: -3px
+                  right: -7px
+                  width: 48%
 
                input
                   display: inline-block
@@ -272,7 +273,7 @@
                   margin: 0
                   color: black
                   position: relative
-                  top: -1px
+                  top: 0px
 
 
             .input-group.textarea
@@ -410,7 +411,8 @@
                padding: 6px
                cursor: pointer
 
-               color: $red
+               +respond-mobile
+                  color: $red
 
                &:hover
                   +btn-hover-transition

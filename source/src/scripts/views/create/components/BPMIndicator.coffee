@@ -186,7 +186,7 @@ class BPMIndicator extends View
 
    onBPMChange: (model) ->
       bpm = model.changed.bpm
-      #@$bpmLabel.text bpm
+
 
 
 

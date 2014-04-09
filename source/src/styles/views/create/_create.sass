@@ -38,6 +38,21 @@
 
 
 
+   .btn-clear
+      +btn-hover-transition
+
+      position: relative
+      top: 12px
+      color: $grey-dark
+      cursor: pointer
+
+      &:hover
+         +btn-hover-transition
+         color: $red
+
+
+
+
    .btn-steps, .btn-pads
 
       @extend .button
@@ -123,13 +138,24 @@
 
 
       .btn-jam-live
-         display: block
+         display: inline-block
          float: right
          font-size: 22px
          color: $red
-         padding: 19px
+         padding: 22px
+         padding-left: 9px
          padding-right: 7px
          cursor: pointer
+
+      .btn-clear
+         background: $grey
+         display: inline-block
+         font-size: 15px
+         width: 50px
+         height: 30px
+         padding: 6px
+         top: 17px
+         position: relative
 
 
    .row-4

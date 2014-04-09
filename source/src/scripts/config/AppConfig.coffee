@@ -37,10 +37,10 @@ AppConfig =
    BREAKPOINTS:
       mobile:
          min: null
-         max: 650
+         max: 600
 
       desktop:
-         min: 651
+         min: 601
          max: null
 
 

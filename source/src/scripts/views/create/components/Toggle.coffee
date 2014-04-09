@@ -1,5 +1,5 @@
 ###*
- * Kit / Pad toggle button
+ * Kit / Pad toggle button.
  *
  * @author Christopher Pappas <chris@wintr.us>
  * @date   3.28.14

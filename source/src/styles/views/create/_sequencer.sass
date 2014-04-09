@@ -66,10 +66,15 @@
 
 
             .instrument
+               +btn-hover-transition
                color: $grey-dark
                font-size: 20px
                width: 50px
                cursor: pointer
+
+               &:hover
+                  +btn-hover-transition
+                  color: $red
 
                +respond-mobile
                   display: none

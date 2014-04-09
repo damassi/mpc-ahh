@@ -17,6 +17,7 @@ LandingView       = require './views/landing/LandingView.coffee'
 CreateView        = require './views/create/CreateView.coffee'
 ShareView         = require './views/share/ShareView.coffee'
 VisualizerView    = require './views/visualizer/VisualizerView.coffee'
+NotSupportedView  = require './views/not-supported/NotSupportedView.coffee'
 View              = require './supers/View.coffee'
 mainTemplate      = require './views/templates/main-template.hbs'
 
@@ -47,14 +48,17 @@ class AppController extends View
          appModel: @appModel
 
       @createView = new CreateView
-         appModel: @appModel
+         appModel:         @appModel
          sharedTrackModel: @sharedTrackModel
-         kitCollection: @kitCollection
+         kitCollection:    @kitCollection
 
       @shareView = new ShareView
-         appModel: @appModel
+         appModel:         @appModel
          sharedTrackModel: @sharedTrackModel
-         kitCollection: @kitCollection
+         kitCollection:    @kitCollection
+
+      @notSupportedView = new NotSupportedView
+         appModel: @appModel
 
       @appRouter = new AppRouter
          appController: @
@@ -65,6 +69,12 @@ class AppController extends View
       unless @isMobile
          @visualizerView = new VisualizerView
             appModel: @appModel
+
+      @notSupported = false
+
+      if @isMobile and @notSupported
+         window.location.hash = 'not-supported'
+
 
       @addEventListeners()
 
@@ -85,9 +95,11 @@ class AppController extends View
       TweenMax.set @$bottomContainer, y: 300
 
       if @isMobile
-         TweenMax.set $('.top-bar'), autoAlpha: 0
+         hash = window.location.hash
 
-         TweenMax.set @$mainContainer, y: (window.innerHeight * .5 - @$mainContainer.height() * .5) - 25
+         if hash.indexOf('share') is -1 or hash.indexOf('not-supported') is -1
+            TweenMax.set $('.top-bar'), autoAlpha: 0
+            TweenMax.set @$mainContainer, y: (window.innerHeight * .5 - @$mainContainer.height() * .5) - 25
 
       Backbone.history.start
          pushState: false
@@ -113,6 +125,7 @@ class AppController extends View
       @landingView?.remove()
       @shareView?.remove()
       @createView?.remove()
+      @notSupportedView?.remove()
 
       super()
 
@@ -138,7 +151,7 @@ class AppController extends View
 
       Visibility.change @onVisibilityChange
 
-      $(window).on 'resize', @onResize
+      #$(window).on 'resize', @onResize
 
 
 
@@ -341,10 +354,23 @@ class AppController extends View
 
 
       if currentView instanceof ShareView
-         @renderVisualizationLayer()
+         if @isMobile
+            $('#logo').removeClass('logo').addClass('logo-white')
+            TweenMax.to $('#wrapper'), .3,
+               backgroundColor: '#E41E2B'
+
+         # Only render visualization on desktop
+         else
+            @renderVisualizationLayer()
 
          _.defer =>
             @visualizerView?.setShareViewPosition()
+
+      else
+         if @isMobile
+            $('#logo').removeClass('logo-white').addClass('logo')
+            TweenMax.to $('#wrapper'), .3,
+               backgroundColor: 'white'
 
 
       $container.append currentView.render().el
