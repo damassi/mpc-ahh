@@ -18,7 +18,10 @@ template         = require './templates/share-template.hbs'
 class ShareView extends View
 
 
+   # @type {String}
+
    className: 'container-share'
+
 
    # The template
    # @type {Function}
@@ -80,10 +83,11 @@ class ShareView extends View
 
 
 
+
+   # Show the view, and hide the message if on mobile
+
    show: ->
       delay = .5
-
-      console.log @isMobile
 
       if @isMobile
 
@@ -119,17 +123,15 @@ class ShareView extends View
 
 
 
-
+   # Hide the view
 
    hide: (options) ->
 
       if @isMobile
-         TweenMax.to @$el, .4,
-            autoAlpha: 0
 
+         TweenMax.to @$el, .4, autoAlpha: 0,
             onComplete: =>
                if options?.remove
-
                   _.delay =>
                      @remove()
                   , 300
@@ -142,23 +144,13 @@ class ShareView extends View
             autoAlpha: 0
             ease: Back.easeIn
 
-         TweenMax.to @$el, .4,
-            autoAlpha: 0
-
+         TweenMax.to @$el, .4, autoAlpha: 0,
             onComplete: =>
                if options?.remove
 
                   _.delay =>
                      @remove()
                   , 300
-
-
-
-
-
-
-   remove: ->
-      super()
 
 
 
@@ -241,6 +233,10 @@ class ShareView extends View
 
 
 
+   # Handler for start button clicks, which sends the user to the CreateView.
+   # Resets the AppModel to its default state
+   # @param {MouseEvent} event
+
    onStartBtnClick: (event) ->
       @removeEventListeners()
       @createView.remove()
@@ -255,6 +251,9 @@ class ShareView extends View
 
 
 
+   # Handler for mouse events on desktop
+   # @param {MouseEvent} event
+
    onMouseOver: (event) =>
       TweenMax.to @$startBtn, .2,
          border: '3px solid black'
@@ -263,6 +262,9 @@ class ShareView extends View
 
 
 
+
+   # Handler for mouse events on desktop
+   # @param {MouseEvent} event
 
    onMouseOut: (event) =>
       TweenMax.to @$startBtn, .2,

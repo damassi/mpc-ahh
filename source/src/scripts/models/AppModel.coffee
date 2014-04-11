@@ -24,8 +24,8 @@ class AppModel extends Model
       'shareId':           null
       'sharedTrackModel':  null
 
-      'showPad':       null
-      'showSequencer': true
+      # Set to true to show sequencer view, false to show pad
+      'showSequencer': null
 
       'view':          null
       'visualization': null

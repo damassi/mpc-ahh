@@ -12,11 +12,18 @@ template      = require './templates/not-supported-template.hbs'
 
 class NotSupportedView extends View
 
+
    className: 'container-not-supported'
+
+
    template:   template
+
+
 
    events:
       'touchend .btn-listen': 'onListenBtnClick'
+
+
 
    render: (options) ->
       super options
@@ -25,6 +32,7 @@ class NotSupportedView extends View
       @$samples      = @$el.find '.samples'
 
       @
+
 
 
    onListenBtnClick: (event) ->

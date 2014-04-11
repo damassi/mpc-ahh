@@ -113,6 +113,8 @@ class VisualizerView extends View
    setShareViewPosition: ->
       @isShareView = true
 
+      console.log 'here!'
+
       @onResize()
 
       return
@@ -194,9 +196,10 @@ class VisualizerView extends View
       xPos = (window.innerWidth  * .5) - (@containerWidth * .5)
       yPos = (window.innerHeight * .5) - (@containerHeight  * .5) - yOffset
 
-      TweenMax.set @$bottlesContainer,
+      TweenMax.to @$bottlesContainer, .6,
          x: ~~xPos
          y: ~~yPos
+         ease: Expo.easeOut
 
 
 

@@ -54,7 +54,7 @@ class PadSquare extends View
 
    events:
       'touchstart': 'onPress'
-      'touchend':   'onRelease'
+      'taphold':    'onHold'
 
 
 
@@ -90,7 +90,6 @@ class PadSquare extends View
 
    addEventListeners: ->
       @listenTo @model, AppEvent.CHANGE_TRIGGER,    @onTriggerChange
-      @listenTo @model, AppEvent.CHANGE_DRAGGING,   @onDraggingChange
       @listenTo @model, AppEvent.CHANGE_DROPPED,    @onDroppedChange
       @listenTo @model, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
@@ -124,22 +123,10 @@ class PadSquare extends View
    # Sets the current sound and enables audio playback
 
    setSound: ->
-      #@audioPlayback?.unload()
-
       instrument = @model.get 'currentInstrument'
 
       unless instrument is null
          audioSrc = instrument.get 'src'
-
-         # TODO: Test methods
-         #if window.location.href.indexOf('test') isnt -1 then audioSrc = ''
-
-         # @audioPlayback = new Howl
-         #    volume: AppConfig.VOLUME_LEVELS.medium
-         #    buffer: false
-         #    urls: [audioSrc]
-         #    onend: @onSoundEnd
-         #    autoplay: false
 
          @audioPlayback = createjs.Sound.createInstance audioSrc
          @audioPlayback.volume = AppConfig.VOLUME_LEVELS.high
@@ -177,18 +164,6 @@ class PadSquare extends View
       @$icon.removeClass icon
       @$icon.text ''
 
-      _.defer =>
-         @model.set
-            'dragging': false
-            'dropped': false
-
-         currentInstrument.set
-            'dropped': false
-            'droppedEvent': null
-
-         @model.set 'currentInstrument', null
-
-
 
 
 
@@ -208,14 +183,10 @@ class PadSquare extends View
 
       TweenMax.to @$el, .2,
          backgroundColor: '#E41E2B'
+
          onComplete: =>
             TweenMax.to @$el, .2,
                backgroundColor: '#e5e5e5'
-
-      # @dragTimeout = setTimeout =>
-      #    @model.set 'dragging', true
-
-      # , @DRAG_TRIGGER_DELAY
 
 
 
@@ -231,57 +202,23 @@ class PadSquare extends View
 
 
 
-   # Handler for drag events.
-   # TODO: Do we need this
-   # @param {MouseEvent} event
-
-   onDrag: (event) ->
-      @model.set 'dragging', true
 
 
+   onHold: (event) =>
+      instrumentId = @$el.parent().attr 'data-instrument'
 
+      currentInstrument    = @model.get('currentInstrument')
 
-   # Set dropped status so that bi-directional change can
-   # be triggered from the LivePad kit render
-   # @param {Number} id
+      @model.set 'dropped', false
+      currentInstrument.set 'dropped', false
 
-   onDrop: (id) ->
-      instrumentModel = @collection.findInstrumentModel id
-
-      instrumentModel.set 'dropped', true
-
-      @model.set
-         'dragging': false
-         'dropped': true
-         'currentInstrument': instrumentModel
-
-
-
-
-   # Handler for 'change:drag' model events, which
-   # sets up sequence for dragging on and off of
-   # the pad square
-   # @param {PadSquareModel} model
-
-   onDraggingChange: (model) =>
-      dragging = model.changed.dragging
-
-      if dragging is true
-
-         instrumentId = @$el.parent().attr 'data-instrument'
-
-         currentInstrument    = @model.get('currentInstrument')
-         originalDroppedEvent = currentInstrument.get 'droppedEvent'
-
-         @model.set 'dropped', false
-         currentInstrument.set 'dropped', false
-
-         # Dispatch drag start event back to LivePad
-         @trigger AppEvent.CHANGE_DRAGGING, {
-            'instrumentId': instrumentId
-            '$padSquare': @$el.parent()
-            'originalDroppedEvent': originalDroppedEvent
-         }
+      # Dispatch drag start event back to LivePad
+      @trigger AppEvent.CHANGE_DRAGGING, {
+         'instrumentId': instrumentId
+         'padSquare': @
+         '$padSquare': @$el.parent()
+         'event': event
+      }
 
 
 
@@ -320,7 +257,10 @@ class PadSquare extends View
    onInstrumentChange: (model) =>
       instrument = model.changed.currentInstrument
 
+      console.log instrument
+
       unless instrument is null or instrument is undefined
+         @model.set 'dropped', true
          @updateInstrumentClass()
          @renderIcon()
          @setSound()

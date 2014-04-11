@@ -103,6 +103,15 @@
                   height: 35px
 
 
+               .inner-container
+                  position: relative
+                  top: 0
+                  height: $square-height
+
+                  +respond-mobile
+                     height: 35px
+
+
                .border-dark
                   position: absolute
                   top: 0
@@ -118,9 +127,12 @@
                   width: 20px
                   height: 20px
 
+                  position: relative
+                  top: 5px
+
                   +respond-mobile
                      position: relative
-                     top: -3px
+                     top: 7px
 
 
                // .velocity-soft

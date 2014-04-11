@@ -27,6 +27,9 @@ $ ->
    $(document).on 'touchmove', (event) ->
       event.preventDefault()
 
+   $body = $('body')
+
+
 
    # Build out the kit-collection, which is the basis for all other models
    kitCollection = new KitCollection
@@ -36,14 +39,11 @@ $ ->
       async: false
       url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
 
-
    # Create the primary application model which handles state
    appModel = new AppModel
       'kitModel': kitCollection.at(0)
 
 
-   # Begin setting up viewport-related components
-   $body = $('body')
 
    # Check current mobile status
    if $(window).innerWidth() < AppConfig.BREAKPOINTS.desktop.min
@@ -53,13 +53,17 @@ $ ->
    else
       $body.addClass 'desktop'
 
-   # if window.innerHeight > window.innerWidth
-   #    $('.device-orientation').show()
+
+   # Tell user to rotate
+   if window.innerHeight > window.innerWidth
+      $('.device-orientation').show()
 
 
    # Create mock preloader for any image assets
-   _.each ['velocity-soft', 'velocity-medium', 'velocity-hard'], (className) ->
-      $('<div />', { class: "preload #{className}"}).appendTo 'body'
+   preloadImages = ['velocity-soft', 'velocity-medium', 'velocity-hard', 'bottle-mask' ]
+   _.each preloadImages, (className) ->
+      $('<div style="visibility:hidden" />', { class: "preload #{className}"}).appendTo 'body'
+
 
 
    # Handler for audio load events, which is required for mobile (iOS) audio playback
@@ -80,7 +84,8 @@ $ ->
 
       appController.render()
 
+
    # To initialize mobile playback, a sound must be loaded and triggered by user interaction
    createjs.Sound.addEventListener 'fileload', onLoad
-   sndPath = 'assets/audio/hip-hop/HipHopKit_KickHard.mp3'
+   sndPath = 'assets/audio/coke/05___female_ahhh_01.mp3'
    createjs.Sound.registerSound sndPath, sndPath

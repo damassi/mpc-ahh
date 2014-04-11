@@ -382,7 +382,10 @@ class Sequencer extends View
 
             newCollection.each (patternSquare, index) ->
                oldPatternSquare = oldCollection.at index
-               patternSquare.set oldPatternSquare.toJSON()
+               oldPatternSquare = oldPatternSquare.toJSON()
+               oldPatternSquare.trigger = false
+
+               patternSquare.set oldPatternSquare
 
 
       @addEventListeners()
@@ -412,7 +415,10 @@ class Sequencer extends View
 
          # Update each individual pattern square with settings
          patternTrackView.collection.each (patternModel, index) ->
-            patternModel.set patternSquareGroups[iterator][index]
+            squareData = patternSquareGroups[iterator][index]
+            squareData.trigger = false
+
+            patternModel.set squareData
 
       if callback then callback()
 

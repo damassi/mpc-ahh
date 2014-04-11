@@ -25,7 +25,11 @@ template                = require './templates/create-template.hbs'
 class CreateView extends View
 
 
+   # The class name for the class
+   # @type {String}
+
    className: 'container-create'
+
 
    # The template
    # @type {Function}
@@ -33,18 +37,13 @@ class CreateView extends View
    template: template
 
 
+
    events:
-      'touchend .btn-share':  'onShareBtnClick'
-      'touchend .btn-export': 'onExportBtnClick'
-      'touchend .btn-clear':  'onResetBtnClick'
+      'touchend .btn-share':    'onShareBtnClick'
+      'touchend .btn-export':   'onExportBtnClick'
+      'touchend .btn-clear':    'onResetBtnClick'
+      'touchend .btn-jam-live': 'onJamLiveBtnClick' # Mobile only
 
-      # Mobile only
-      'touchend .btn-jam-live': 'onJamLiveBtnClick'
-
-
-
-   initialize: (options) ->
-      super options
 
 
 
@@ -129,14 +128,10 @@ class CreateView extends View
 
 
 
-   show: =>
-      # TweenMax.fromTo @$el, .3, autoAlpha: 0,
-      #    autoAlpha: 1
-      #    delay: .3
+   # Show the view and open the sequencer
 
-      #@kitSelector.show()
+   show: =>
       @showUI()
-      @showSequencer()
       @appModel.set 'showSequencer', true
 
       if @isMobile
@@ -148,13 +143,10 @@ class CreateView extends View
             ease: Expo.easeOut
             delay: 1
 
-      else
-         _.defer =>
-            @toggle.$stepsBtn.trigger 'touchend'
 
 
 
-
+   # Hide the view and remove it from the DOM
 
    hide: (options) =>
       TweenMax.fromTo @$el, .3, autoAlpha: 1,
@@ -182,6 +174,9 @@ class CreateView extends View
 
 
 
+   # Desktop only.  Triggered when showing / hiding view or expanding
+   # visualization on share
+
    showUI: ->
       @kitSelector.show()
 
@@ -197,6 +192,9 @@ class CreateView extends View
 
 
 
+
+   # Desktop only.  Triggered when showing / hiding view or expanding
+   # visualization on share
 
    hideUI: ->
       @kitSelector.hide()
@@ -245,9 +243,6 @@ class CreateView extends View
 
       $('.container-kit-selector').remove()
 
-      # Reset model if leaving the view but keep the view prop
-      #@resetModel()
-
       super()
 
 
@@ -256,7 +251,6 @@ class CreateView extends View
 
    addEventListeners: ->
       @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
-      @listenTo @appModel, AppEvent.CHANGE_SHOW_PAD,       @onShowPadChange
 
 
 
@@ -313,7 +307,6 @@ class CreateView extends View
          @$row4.html html
       else
          @$sequencer.prepend html
-
 
       @listenTo @sequencer, PubEvent.BEAT, @onBeat
 
@@ -397,18 +390,16 @@ class CreateView extends View
 
 
 
-   resetModel: ->
-      defaults = @appModel.defaults
-      defaults.view = @appModel.get 'view'
-      @appModel.set(defaults)
 
 
-
-
+   # --------------------------------------------------------------------------------
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
 
 
+
+   # Handler for beats which are piped down from PatternSquare to VisualizationView
+   # @param {Object} params Which consist of PatternSquareModel for handling velocity, etc
 
    onBeat: (params) =>
       @trigger PubEvent.BEAT, params
@@ -437,12 +428,18 @@ class CreateView extends View
 
 
 
+   # Handler for resetting the pattern track to default, blank state
+   # @param {MouseEvent|TouchEvent} event
+
    onResetBtnClick: (event) =>
       @appModel.set
          'bpm':              320
          'sharedTrackModel': null
 
+      # Remove preset if currently selected
+      @patternSelector.$el.find('.selected').removeClass 'selected'
       @sequencer.renderTracks()
+
 
 
 
@@ -462,47 +459,30 @@ class CreateView extends View
 
 
 
+   # Handler for showing sequencer / pad.  If seq is false, then pad is shown
+   # @param {AppModel} model
 
    onShowSequencerChange: (model) =>
       if model.changed.showSequencer
          @showSequencer()
 
-         @appModel.set 'showPad', false
-
-
-
-
-
-   onShowPadChange: (model) =>
-      if model.changed.showPad
+      else
          @showLivePad()
 
-         @appModel.set 'showSequencer', false
 
 
 
+   # MOBILE ONLY.  Handler for showing the live pad from mobile view
+   # @param {TouchEvent} event
 
    onJamLiveBtnClick: (event) =>
-      @appModel.set 'showPad', true
-
-
-
-
-   # MOBILE ONLY.  Handler for window resize events.  Updates the spacing between
-   # the rows so that the view fills the screen
-   # @param {MouseEvent} event
-
-   onResize: (event) =>
-      if window.innerHeight > 320
-         rowHeight = window.innerHeight / 6
-
-         _.each [@$row1, @$row2, @$row3, @$row4], ($row) ->
-            $row.height rowHeight
+      @appModel.set 'showSequencer', false
 
 
 
 
 
+   # --------------------------------------------------------------------------------
    # PRIVATE METHODS
    # --------------------------------------------------------------------------------
 

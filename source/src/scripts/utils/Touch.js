@@ -13,11 +13,11 @@ var Touch = {
   translateTouchEvents: function () {
 
     if (! ('ontouchstart' in window )) {
-      $(document).delegate( 'body', 'mousedown', function(e) {
+      $(document).on( 'mousedown', 'body', function(e) {
         $(e.target).trigger( 'touchstart' )
       })
 
-      $(document).delegate( 'body', 'mouseup', function(e) {
+      $(document).on( 'mouseup', 'body',  function(e) {
         $(e.target).trigger( 'touchend' )
       })
     }

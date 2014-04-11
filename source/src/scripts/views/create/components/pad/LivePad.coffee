@@ -79,9 +79,7 @@ class LivePad extends View
    events:
       'touchend .btn-edit': 'onEditBtnClick'
       'touchend .tab':      'onTabClick'
-
-      # Mobile only
-      'touchend .btn-back': 'onBackBtnClick'
+      'touchend .btn-back': 'onBackBtnClick' # Mobile only
 
 
 
@@ -124,10 +122,7 @@ class LivePad extends View
             $(@$tabs[0]).trigger 'touchend'
          , 100
 
-
-      @setDragAndDrop()
-      #@addEventListeners()
-
+      @initDragAndDrop()
 
       @
 
@@ -140,6 +135,32 @@ class LivePad extends View
 
       @$padsContainer.remove()
       super()
+
+
+
+
+   # Add collection listeners to listen for instrument drops
+
+   addEventListeners: ->
+      $(document).on 'mousemove', @onMouseMove
+
+      # Setup livepad keys
+      _.each @KEYMAP, (key) =>
+         $(document).on 'keydown', null, key, @onKeyPress
+
+
+
+
+   # Removes event listeners
+
+   removeEventListeners: ->
+      $(document).off 'mousemove', @onMouseMove
+
+      # Remove livepad keys
+      _.each @KEYMAP, (key) =>
+         $(document).off 'keydown', null, key, @onKeyPress
+
+      @stopListening()
 
 
 
@@ -166,31 +187,6 @@ class LivePad extends View
       if @isMobile
          @$kits = @$el.find '.container-kit'
          @$tabs = @$el.find '.tab'
-
-
-
-   # Add collection listeners to listen for instrument drops
-
-   addEventListeners: ->
-      $(document).on 'mousemove', @onMouseMove
-
-      # Setup livepad keys
-      _.each @KEYMAP, (key) =>
-         $(document).on 'keydown', null, key, @onKeyPress
-
-
-
-
-   # Removes event listeners
-
-   removeEventListeners: ->
-      $(document).off 'mousemove', @onMouseMove
-
-      # Remove livepad keys
-      _.each @KEYMAP, (key) =>
-         $(document).off 'keydown', null, key, @onKeyPress
-
-      @stopListening()
 
 
 
@@ -264,64 +260,13 @@ class LivePad extends View
 
 
 
-   # Handler for drop events.  Passes in the item dragged, the item it was
-   # dropped upon, and the original event to store in memory for when
-   # the user wants to "detach" the dropped item and move it back into the
-   # instrument queue
-   #
-   # @param {HTMLDomElement} dragged
-   # @param {HTMLDomElement} dropped
-   # @param {MouseEvent} event
-
-   onInstrumentDrop: (dragged, dropped, event) =>
-      {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
-
-      $dropped.addClass id
-      $dropped.attr 'data-instrument', "#{id}"
-
-      instrumentModel.set
-         'dropped': true
-         'droppedEvent': event
-
-      _.defer =>
-         @renderInstruments()
-         @setDragAndDrop()
-
-         # Hide everything and reselect tab
-         if @isMobile
-            @reselectMobileTab()
-
-
-
-
-   # Handler for situations where the user attempts to drop the instrument incorrectly
-   # @param {HTMLDomElement} dragged
-   # @param {HTMLDomElement} dropped
-
-   onPreventInstrumentDrop: (dragged, dropped) =>
-      {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
-
-      instrumentModel.set
-         'dropped': false
-         'droppedEvent': null
-
-      _.defer =>
-         @renderInstruments()
-         @setDragAndDrop()
-
-         if @isMobile
-            @reselectMobileTab()
-
-
-
-
    # Handler for press and hold events, as dispatched from the pad square the user
    # is interacting with.  Releases the instrument and allows the user to drag to
    # a new square or deposit it back within the instrument rack
    # @param {Object} params
 
-   onPadSquareDraggingStart: (params) =>
-      {instrumentId, $padSquare, originalDroppedEvent} = params
+   onDraggingChange: (params) =>
+      {instrumentId, padSquare, $padSquare, event} = params
 
       $droppedInstrument = $(document.getElementById(instrumentId))
 
@@ -330,31 +275,35 @@ class LivePad extends View
          if $(draggableElement._eventTarget).attr('id') is $droppedInstrument.attr('id')
             return draggableElement
 
-      offset = $droppedInstrument.offset()
 
-      # Silently update the position of the instrument
+      # Silently update the position of the hidden instrument
       $droppedInstrument.css 'position', 'absolute'
-
-      instrumentModel = @kitCollection.findInstrumentModel $droppedInstrument.attr('id')
-      #console.log instrumentModel
-
-      # TODO: If Bounds are set on the original draggable then there's a weird
-      # boundry offset that needs to be solved.  Reset in Draggable constructor
-
-      TweenMax.set $droppedInstrument,
-         left: @mousePosition.x - ($droppedInstrument.width()  * .5)
-         top:  @mousePosition.y - ($droppedInstrument.height() * .5)
-
-      # Renable dragging
-      draggable.startDrag originalDroppedEvent
-      draggable.update(true)
-
-      # And show it
       $droppedInstrument.show()
 
+      # Set the model to null so that it can be reassigned
+      padSquare.model.set 'dropped', false
+      padSquare.model.set 'currentInstrument', null
 
+      position = $padSquare.position()
 
+      # Set the position before it appears
+      TweenMax.set $droppedInstrument,
+         scale: .8
+         top:  position.top  + ($droppedInstrument.height() * .5)
+         left: position.left + ($droppedInstrument.width()  * .5)
 
+      # Renable dragging
+      draggable.enable()
+      draggable.update()
+      draggable.startDrag event
+
+      TweenMax.to $droppedInstrument, .2,
+         scale: 1.1
+         color: '#E41E2B'
+         ease: Expo.easeOut
+         onComplete: ->
+            TweenMax.to $droppedInstrument, .2,
+               scale: 1
 
 
 
@@ -364,10 +313,10 @@ class LivePad extends View
 
 
    # Sets up drag and drop on each of the instruments rendered from the KitCollection
-   # Adds highlights and determines hit-tests, or defers to onPreventInstrumentDrop
+   # Adds highlights and determines hit-tests, or defers to returnInstrumentToDock
    # in situations where dropping isn't possible
 
-   setDragAndDrop: ->
+   initDragAndDrop: ->
       self = @
 
       @$instrument = @$el.find '.instrument'
@@ -395,14 +344,10 @@ class LivePad extends View
                      TweenMax.to self.padSquareViews[i].$border, .2,
                         autoAlpha: 1
 
-                     #$($droppables[i]).addClass 'highlight'
-
                # Remove if not over square
                else
                   TweenMax.to self.padSquareViews[i].$border, .2,
                      autoAlpha: 0
-
-                  #$($droppables[i]).removeClass 'highlight'
 
 
          # Check to see if instrument is droppable; otherwise
@@ -413,8 +358,13 @@ class LivePad extends View
             i = $droppables.length
 
             droppedProperly = false
+            $dragged = null
+            $dropped = null
 
             while( --i > -1 )
+
+               $dragged = this.target
+               $dropped = $droppables[i]
 
                if @hitTest($droppables[i], '50%')
                   instrument = $($droppables[i]).attr('data-instrument')
@@ -422,20 +372,77 @@ class LivePad extends View
                   # Prevent droppables on squares that already have instruments
                   if instrument is null or instrument is undefined
                      droppedProperly = true
-                     self.onInstrumentDrop( this.target, $droppables[i], event )
+
+                     # Setup sound and init pad
+                     self.dropInstrument( $dragged, $dropped, event )
 
                      # Hide Border
                      TweenMax.to self.padSquareViews[i].$border, .2,
                         autoAlpha: 0
 
+                     break
 
-                  # Send instrument back
+                  # Send instrument back if overlaping on other square
                   else
-                     self.onPreventInstrumentDrop( this.target, $droppables[i] )
+                     self.returnInstrumentToDock( $dragged, $dropped )
+                     break
 
-               # Send instrument back
-               if droppedProperly is false
-                  self.onPreventInstrumentDrop( this.target, $droppables[i] )
+            # Send instrument back if out of bounds
+            if droppedProperly is false
+               self.returnInstrumentToDock( $dragged, $dropped )
+
+
+
+
+
+   # Handler for drop events.  Passes in the item dragged, the item it was
+   # dropped upon, and the original event to store in memory for when
+   # the user wants to "detach" the dropped item and move it back into the
+   # instrument queue
+   #
+   # @param {HTMLDomElement} dragged
+   # @param {HTMLDomElement} dropped
+   # @param {MouseEvent} event
+
+   dropInstrument: (dragged, dropped, event) =>
+      {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
+
+      $dropped.addClass id
+      $dropped.attr 'data-instrument', "#{id}"
+
+      instrumentModel.set
+         'dropped': true
+         'droppedEvent': event
+
+      _.defer =>
+         @renderInstruments()
+         @initDragAndDrop()
+
+         # Hide everything and reselect tab
+         if @isMobile
+            @reselectMobileTab()
+
+
+
+
+
+   # Handler for situations where the user attempts to drop the instrument incorrectly
+   # @param {HTMLDomElement} dragged
+   # @param {HTMLDomElement} dropped
+
+   returnInstrumentToDock: (dragged, dropped) =>
+      {$dragged, $dropped, id, instrumentModel} = @parseDraggedAndDropped( dragged, dropped )
+
+      instrumentModel.set
+         'dropped': false
+         'droppedEvent': null
+
+      _.defer =>
+         @renderInstruments()
+         @initDragAndDrop()
+
+         if @isMobile
+            @reselectMobileTab()
 
 
 
@@ -497,7 +504,7 @@ class LivePad extends View
             # Begin listening to drag / release / remove events from
             # each pad square and re-render pad squares
 
-            @listenTo padSquare, AppEvent.CHANGE_DRAGGING, @onPadSquareDraggingStart
+            @listenTo padSquare, AppEvent.CHANGE_DRAGGING, @onDraggingChange
 
 
             tds.push {

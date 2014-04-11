@@ -138,12 +138,14 @@ class LandingView extends View
 
 
    onStartBtnClick: (event) =>
-      snd = createjs.Sound.createInstance('assets/audio/hip-hop/HipHopKit_KickHard.mp3')
-      snd.volume = .1
-      snd.play()
-      @hide()
+      if @isMobile
+         snd = createjs.Sound.createInstance('assets/audio/coke/05___female_ahhh_01.mp3')
+         snd.volume = .1
+         snd.play()
 
       TweenMax.set $('#container-main'), autoAlpha: 1
+
+      @hide()
 
 
 

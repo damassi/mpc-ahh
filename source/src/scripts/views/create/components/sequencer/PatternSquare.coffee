@@ -128,13 +128,11 @@ class PatternSquare extends View
 
       TweenMax.to @$icon, .3,
          scale: 1.2
-         #rotation: 180
          ease: Back.easeOut
 
          onComplete: =>
             TweenMax.to @$icon, .3,
                scale: 1
-               #rotation: 0
                ease: Back.easeOut
 
 
@@ -142,7 +140,6 @@ class PatternSquare extends View
          backgroundColor: "#E41E2B"
 
          onComplete: =>
-
             TweenMax.to @$el, .2,
                backgroundColor: "#E5E5E5"
 

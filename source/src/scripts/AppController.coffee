@@ -37,10 +37,12 @@ class AppController extends View
       @$body   = $ 'body'
       @$window = $ 'window'
 
-
       @breakpointManager = new BreakpointManager
          breakpoints: AppConfig.BREAKPOINTS
          scope: @
+
+      # Shared track model is used for saving to Parse,
+      # or prepopulating for Presets
 
       @sharedTrackModel = new SharedTrackModel
 
@@ -70,11 +72,11 @@ class AppController extends View
          @visualizerView = new VisualizerView
             appModel: @appModel
 
+      # TODO: Hook up browser detection
       @notSupported = false
 
       if @isMobile and @notSupported
          window.location.hash = 'not-supported'
-
 
       @addEventListeners()
 
@@ -108,6 +110,9 @@ class AppController extends View
 
 
 
+
+   # Renders the visualization if on desktop
+
    renderVisualizationLayer: ->
       if @appModel.get('isMobile') then return
 
@@ -138,8 +143,6 @@ class AppController extends View
    addEventListeners: ->
       @listenTo @appModel,   AppEvent.CHANGE_VIEW,         @onViewChange
       @listenTo @appModel,   AppEvent.CHANGE_ISMOBILE,     @onIsMobileChange
-      @listenTo @appModel,   AppEvent.CHANGE_PAGE_FOCUS,   @onPageFocusChange
-      @listenTo @appModel,   AppEvent.CHANGE_PLAYING,      @onPlayingChange
 
       @listenTo @createView, AppEvent.OPEN_SHARE,          @onOpenShare
       @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
@@ -147,14 +150,15 @@ class AppController extends View
       @listenTo @createView, PubEvent.BEAT,                @onBeat
 
       @listenTo @,           AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
-      @listenTo @,           AppEvent.BREAKPOINT_UNMATCH,  @onBreakpointUnmatch
 
       Visibility.change @onVisibilityChange
 
-      #$(window).on 'resize', @onResize
+      $(window).on 'resize', @onResize
 
 
 
+
+   # Remove listeners and call superclass
 
    removeEventListeners: ->
       $(window).off 'resize', @onResize
@@ -162,6 +166,8 @@ class AppController extends View
 
 
 
+
+   # Desktop.  Expand the visualization on ShareModal open
 
    expandVisualization: ->
       unless @isMobile
@@ -173,6 +179,7 @@ class AppController extends View
 
 
 
+   # Desktop.  Contract the visualization on ShareModal close
 
    contractVisualization: ->
       unless @isMobile
@@ -271,6 +278,7 @@ class AppController extends View
             scrollTop: 0
             scrollLeft: 0
 
+
          # User is in Portrait
          if window.innerHeight > window.innerWidth
 
@@ -286,6 +294,7 @@ class AppController extends View
                delay: .6
 
             $deviceOrientation.show()
+
 
          # User is in landscape -- all good
          else
@@ -307,6 +316,12 @@ class AppController extends View
 
 
 
+
+
+   # Handler for sound beats.  Pass it on to the visualization layer and trigger
+   # animation.  Passed down from PatternSquareView
+   # @param {Object} params
+
    onBeat: (params) ->
       @visualizerView.onBeat params
 
@@ -314,18 +329,17 @@ class AppController extends View
 
 
 
+   # Handler for page visibility changes, when opening new tab / minimizing window
+   # Pauses the audio and waits for the user to return
+   # @param {Event} event
+   # @param {String} state - either 'visible' or 'hidden'
+
    onVisibilityChange: (event, state) =>
       if state is 'visible'
          if @appModel._previousAttributes.playing is  true
             @appModel.set 'playing', true
       else
          @appModel.set 'playing', false
-
-
-
-
-   onPlayingChange: (model) =>
-      @isPlaying = model.changed.playing
 
 
 
@@ -381,6 +395,10 @@ class AppController extends View
 
 
 
+   # Handler for mobile breakpoint changes.  Updates the dom with
+   # an indicator.
+   # @param {AppModel} model=
+
    onIsMobileChange: (model) ->
       isMobile = model.changed.isMobile
 
@@ -389,6 +407,7 @@ class AppController extends View
 
       else
          @$body.removeClass('mobile').addClass 'desktop'
+
 
 
 
@@ -406,23 +425,15 @@ class AppController extends View
 
 
 
-   onBreakpointUnmatch: (breakpoint) ->
-
-
-
-
-
-   onPageFocusChange: (model) ->
-      console.log model.changed.pageFocus
-
-
-
+   # Handler for opening the share modal.  Passed down from CreateView
 
    onOpenShare: =>
       @expandVisualization()
 
 
 
+
+   # Handler for closing the share modal.  Passed down from CreateView
 
    onCloseShare: =>
       @contractVisualization()

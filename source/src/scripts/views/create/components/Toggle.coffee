@@ -31,14 +31,11 @@ class Toggle extends View
       @$stepsBtn = @$el.find '.btn-steps'
       @$padBtn   = @$el.find '.btn-pads'
 
-      @$stepsBtn.addClass  'selected'
-
       @
 
 
    addEventListeners: ->
       @appModel.on 'change:showSequencer',   @onShowSequencerChange
-      @appModel.on 'change:showPad',         @onShowPadChange
 
 
 
@@ -46,14 +43,12 @@ class Toggle extends View
    onStepsBtnClick: (event) =>
       @appModel.set
          'showSequencer':  true
-         'showPad':        false
 
 
 
    onPadBtnClick: (event) =>
       @appModel.set
          'showSequencer':  false
-         'showPad':        true
 
 
 
@@ -63,13 +58,11 @@ class Toggle extends View
          @$stepsBtn.addClass  'selected'
          @$padBtn.removeClass 'selected'
 
-
-
-
-   onShowPadChange: (model) =>
-      if model.changed.showPad
+      # Show pad
+      else
          @$stepsBtn.removeClass  'selected'
          @$padBtn.addClass       'selected'
+
 
 
 
