@@ -11,32 +11,32 @@
         {
           "label": "Kick Drum 1",
           "src": "01___Kick_hard.ogg",
-          "icon": "icon-kit-0-kick1"
+          "icon": "icon-kit-hiphop-kick1"
         },
         {
           "label": "Kick Drum 2",
           "src": "02___HipHopKit_KickHard.ogg",
-          "icon": "icon-kit-0-kick2"
+          "icon": "icon-kit-hiphop-kick2"
         },
         {
           "label": "Closed HiHat",
           "src": "04___HipHopKit_Hi_HatClosedHard.ogg",
-          "icon": "icon-kit-0-hihat-closed"
+          "icon": "icon-kit-hiphop-hihat-closed"
         },
         {
           "label": "Open HiHat",
           "src": "03___HipHopKit_Hi_HatOpenHard.ogg",
-          "icon": "icon-kit-0-hihat-open"
+          "icon": "icon-kit-hiphop-hihat-open"
         },
         {
           "label": "Snare",
           "src": "05___Snare1_hard.ogg",
-          "icon": "icon-kit-0-snare"
+          "icon": "icon-kit-hiphop-snare"
         },
         {
           "label": "Voice",
           "src": "06___male_ahhh_01.ogg",
-          "icon": "icon-kit-0-voice"
+          "icon": "icon-kit-hiphop-voice"
         }
       ]
     },
@@ -47,32 +47,32 @@
         {
           "label": "Kick Drum 1",
           "src": "01___kick_soft_03_n.ogg",
-          "icon": "icon-kit-0-kick1"
+          "icon": "icon-kit-dance-kick"
         },
         {
           "label": "Kick Drum 2",
           "src": "02___snare_fx_06_n.ogg",
-          "icon": "icon-kit-0-kick2"
+          "icon": "icon-kit-dance-kick2"
         },
         {
-          "label": "Closed HiHat",
+          "label": "Ride",
           "src": "03___cymbal_splash_02_n.ogg",
-          "icon": "icon-kit-0-hihat-closed"
-        },
-        {
-          "label": "Open HiHat",
-          "src": "04___snare_hard_04_n.ogg",
-          "icon": "icon-kit-0-hihat-open"
+          "icon": "icon-kit-dance-ride"
         },
         {
           "label": "Snare",
+          "src": "04___snare_hard_04_n.ogg",
+          "icon": "icon-kit-dance-tap"
+        },
+        {
+          "label": "Clap",
           "src": "05___hand_clap.ogg",
-          "icon": "icon-kit-0-snare"
+          "icon": "icon-kit-dance-clap"
         },
         {
           "label": "Voice",
           "src": "06___female_ahhh_01.ogg",
-          "icon": "icon-kit-0-voice"
+          "icon": "icon-kit-coke-voice2"
         }
       ]
     },
@@ -83,32 +83,32 @@
         {
           "label": "Kick Drum 1",
           "src": "01___BB_Kick_Hard.ogg",
-          "icon": "icon-kit-0-kick1"
+          "icon": "icon-kit-rock-kick"
         },
         {
-          "label": "Kick Drum 2",
-          "src": "02___BB_Snare_Hard.ogg",
-          "icon": "icon-kit-0-kick2"
-        },
-        {
-          "label": "Closed HiHat",
+          "label": "Tom",
           "src": "03___BB_Tom_Lo_Hard.ogg",
-          "icon": "icon-kit-0-hihat-closed"
+          "icon": "icon-kit-rock-tom"
+        },
+        {
+          "label": "Snare",
+          "src": "02___BB_Snare_Hard.ogg",
+          "icon": "icon-kit-rock-snare"
         },
         {
           "label": "Open HiHat",
           "src": "04___h_closed_big_01_n.ogg",
-          "icon": "icon-kit-0-hihat-open"
+          "icon": "icon-kit-rock-hihat"
         },
         {
-          "label": "Snare",
+          "label": "Ride",
           "src": "05___cymbal_ride_01_n.ogg",
-          "icon": "icon-kit-0-snare"
+          "icon": "icon-kit-rock-ride"
         },
         {
           "label": "Voice",
           "src": "06___coke_cowbell.ogg",
-          "icon": "icon-kit-0-voice"
+          "icon": "icon-kit-coke-voice3"
         }
       ]
     },
@@ -117,34 +117,34 @@
       "folder": "coke",
       "instruments": [
         {
-          "label": "Kick Drum 1",
-          "src": "male_ahhh_05.ogg",
-          "icon": "icon-kit-0-kick1"
-        },
-        {
-          "label": "Closed HiHat",
+          "label": "Cowbell",
           "src": "03___coke_cowbell.ogg",
-          "icon": "icon-kit-0-hihat-closed"
-        },
-        {
-          "label": "Open HiHat",
-          "src": "04___male_ahhh_01.ogg",
-          "icon": "icon-kit-0-hihat-open"
-        },
-        {
-          "label": "Snare",
-          "src": "05___female_ahhh_01.ogg",
-          "icon": "icon-kit-0-snare"
+          "icon": "icon-kit-coke-can"
         },
         {
           "label": "Voice",
           "src": "05___female_ahhh_02.ogg",
-          "icon": "icon-kit-0-voice"
+          "icon": "icon-kit-coke-twist"
         },
         {
           "label": "Kick Drum 2",
           "src": "02___0021_props_can_beer_open _01.ogg",
-          "icon": "icon-kit-0-kick2"
+          "icon": "icon-kit-coke-bottle"
+        },
+        {
+          "label": "Voice 3",
+          "src": "male_ahhh_05.ogg",
+          "icon": "icon-kit-coke-voice3"
+        },
+        {
+          "label": "Voice 2",
+          "src": "04___male_ahhh_01.ogg",
+          "icon": "icon-kit-coke-voice2"
+        },
+        {
+          "label": "Voice 1",
+          "src": "05___female_ahhh_01.ogg",
+          "icon": "icon-kit-coke-voice1"
         }
       ]
     }
