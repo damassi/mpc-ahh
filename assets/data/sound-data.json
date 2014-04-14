@@ -45,14 +45,14 @@
       "folder": "dance",
       "instruments": [
         {
-          "label": "Kick Drum 1",
+          "label": "Kick Drum 2",
           "src": "01___kick_soft_03_n.ogg",
-          "icon": "icon-kit-dance-kick"
+          "icon": "icon-kit-dance-kick2"
         },
         {
-          "label": "Kick Drum 2",
+          "label": "Kick Drum 1",
           "src": "02___snare_fx_06_n.ogg",
-          "icon": "icon-kit-dance-kick2"
+          "icon": "icon-kit-dance-kick"
         },
         {
           "label": "Ride",
@@ -108,7 +108,7 @@
         {
           "label": "Voice",
           "src": "06___coke_cowbell.ogg",
-          "icon": "icon-kit-coke-voice3"
+          "icon": "icon-kit-coke-bottle"
         }
       ]
     },
