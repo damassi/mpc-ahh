@@ -119,17 +119,17 @@
         {
           "label": "Cowbell",
           "src": "03___coke_cowbell.ogg",
-          "icon": "icon-kit-coke-can"
+          "icon": "icon-kit-coke-bottle"
         },
         {
-          "label": "Voice",
-          "src": "05___female_ahhh_02.ogg",
+          "label": "Twist",
+          "src": "01___000696990-soda-bottle.mp3",
           "icon": "icon-kit-coke-twist"
         },
         {
-          "label": "Kick Drum 2",
+          "label": "Can opening",
           "src": "02___0021_props_can_beer_open _01.ogg",
-          "icon": "icon-kit-coke-bottle"
+          "icon": "icon-kit-coke-can"
         },
         {
           "label": "Voice 3",
