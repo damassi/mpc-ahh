@@ -82,7 +82,9 @@
 
       @extend .button
       @extend .miso-regular
-      +btn-hover-transition
+
+      +respond-desktop
+         +btn-hover-transition
 
       $size: 50px
 
@@ -95,15 +97,16 @@
       width: $size
       height: $size
 
-      &:hover
-         +btn-hover-transition
-         color: black
+      +respond-desktop
+         &:hover
+            +btn-hover-transition
+            color: black
 
       +respond-mobile
-         //padding-top: 0
-         // top: -3px
-         // top: 14px
          top: 0
+
+         &.press
+            color: black
 
 
 

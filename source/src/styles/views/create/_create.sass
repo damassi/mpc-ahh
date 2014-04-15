@@ -39,16 +39,19 @@
 
 
    .btn-clear
-      +btn-hover-transition
+
+      +respond-desktop
+         +btn-hover-transition
 
       position: relative
       top: 12px
       color: $grey-dark
       cursor: pointer
 
-      &:hover
-         +btn-hover-transition
-         color: $red
+      +respond-desktop
+         &:hover
+            +btn-hover-transition
+            color: $red
 
 
 
@@ -147,6 +150,9 @@
          padding-right: 7px
          cursor: pointer
 
+         &:hover
+            color: black
+
       .btn-clear
          background: $grey
          display: inline-block
@@ -156,6 +162,10 @@
          padding: 6px
          top: 17px
          position: relative
+
+         &.press
+            background: black
+            color: white
 
 
    .row-4

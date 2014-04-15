@@ -39,7 +39,7 @@
 
       .sequencer
 
-         border-collapse: initial
+         border-collapse: separate
          border-spacing: 4px
 
          width: 100%
@@ -106,10 +106,12 @@
                .inner-container
                   position: relative
                   top: 0
-                  height: $square-height
+                  height: $square-height // - 2
+                  width: 100%
 
                   +respond-mobile
                      height: 35px
+
 
 
                .border-dark
@@ -133,20 +135,6 @@
                   +respond-mobile
                      position: relative
                      top: 7px
-
-
-               // .velocity-soft
-               //    background: url("#{$images}/icon-beat-soft.svg") no-repeat
-
-
-               // .velocity-medium
-               //    background: url("#{$images}/icon-beat-medium.svg") no-repeat
-
-
-               // .velocity-hard
-               //    background: url("#{$images}/icon-beat-hard.svg") no-repeat
-
-
 
 
          .mute

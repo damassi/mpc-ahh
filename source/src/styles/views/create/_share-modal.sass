@@ -1,11 +1,14 @@
 
-.container-share
+.container-share-modal
+
+   z-index: 10 !important
 
    +respond-mobile
       position: absolute
       top: 0
       left: 0
       width: 100%
+      height: 100%
 
    .btn-close
       @extend .button
@@ -34,6 +37,9 @@
       text-transform: uppercase
       padding-left: 10px
 
+      &.press
+         color: $red
+
 
    > .wrapper
 
@@ -47,8 +53,12 @@
 
       //background: url("#{$images}/placeholders/desktop/placeholder-form.png") no-repeat
       width: 422px
-      height: 473px
+      height: 425px
       padding-top: 15px
+
+      +respond-desktop
+         background: $red
+
 
       +respond-mobile
          position: absolute
@@ -56,7 +66,7 @@
          left: 0
 
          width: 100% !important
-         height: 240px
+         height: 140px
 
       h1
          @extend .miso-bold
@@ -74,6 +84,7 @@
 
          +respond-mobile
             width: 96%
+            height: 170px
 
 
       .mouseover
@@ -94,10 +105,11 @@
          background: black
          color: white
          font-size: 30px
-         width: 100%
+         width: 420px
          height: 60px
          padding-top: 19px
          position: relative
+         left: -2px
          text-transform: uppercase
 
          +respond-mobile
@@ -106,7 +118,9 @@
             color: $red
             font-size: 22px
             height: 40px
-            padding-top: 9px
+            padding-top: 8px
+            width: 50%
+            left: 0
 
 
          &:hover
@@ -122,6 +136,15 @@
 
 
       .btn-select-service
+
+         top: -20px
+         width: 352px
+         left: 0
+
+         +respond-mobile
+            width: 50%
+            top: 0
+            border: 2px solid black
 
          .preloader
             display: inline-block
@@ -139,10 +162,11 @@
          .url
             @extend .miso-regular
             width: 65%
+            display: none
 
          .copy
             @extend .miso-bold
-            width: 20%
+            width: 40%
 
 
          +respond-mobile
@@ -158,11 +182,13 @@
          font-size: 16px
          float: left
          padding: 16px
-         width: 170px
+         width: 120px
 
          +respond-mobile
+            width: 170px
             float: none
             color: black
+            margin-top: -15px
 
          &:hover
             +btn-hover-transition
@@ -180,6 +206,7 @@
 
          +respond-mobile
             margin-top: 10px
+            width: 100%
 
 
 
@@ -188,18 +215,30 @@
 
       .container-form
 
+         .message
+            color: white
+            font-size:  26px
+            padding-top: 30px
+            padding-bottom: 30px
+            display: none
+
+
          .input-group
             background: $red
             margin-bottom: 10px
             width: $form-width
+            width: 350px
+            display: inline-block
             height: $form-height
             opacity: 1
             border: $form-border
+
 
             .label-input
                @extend .label
                float: left
                padding: 19px
+               display: none
 
 
 
@@ -236,6 +275,13 @@
                   text-transform: none !important
 
 
+
+         // Push the button down as hack
+         .name
+            +respond-desktop
+               margin-bottom: 57px
+
+
          +respond-mobile
 
             .input-group
@@ -252,28 +298,20 @@
 
             .text-input
                display: inline-block
-               width: 48%
+               width: 50%
                height: 35px
-
-               &.t
-                  position: relative
-                  left: -5px
-
-               &.n
-                  position: relative
-                  right: -7px
-                  width: 48%
 
                input
                   display: inline-block
-                  width: 74%
+                  width: 100%
                   font-size: 22px
-                  height: 31px
+                  height: 25px
                   float: none
                   margin: 0
                   color: black
                   position: relative
-                  top: 0px
+                  top: 2px
+                  padding-top: 7px
 
 
             .input-group.textarea
@@ -312,6 +350,15 @@
 
 
 
+      .container-form, .container-preview
+         +respond-desktop
+            background: $red
+            //border: $form-border
+            width: 420px
+            height: 270px
+            position: relative
+
+
 
       // Second, landing screen after form input has
       // been completed
@@ -321,13 +368,14 @@
          background: $red
          border: $form-border
          width: 420px
-         height: 320px
+         height: 270px
          position: relative
+         //padding-top: 20px
 
          +respond-mobile
             background: white
             width: 100%
-            height: 100%
+            height: 73%
 
 
          .track-data
@@ -336,13 +384,15 @@
             color: white
             line-height: 40px
             padding-top: 23px
-            min-height: 276px
+            min-height: 225px
 
             +respond-mobile
                color: black
                min-height: 90px
                padding-top: 0
-               display: none
+               position: relative
+               top: -6px
+               //display: none
 
 
             h1, h3
@@ -358,20 +408,21 @@
 
                +respond-mobile
                   font-size: 45px
-                  display: inline-block
+                  //display: inline-block
 
             h3
                font-size: 24px
 
                +respond-mobile
                   font-size: 22px
-                  display: inline-block
+                  //display: inline-block
 
             p
                line-height: 18px
                margin-top: 12px
                padding-left: 16px
                padding-right: 16px
+               display: none
 
 
 
@@ -401,6 +452,7 @@
             .service-btns
                +respond-mobile
                   display: inline-block
+                  margin-left: 6px
 
 
             .icon

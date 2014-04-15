@@ -41,8 +41,10 @@ class PatternTrack extends View
    patternSquareViews: null
 
 
+
    # @type {PatternSquareCollection}
    collection: null
+
 
 
    # @type {InstrumentModel}
@@ -175,7 +177,6 @@ class PatternTrack extends View
 
          return @model.set
             'mute':  true
-            'focus': false
 
 
       # Focus state > Mute
@@ -183,37 +184,6 @@ class PatternTrack extends View
 
          return @model.set
             'mute':  false
-            'focus': false
-
-
-      # ONLY MUTE FOR NOW
-
-      return
-
-      # Focus state > Mute
-      if @model.get('focus')
-
-         return @model.set
-            'mute':  true
-            'focus': false
-
-      # Mute state > off
-      if @model.get('mute')
-
-         return @model.set
-            'mute': false
-            'focus': false
-
-
-
-
-   onFocusChange: (model) ->
-      focus = model.changed.focus
-
-      if focus
-         @$instrument.addClass 'focus'
-      else
-         @$instrument.removeClass 'focus'
 
 
 

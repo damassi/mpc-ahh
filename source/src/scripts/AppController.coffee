@@ -13,12 +13,14 @@ SharedTrackModel  = require './models/SharedTrackModel.coffee'
 AppRouter         = require './routers/AppRouter.coffee'
 BreakpointManager = require './utils/BreakpointManager.coffee'
 PubSub            = require './utils/PubSub'
+BrowserDetect     = require './utils/BrowserDetect'
 LandingView       = require './views/landing/LandingView.coffee'
 CreateView        = require './views/create/CreateView.coffee'
 ShareView         = require './views/share/ShareView.coffee'
 VisualizerView    = require './views/visualizer/VisualizerView.coffee'
 NotSupportedView  = require './views/not-supported/NotSupportedView.coffee'
 View              = require './supers/View.coffee'
+observeDom        = require './utils/observeDom'
 mainTemplate      = require './views/templates/main-template.hbs'
 
 
@@ -28,7 +30,20 @@ class AppController extends View
    id: 'wrapper'
 
 
+   # Checks if visualization is rendered.  Useful when arriving to page before
+   # starting initially, or arriving on a Share
+   # @type {Boolean}
+
    visualizationRendered: false
+
+
+   # The number of attempts it will make to save the track to Parse
+   # without timing out.  Max is 3
+   # @type {Number}
+
+   parseErrorAttempts: 0
+
+
 
 
    initialize: (options) ->
@@ -62,11 +77,13 @@ class AppController extends View
       @notSupportedView = new NotSupportedView
          appModel: @appModel
 
+
       @appRouter = new AppRouter
          appController: @
          appModel: @appModel
 
       @isMobile = @$body.hasClass 'mobile'
+      @isTablet = if BrowserDetect.deviceDetection().deviceType is 'tablet' then true else false
 
       unless @isMobile
          @visualizerView = new VisualizerView
@@ -87,6 +104,7 @@ class AppController extends View
    # off backbones history
 
    render: ->
+
       @$body.append @$el.html mainTemplate
          isDesktop: @$body.hasClass 'desktop'
 
@@ -94,14 +112,17 @@ class AppController extends View
       @$topContainer    = @$el.find '#container-top'
       @$bottomContainer = @$el.find '#container-bottom'
 
-      TweenMax.set @$bottomContainer, y: 300
+      TweenLite.set @$bottomContainer, y: 300
+
+      unless @isMobile
+         @$mainContainer.hide()
 
       if @isMobile
          hash = window.location.hash
 
          if hash.indexOf('share') is -1 or hash.indexOf('not-supported') is -1
-            TweenMax.set $('.top-bar'), autoAlpha: 0
-            TweenMax.set @$mainContainer, y: (window.innerHeight * .5 - @$mainContainer.height() * .5) - 25
+            TweenLite.set $('.top-bar'), autoAlpha: 0
+            TweenLite.set @$mainContainer, y: (window.innerHeight * .5 - @$mainContainer.height() * .5) - 25
 
       Backbone.history.start
          pushState: false
@@ -148,12 +169,24 @@ class AppController extends View
       @listenTo @createView, AppEvent.CLOSE_SHARE,         @onCloseShare
       @listenTo @createView, AppEvent.SAVE_TRACK,          @onSaveTrack
       @listenTo @createView, PubEvent.BEAT,                @onBeat
+      @listenTo @shareView,  PubEvent.BEAT,                @onBeat
 
       @listenTo @,           AppEvent.BREAKPOINT_MATCH,    @onBreakpointMatch
 
       Visibility.change @onVisibilityChange
 
-      $(window).on 'resize', @onResize
+      # Check if a user is adding items to the Coke playlist
+      unless @isMobile
+         _.delay =>
+            observeDom $('.plitems')[0], =>
+               TweenLite.to @$bottomContainer, .6,
+                  y: @createView.returnMoveAmount()
+                  ease: Expo.easeInOut
+         , 500
+
+      # Resize listen for rotation and respons
+      if AppConfig.ENABLE_ROTATION_LOCK
+         $(window).on 'resize', @onResize
 
 
 
@@ -227,8 +260,8 @@ class AppController extends View
 
 
 
-   # Create a new Parse model and pass in params that
-   # have been retrieved, via PubSub from the Sequencer view
+   # Create a new Parse model and pass in params that have been
+   # retrieved, via PubSub from the CreateView
 
    saveTrack: =>
 
@@ -245,8 +278,17 @@ class AppController extends View
       @sharedTrackModel.save
 
          error: (object, error) =>
+            console.log 'error here!'
             console.error object, error
-            @appModel.set 'shareId', 'error'
+
+            if @parseErrorAttempts < 3
+               @parseErrorAttempts++
+
+               @saveTrack()
+
+            else
+               @appModel.set 'shareId', 'error'
+
 
 
 
@@ -269,12 +311,12 @@ class AppController extends View
 
 
    onResize: (event) =>
-      if @isMobile
+      if @isMobile or @isTablet
 
          $deviceOrientation = $('.device-orientation')
 
          # Reset position
-         TweenMax.to $('body'), 0,
+         TweenLite.to $('body'), 0,
             scrollTop: 0
             scrollLeft: 0
 
@@ -282,14 +324,15 @@ class AppController extends View
          # User is in Portrait
          if window.innerHeight > window.innerWidth
 
-            TweenMax.set $('#wrapper'), autoAlpha: 0
+            TweenLite.set $('#wrapper'), autoAlpha: 0
 
-            TweenMax.fromTo $deviceOrientation, .2, autoAlpha: 0,
+            TweenLite.fromTo $deviceOrientation, .2, autoAlpha: 0,
                autoAlpha: 1
                delay: 0
 
-            TweenMax.fromTo $deviceOrientation.find('img'), .3, scale: 0,
+            TweenLite.fromTo $deviceOrientation.find('img'), .3, scale: 0,
                scale: 1
+               autoAlpha: 1
                ease: Back.easeOut
                delay: .6
 
@@ -299,19 +342,20 @@ class AppController extends View
          # User is in landscape -- all good
          else
 
-            TweenMax.to $deviceOrientation.find('img'), .3,
+            TweenLite.to $deviceOrientation.find('img'), .3,
                scale: 0
+               autoAlpha: 0
                ease: Back.easeIn
                delay: .3
 
-            TweenMax.to $deviceOrientation, .2,
+            TweenLite.to $deviceOrientation, .2,
                autoAlpha: 0
                delay: .6
 
                onComplete: =>
 
                   # Fade the interface back in
-                  TweenMax.to $('#wrapper'), .4, autoAlpha: 1, delay: .3
+                  TweenLite.to $('#wrapper'), .4, autoAlpha: 1, delay: .3
                   $deviceOrientation.hide()
 
 
@@ -370,7 +414,7 @@ class AppController extends View
       if currentView instanceof ShareView
          if @isMobile
             $('#logo').removeClass('logo').addClass('logo-white')
-            TweenMax.to $('#wrapper'), .3,
+            TweenLite.to $('#wrapper'), .3,
                backgroundColor: '#E41E2B'
 
          # Only render visualization on desktop
@@ -383,7 +427,7 @@ class AppController extends View
       else
          if @isMobile
             $('#logo').removeClass('logo-white').addClass('logo')
-            TweenMax.to $('#wrapper'), .3,
+            TweenLite.to $('#wrapper'), .3,
                backgroundColor: 'white'
 
 

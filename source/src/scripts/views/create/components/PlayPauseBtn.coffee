@@ -21,8 +21,15 @@ class PlayPauseBtn extends View
 
 
    events:
-      'touchend': 'onClick'
+      'mouseover .btn-play':  'onMouseOver'
+      'mouseover .btn-pause': 'onMouseOver'
+      'mouseout .btn-play':   'onMouseOut'
+      'mouseout .btn-pause':  'onMouseOut'
+      'touchend':             'onClick'
 
+
+
+   # Render the view
 
    render: (options) ->
       super options
@@ -31,17 +38,22 @@ class PlayPauseBtn extends View
       @$pauseBtn = @$el.find '.btn-pause'
       @$label    = @$el.find '.label-btn'
 
-      TweenMax.set @$playBtn, autoAlpha: 0
+      TweenLite.set @$playBtn, autoAlpha: 0
 
       @
 
 
+
+   # Add event listeners
 
    addEventListeners: ->
       @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayChange
 
 
 
+
+   # Handler for playing model change events
+   # @param {AppModel} model
 
    onPlayChange: (model) =>
       playing = model.changed.playing
@@ -54,6 +66,34 @@ class PlayPauseBtn extends View
 
 
 
+
+   # Handler for mouseout events
+   # @param {MouseEvent}
+
+   onMouseOver: (event) =>
+      return
+      $target = $(event.currentTarget)
+
+      TweenLite.to $target, .2,
+         color: 'black'
+
+
+
+
+   # Handler for mouseout events
+   # @param {MouseEvent}
+
+   onMouseOut: (event) =>
+      return
+      $target = $(event.currentTarget)
+
+      TweenLite.to $target, .2,
+         color: '#E41E2B'
+
+
+
+
+
    # Handler for click events.  Fades the volume up or down and
    # stops or starts playback
    # @param {MouseEvent} event
@@ -63,7 +103,7 @@ class PlayPauseBtn extends View
       volume = if doPlay is true then 1 else 0
       obj    = volume: if volume is 1 then 0 else 1
 
-      TweenMax.to obj, .4,
+      TweenLite.to obj, .4,
          volume: volume
 
          onUpdate: =>
@@ -83,12 +123,11 @@ class PlayPauseBtn extends View
 
 
 
-
    # Set visual state of play pause btn
 
    setPlayState: ->
-      TweenMax.set @$playBtn, autoAlpha: 0
-      TweenMax.set @$pauseBtn, autoAlpha: 1
+      TweenLite.set @$playBtn, autoAlpha: 0
+      TweenLite.set @$pauseBtn, autoAlpha: 1
       @$label.text 'PAUSE'
 
 
@@ -97,8 +136,8 @@ class PlayPauseBtn extends View
    # Set visual state of play pause btn
 
    setPauseState: ->
-      TweenMax.set @$playBtn, autoAlpha: 1
-      TweenMax.set @$pauseBtn, autoAlpha: 0
+      TweenLite.set @$playBtn, autoAlpha: 1
+      TweenLite.set @$pauseBtn, autoAlpha: 0
       @$label.text 'PLAY'
 
 

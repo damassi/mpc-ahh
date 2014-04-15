@@ -7,6 +7,7 @@
 
 AppConfig = require '../../../../config/AppConfig.coffee'
 AppEvent  = require '../../../../events/AppEvent.coffee'
+PubEvent  = require '../../../../events/PubEvent.coffee'
 View      = require '../../../../supers/View.coffee'
 template  = require './templates/pad-square-template.hbs'
 
@@ -69,8 +70,8 @@ class PadSquare extends View
       @$iconContainer = @$el.find '.container-icon'
       @$icon          = @$iconContainer.find '.icon'
 
-      TweenMax.set @$border, autoAlpha: 0
-      TweenMax.set @$keycode, scale: .7
+      TweenLite.set @$border, autoAlpha: 0
+      TweenLite.set @$keycode, scale: .7
 
       @
 
@@ -100,7 +101,8 @@ class PadSquare extends View
 
    updateInstrumentClass: ->
       instrument = @model.get 'currentInstrument'
-      @$el.parent().addClass instrument.get 'id'
+      @instrumentId = instrument.get 'id'
+      @$el.parent().addClass @instrumentId
 
 
 
@@ -139,6 +141,15 @@ class PadSquare extends View
 
    playSound: ->
       @audioPlayback?.play()
+
+      unless @isMobile
+
+         # Make sure that there's an instrument attached
+         # to the pad before triggering the visualization
+
+         if @model.get('currentInstrument')
+            @trigger PubEvent.BEAT, livePad: true
+
       @model.set 'trigger', false
 
 
@@ -181,11 +192,11 @@ class PadSquare extends View
    onPress: (event) =>
       @model.set 'trigger', true
 
-      TweenMax.to @$el, .2,
+      TweenLite.to @$el, .2,
          backgroundColor: '#E41E2B'
 
          onComplete: =>
-            TweenMax.to @$el, .2,
+            TweenLite.to @$el, .2,
                backgroundColor: '#e5e5e5'
 
 
@@ -196,7 +207,6 @@ class PadSquare extends View
    # @param {MouseEvent} event
 
    onRelease: (event) =>
-      clearTimeout @dragTimeout
       @model.set 'dragging', false
 
 
@@ -205,9 +215,10 @@ class PadSquare extends View
 
 
    onHold: (event) =>
-      instrumentId = @$el.parent().attr 'data-instrument'
+      currentInstrument = @model.get('currentInstrument')
+      instrumentId      = @$el.parent().attr 'data-instrument'
 
-      currentInstrument    = @model.get('currentInstrument')
+      if currentInstrument is null then return
 
       @model.set 'dropped', false
       currentInstrument.set 'dropped', false
@@ -256,8 +267,6 @@ class PadSquare extends View
 
    onInstrumentChange: (model) =>
       instrument = model.changed.currentInstrument
-
-      console.log instrument
 
       unless instrument is null or instrument is undefined
          @model.set 'dropped', true

@@ -64,8 +64,8 @@ class PatternSquare extends View
       @$border = @$el.find '.border-dark'
       @$icon   = @$el.find '.icon'
 
-      TweenMax.set @$border, autoAlpha: 0
-      TweenMax.set @$icon, autoAlpha: 0, scale: 0
+      TweenLite.set @$border, autoAlpha: 0
+      TweenLite.set @$icon, autoAlpha: 0, scale: 0
 
       audioSrc = ''
 
@@ -126,21 +126,21 @@ class PatternSquare extends View
       unless @isMobile
          @trigger PubEvent.BEAT, patternSquareModel: @patternSquareModel.toJSON()
 
-      TweenMax.to @$icon, .3,
+      TweenLite.to @$icon, .3,
          scale: 1.2
          ease: Back.easeOut
 
          onComplete: =>
-            TweenMax.to @$icon, .3,
+            TweenLite.to @$icon, .3,
                scale: 1
                ease: Back.easeOut
 
 
-      TweenMax.to @$el, .2,
+      TweenLite.to @$el, .2,
          backgroundColor: "#E41E2B"
 
          onComplete: =>
-            TweenMax.to @$el, .2,
+            TweenLite.to @$el, .2,
                backgroundColor: "#E5E5E5"
 
 
@@ -152,13 +152,13 @@ class PatternSquare extends View
 
 
    onMouseOver: (event) ->
-      TweenMax.to @$border, .2,
+      TweenLite.to @$border, .2,
          autoAlpha: .5
 
 
 
    onMouseOut: (event) ->
-      TweenMax.to @$border, .2,
+      TweenLite.to @$border, .2,
          autoAlpha: 0
 
 
@@ -201,7 +201,7 @@ class PatternSquare extends View
          removeClass()
 
          if velocityClass is 'velocity-soft play'
-            TweenMax.set @$icon, autoAlpha: 0, scale: 0
+            TweenLite.set @$icon, autoAlpha: 0, scale: 0
 
          rotation = switch velocity
             when 1 then 90
@@ -209,7 +209,7 @@ class PatternSquare extends View
             when 3 then 270
             else 0
 
-         TweenMax.to @$icon, .2,
+         TweenLite.to @$icon, .2,
             autoAlpha: 1
             scale: 1
             rotation: rotation
@@ -219,11 +219,11 @@ class PatternSquare extends View
 
       # User is removing the pattern, animate out
       else
-         TweenMax.to @$icon, .2,
+         TweenLite.to @$icon, .2,
             scale: 0
             ease: Back.easeIn
             onComplete: =>
-               TweenMax.set @$icon, rotation: 0
+               TweenLite.set @$icon, rotation: 0
                removeClass()
 
       # Trigger mouse out to hide border
@@ -257,6 +257,9 @@ class PatternSquare extends View
    onTriggerChange: (model) =>
       if model.changed.trigger is true
          @play()
+
+         # Auto set it for now
+         @patternSquareModel.set 'trigger', false
 
 
 

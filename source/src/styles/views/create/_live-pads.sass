@@ -40,7 +40,10 @@
          margin-bottom: 9px
          margin-left: 0
          white-space: nowrap
-         width: 273px
+         //display: inline-block
+         width: 270px
+         margin-left: -7px
+         //width: 273px
 
 
          +respond-mobile
@@ -65,7 +68,7 @@
 
       .right
          display: inline-block
-         width: 38%
+         //width: 38%
          vertical-align: top
          min-width: 280px
 
@@ -79,11 +82,11 @@
 
 
       .left-wrapper
-         margin-right: 370px
-         width: 46%
+         margin-right: 330px
+         //width: 46%
 
          +respond-mobile
-            width: 50%
+            width: 57%
             margin-left: 10px
             margin-right: 220px
 
@@ -199,7 +202,8 @@
 
             white-space: nowrap
             text-align: left
-            min-width: 280px
+
+            //min-width: 280px
 
 
             .kit-type
@@ -299,6 +303,10 @@
          .btn-back
             border-right: 2px solid $grey
             cursor: pointer
+            color: $red
+
+            &:hover
+               color: black
 
 
          .btn-edit

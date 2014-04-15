@@ -36,12 +36,12 @@ class NotSupportedView extends View
 
 
    onListenBtnClick: (event) ->
-      TweenMax.to @$notification, .6,
+      TweenLite.to @$notification, .6,
          autoAlpha: 0
          x: -window.innerWidth
          ease: Expo.easeInOut
 
-      TweenMax.fromTo @$samples, .6, x: window.innerWidth, autoAlpha: 0,
+      TweenLite.fromTo @$samples, .6, x: window.innerWidth, autoAlpha: 0,
          display: 'block'
          autoAlpha: 1
          x: 0

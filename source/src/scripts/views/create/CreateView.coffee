@@ -10,6 +10,9 @@ View                    = require '../../supers/View.coffee'
 AppEvent                = require '../../events/AppEvent.coffee'
 PubEvent                = require '../../events/PubEvent.coffee'
 SharedTrackModel        = require '../../models/SharedTrackModel.coffee'
+Bubbles                 = require '../../views/visualizer/Bubbles'
+BubblesView             = require '../../views/visualizer/BubblesView.coffee'
+BrowserDetect           = require '../../utils/BrowserDetect'
 KitSelector             = require './components/KitSelector.coffee'
 PlayPauseBtn            = require './components/PlayPauseBtn.coffee'
 Toggle                  = require './components/Toggle.coffee'
@@ -39,10 +42,12 @@ class CreateView extends View
 
 
    events:
-      'touchend .btn-share':    'onShareBtnClick'
-      'touchend .btn-export':   'onExportBtnClick'
-      'touchend .btn-clear':    'onResetBtnClick'
-      'touchend .btn-jam-live': 'onJamLiveBtnClick' # Mobile only
+      'touchend .btn-share':      'onShareBtnClick'
+      'touchend .btn-export':     'onExportBtnClick'
+      'touchstart .btn-clear':    'onClearBtnPress'
+      'touchend .btn-clear':      'onClearBtnClick'
+      'touchstart .btn-jam-live': 'onJamLiveBtnPress' # Mobile only
+      'touchend .btn-jam-live':   'onJamLiveBtnClick' # Mobile only
 
 
 
@@ -58,6 +63,9 @@ class CreateView extends View
          appModel: @appModel
 
       @toggle = new Toggle
+         appModel: @appModel
+
+      @bubblesView = new BubblesView
          appModel: @appModel
 
       @$body = $('body')
@@ -83,7 +91,7 @@ class CreateView extends View
       @$playPauseContainer.html  @playPauseBtn.render().el
 
       # Fix viewport if on Tablet
-      TweenMax.to @$body, 0,
+      TweenLite.to @$body, 0,
          scrollTop:  0
          scrollLeft: 0
 
@@ -113,13 +121,16 @@ class CreateView extends View
             @instrumentSelector.instrumentViews[0].onClick()
 
 
-      TweenMax.set @$bottomContainer, y: 300
+      TweenLite.set @$bottomContainer, y: 300
 
       @renderKitSelector()
       @renderSequencer()
       @renderLivePad()
       @renderPatternSelector()
       @renderBPM()
+
+      unless @isMobile or @isTablet or BrowserDetect.isIE()
+         @renderBubbles()
 
       @$kitSelector = @$el.find '.kit-selector'
 
@@ -131,15 +142,16 @@ class CreateView extends View
    # Show the view and open the sequencer
 
    show: =>
+      @$mainContainer.show()
       @showUI()
       @appModel.set 'showSequencer', true
 
       if @isMobile
-         TweenMax.to $('.top-bar'), .3, autoAlpha: 1
+         TweenLite.to $('.top-bar'), .3, autoAlpha: 1
 
-         TweenMax.fromTo @$mainContainer, .4, y: 1000,
+         TweenLite.fromTo @$mainContainer, .4, y: 1000,
             immediateRender: true
-            y: 0
+            y: @returnMoveAmount()
             ease: Expo.easeOut
             delay: 1
 
@@ -149,17 +161,18 @@ class CreateView extends View
    # Hide the view and remove it from the DOM
 
    hide: (options) =>
-      TweenMax.fromTo @$el, .3, autoAlpha: 1,
+      TweenLite.fromTo @$el, .3, autoAlpha: 1,
          autoAlpha: 0
 
       @kitSelector.hide()
+      @hideUI()
 
       if @isMobile
-         TweenMax.to $('.top-bar'), .3, autoAlpha: 0
+         TweenLite.to $('.top-bar'), .3, autoAlpha: 0
 
       if @$bottomContainer.length
 
-         TweenMax.fromTo @$bottomContainer, .4, y: 0,
+         TweenLite.fromTo @$bottomContainer, .4, y: 0,
             y: 300
             ease: Expo.easeOut
             onComplete: =>
@@ -180,13 +193,13 @@ class CreateView extends View
    showUI: ->
       @kitSelector.show()
 
-      TweenMax.fromTo @$el, .3, autoAlpha: 0,
+      TweenLite.fromTo @$el, .3, autoAlpha: 0,
          autoAlpha: 1
          delay: .3
 
-      TweenMax.fromTo @$bottomContainer, .4, y: 300,
+      TweenLite.fromTo @$bottomContainer, .4, y: 300,
          autoAlpha: 1
-         y: 0
+         y: @returnMoveAmount()
          ease: Expo.easeOut
          delay: .3
 
@@ -199,10 +212,10 @@ class CreateView extends View
    hideUI: ->
       @kitSelector.hide()
 
-      TweenMax.fromTo @$el, .3, autoAlpha: 1,
+      TweenLite.fromTo @$el, .3, autoAlpha: 1,
          autoAlpha: 0
 
-      TweenMax.fromTo @$bottomContainer, .4, y: 0,
+      TweenLite.fromTo @$bottomContainer, .4, y: 0,
          y: 300
          ease: Expo.easeOut
 
@@ -328,6 +341,9 @@ class CreateView extends View
          @$livePad.html html
 
 
+      @listenTo @livePad, PubEvent.BEAT, @onBeat
+
+
 
 
    # Render the pre-populated pattern selector
@@ -362,6 +378,11 @@ class CreateView extends View
 
 
 
+   renderBubbles: ->
+      @$mainContainer.prepend Bubbles.initialize()
+
+
+
 
    # Renders out the share modal which then posts to Parse
 
@@ -374,7 +395,7 @@ class CreateView extends View
          @$mainContainer.append @shareModal.render().el
 
          # Slide main container up and then open share
-         TweenMax.to @$sequencerContainer, .6,
+         TweenLite.to @$sequencerContainer, .6,
             y: -window.innerHeight
             ease: Expo.easeInOut
 
@@ -404,6 +425,9 @@ class CreateView extends View
    onBeat: (params) =>
       @trigger PubEvent.BEAT, params
 
+      unless @isMobile
+         Bubbles.beat()
+
 
 
 
@@ -412,7 +436,6 @@ class CreateView extends View
 
    onSaveTrack: =>
       @trigger AppEvent.SAVE_TRACK, sharedTrackModel: @sharedTrackModel
-
 
 
 
@@ -428,17 +451,36 @@ class CreateView extends View
 
 
 
+   # Handler for press-states on mobile
+   # @param {Event} event
+
+   onClearBtnPress: (event) ->
+      if @isMobile
+         $(event.currentTarget).addClass 'press'
+
+
+
+
    # Handler for resetting the pattern track to default, blank state
    # @param {MouseEvent|TouchEvent} event
 
-   onResetBtnClick: (event) =>
-      @appModel.set
-         'bpm':              320
-         'sharedTrackModel': null
+   onClearBtnClick: (event) =>
 
-      # Remove preset if currently selected
-      @patternSelector.$el.find('.selected').removeClass 'selected'
-      @sequencer.renderTracks()
+      if @isMobile
+         $(event.currentTarget).removeClass 'press'
+
+      # When user is in Sequencer mode
+      if @appModel.get 'showSequencer'
+
+         @appModel.set 'sharedTrackModel', null
+
+         # Remove preset if currently selected
+         @patternSelector.$el.find('.selected').removeClass 'selected'
+         @sequencer.renderTracks()
+
+      # Fired when the user in the LivePad model
+      else
+         @livePad.clearLivePad()
 
 
 
@@ -452,7 +494,7 @@ class CreateView extends View
       @stopListening @shareModal
 
       if @isMobile
-         TweenMax.to @$sequencerContainer, .6,
+         TweenLite.to @$sequencerContainer, .6,
             y: 0
             ease: Expo.easeInOut
 
@@ -463,10 +505,21 @@ class CreateView extends View
    # @param {AppModel} model
 
    onShowSequencerChange: (model) =>
+
+      # Slide the sequencer in
       if model.changed.showSequencer
+         if @prevVolume then createjs.Sound.setVolume @prevVolume
+
          @showSequencer()
 
+
+      # Slide the live pad in
       else
+
+         # Ensure that volume is always up for the LivePad
+         @prevVolume = createjs.Sound.getVolume()
+         createjs.Sound.setVolume 1
+
          @showLivePad()
 
 
@@ -475,7 +528,17 @@ class CreateView extends View
    # MOBILE ONLY.  Handler for showing the live pad from mobile view
    # @param {TouchEvent} event
 
+   onJamLiveBtnPress: (event) =>
+      $(event.currentTarget).addClass 'press'
+
+
+
+
+   # MOBILE ONLY.  Handler for showing the live pad from mobile view
+   # @param {TouchEvent} event
+
    onJamLiveBtnClick: (event) =>
+      $(event.currentTarget).removeClass 'press'
       @appModel.set 'showSequencer', false
 
 
@@ -487,6 +550,14 @@ class CreateView extends View
    # --------------------------------------------------------------------------------
 
 
+   # Check against Coke nav playlist items
+
+   returnMoveAmount: ->
+      moveAmount = if $('.plitem').length > 0 then -30 else 0
+
+
+
+
 
    # Swaps the live pad out with the sequencer
 
@@ -496,12 +567,12 @@ class CreateView extends View
 
       if @isMobile
 
-         TweenMax.to @$sequencerContainer, tweenTime,
+         TweenLite.to @$sequencerContainer, tweenTime,
             x: 0
             autoAlpha: 1
             ease: Expo.easeInOut
 
-         TweenMax.to @$livePadContainer, tweenTime,
+         TweenLite.to @$livePadContainer, tweenTime,
             x: window.innerWidth
             autoAlpha: 0
             ease: Expo.easeInOut
@@ -509,12 +580,12 @@ class CreateView extends View
 
       else
 
-         TweenMax.to @$sequencer, tweenTime,
+         TweenLite.to @$sequencer, tweenTime,
             autoAlpha: 1
             x: 0
             ease: Expo.easeInOut
 
-         TweenMax.to @$livePad, tweenTime,
+         TweenLite.to @$livePad, tweenTime,
             autoAlpha: 0
             x: 2000
             ease: Expo.easeInOut
@@ -529,25 +600,25 @@ class CreateView extends View
 
       if @isMobile
 
-         TweenMax.to @$sequencerContainer, tweenTime,
+         TweenLite.to @$sequencerContainer, tweenTime,
             autoAlpha: 0
             x: -window.innerWidth
             ease: Expo.easeInOut
 
-         TweenMax.fromTo @$livePadContainer, tweenTime, x: window.innerWidth,
+         TweenLite.fromTo @$livePadContainer, tweenTime, x: window.innerWidth,
             autoAlpha: 1
             x: 0
             ease: Expo.easeInOut
 
       else
 
-         TweenMax.to @$sequencer, tweenTime,
+         TweenLite.to @$sequencer, tweenTime,
             autoAlpha: 0
             x: -2000
             ease: Expo.easeInOut
 
 
-         TweenMax.to @$livePad, tweenTime,
+         TweenLite.to @$livePad, tweenTime,
             autoAlpha: 1
             x: 0
             ease: Expo.easeInOut

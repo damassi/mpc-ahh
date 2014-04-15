@@ -42,6 +42,14 @@ General CSS utilities and SASS mixins
  }
 
 
+ @mixin delay($time: 200ms) {
+  -webkit-transition-delay:  $time;
+  -moz-transition-delay:  $time;
+  -o-transition-delay:  $time;
+  transition-delay:  $time;
+ }
+
+
 @mixin gpu() {
   -webkit-transform: translate3d(0,0,0);
   -moz-transform: translate3d(0,0,0);
@@ -49,6 +57,15 @@ General CSS utilities and SASS mixins
   -o-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
  }
+
+@mixin bg-gradient-radial( $endColor, $startColor, $colorStop: 50% ) {
+  background: $startColor;
+  background: -webkit-radial-gradient(center center, ellipse farthest-corner, $startColor 0%, $endColor $colorStop);
+  background: -moz-radial-gradient(center center, ellipse farthest-corner, $startColor 0%, $endColor $colorStop);
+  background: -ms-radial-gradient(center center, ellipse farthest-corner, $startColor 0%, $endColor $colorStop);
+  background: -o-radial-gradient(center center, ellipse farthest-corner, $startColor 0%, $endColor $colorStop);
+  background: radial-gradient(center center, ellipse farthest-corner, $startColor 0%, $endColor $colorStop);
+}
 
 
  .no-transition {

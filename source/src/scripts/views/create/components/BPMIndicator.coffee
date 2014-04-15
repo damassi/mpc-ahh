@@ -14,6 +14,15 @@ template  = require './templates/bpm-template.hbs'
 class BPMIndicator extends View
 
 
+   # Animation rotation time for bottlecap
+   # @type {Number}
+
+   ROTATE_TWEEN_TIME: .4
+
+
+   # Class name of container
+   # @type {String}
+
    className: 'container-bpm'
 
 
@@ -78,10 +87,13 @@ class BPMIndicator extends View
       @$bpmLabel   = @$el.find '.bpm-value'
       @increaseBtn = @$el.find '.btn-increase'
       @decreaseBtn = @$el.find '.btn-decrease'
+      @$bgCircle   = @$el.find '.bg-circle'
 
       @currBPM = @appModel.get('bpm')
       @$bpmLabel.text @currBPM
-      @onBtnUp()
+
+      unless @isMobile
+         TweenLite.set @$bgCircle, rotation: 0
 
       @
 
@@ -114,6 +126,9 @@ class BPMIndicator extends View
          @currBPM = bpm
          @$bpmLabel.text @currBPM
 
+         unless @isMobile
+            TweenLite.to @$bgCircle, @ROTATE_TWEEN_TIME, rotation: GreenProp.rotation(@$bgCircle) + 90
+
       , @intervalUpdateTime
 
 
@@ -128,14 +143,17 @@ class BPMIndicator extends View
       @updateInterval = setInterval =>
          bpm = @currBPM
 
-         if bpm > 0
+         if bpm > 1
             bpm -= @bpmIncreaseAmount
 
          else
-            bpm = 0
+            bpm = 1
 
          @currBPM = bpm
          @$bpmLabel.text @currBPM
+
+         unless @isMobile
+            TweenLite.to @$bgCircle, @ROTATE_TWEEN_TIME, rotation: GreenProp.rotation(@$bgCircle) - 90
 
       , @intervalUpdateTime
 

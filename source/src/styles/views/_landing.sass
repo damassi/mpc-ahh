@@ -8,7 +8,7 @@
    > .wrapper
 
       +center-everywhere
-      width: 458px
+      width: 788px
       height: 273px
 
 
@@ -31,18 +31,57 @@
          margin-bottom: 15px
 
 
-   .message
+   .landing
 
-      font-size: 29px
-      letter-spacing: 1px
-      line-height: 28px
-      color: $black
-      margin-bottom: 50px
+      +respond-desktop
+         margin-top: -20px
 
-      +respond-mobile
-         font-size: 22px
-         margin-bottom: 25px
-         line-height: 22px
+      .message
+
+         font-size: 29px
+         letter-spacing: 1px
+         line-height: 28px
+         color: $black
+         margin-bottom: 50px
+         display: inline-block
+
+         +respond-desktop
+            width: 458px
+
+         +respond-mobile
+            font-size: 22px
+            margin-bottom: 25px
+            line-height: 22px
+
+
+   .instructions
+      display: none
+      opacity: 0
+
+      div
+         font-size: 20px
+         text-transform: uppercase
+         margin-bottom: 30px
+         //opacity: 0
+
+      .first
+         margin-top: -10px
+
+
+      .img-track
+         width: 534px
+         height: 30px
+
+      .img-velocity
+         width: 220px
+         height: 67px
+
+      img
+         margin-top: 10px
+
+      span
+         padding: 7px
+         background: $grey
 
 
    .btn-start
@@ -60,4 +99,17 @@
          height: 40px
          font-size: 22px
          padding: 7px
+
+
+
+   .btn-instructions
+      position: relative
+      top: 20px
+      font-size: 13px
+      opacity: 0
+      cursor: pointer
+
+      +respond-mobile
+         display: none
+
 

@@ -44,6 +44,12 @@ AppConfig =
          max: null
 
 
+   # For debugging responsive issues on desktop
+   # @type {Boolean}
+
+   ENABLE_ROTATION_LOCK: true
+
+
    # The max varient on each pattern square (off, low, medium, high)
    # @type {Number}
 

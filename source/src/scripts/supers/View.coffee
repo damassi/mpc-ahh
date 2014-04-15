@@ -5,6 +5,8 @@
  * @date   2.17.14
 ###
 
+BrowserDetect = require '../utils/BrowserDetect'
+
 
 class View extends Backbone.View
 
@@ -40,6 +42,7 @@ class View extends Backbone.View
 
       # Add flag so view can check against stuff
       @isMobile = if $('body').hasClass('mobile') then true else false
+      @isTablet = if BrowserDetect.deviceDetection().deviceType is 'tablet' then true else false
 
       @delegateEvents()
       @addEventListeners()
@@ -66,7 +69,7 @@ class View extends Backbone.View
 
    show: (options) ->
       return
-      TweenMax.set @$el, { autoAlpha: 1 }
+      TweenLite.set @$el, { autoAlpha: 1 }
 
 
 
@@ -76,7 +79,7 @@ class View extends Backbone.View
 
    hide: (options) ->
 
-      TweenMax.to @$el, 0,
+      TweenLite.to @$el, 0,
          autoAlpha: 0
          onComplete: =>
             if options?.remove

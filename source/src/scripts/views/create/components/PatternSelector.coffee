@@ -18,12 +18,17 @@ class PatternSelector extends View
 
    className: 'container-pattern-selector'
 
+
    template: template
+
 
    @selectedIndex: -1
 
+
+
    events:
-      'touchend .btn': 'onBtnClick'
+      'touchstart .btn':   'onBtnPress'
+      'touchend .btn':     'onBtnClick'
 
 
    initialize: (options) ->
@@ -41,11 +46,16 @@ class PatternSelector extends View
       @
 
 
+   onBtnPress: (event) ->
+      $(event.currentTarget).addClass 'press'
+
+
 
    onBtnClick: (event) =>
       self = @
 
       $btn = $(event.currentTarget)
+      $btn.removeClass 'press'
 
       # Deselect current buttons
       @$btns.each (index) ->

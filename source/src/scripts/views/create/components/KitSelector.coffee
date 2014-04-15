@@ -42,6 +42,7 @@ class KitSelector extends View
 
 
    events:
+      'touchstart .btn':      'onBtnPress'
       'touchend .btn-left':   'onLeftBtnClick'
       'touchend .btn-right':  'onRightBtnClick'
 
@@ -71,7 +72,7 @@ class KitSelector extends View
 
       unless @isMobile
 
-         TweenMax.fromTo @$el, .4, y: -100,
+         TweenLite.fromTo @$el, .4, y: -100,
             y: 0
             ease: Expo.easeOut
             delay: .3
@@ -82,7 +83,7 @@ class KitSelector extends View
 
       unless @isMobile
 
-         TweenMax.fromTo @$el, .4, y: 0,
+         TweenLite.fromTo @$el, .4, y: 0,
             y: -100
             ease: Expo.easeOut
 
@@ -97,8 +98,15 @@ class KitSelector extends View
 
 
 
+
    # EVENT HANDLERS
    # --------------------------------------------------------------------------------
+
+
+
+   onBtnPress: (event) ->
+      $(event.currentTarget).addClass 'press'
+
 
 
 
@@ -106,6 +114,7 @@ class KitSelector extends View
    # sets a new kitModel on the main AppModel
 
    onLeftBtnClick: (event) ->
+      $(event.currentTarget).removeClass 'press'
       @appModel.set 'kitModel', @kitCollection.previousKit()
 
 
@@ -115,6 +124,7 @@ class KitSelector extends View
    # sets a new kitModel on the main AppModel
 
    onRightBtnClick: (event) ->
+      $(event.currentTarget).removeClass 'press'
       @appModel.set 'kitModel', @kitCollection.nextKit()
 
 
@@ -126,24 +136,18 @@ class KitSelector extends View
    onChangeKit: (model) ->
       @kitModel = model.changed.kitModel
 
-      TweenMax.to @$kitLabel, .2,
+      delay = if @isMobile then .5 else 0
+
+      TweenLite.to @$kitLabel, .2,
          y: -20
          ease: Expo.easeIn
+         delay: delay
 
          onComplete: =>
             @$kitLabel.text @kitModel.get 'label'
-            TweenMax.fromTo @$kitLabel, .2, { y: 20 },
+            TweenLite.fromTo @$kitLabel, .2, { y: 20 },
                y: 0
                ease: Expo.easeOut
-
-
-
-
-
-   # PRIVATE METHODS
-   # --------------------------------------------------------------------------------
-
-
 
 
 

@@ -65,7 +65,7 @@ class VisualizerView extends View
    show: =>
       @buildBottles()
 
-      TweenMax.to @$el.find('.wrapper'), .3,
+      TweenLite.to @$el.find('.wrapper'), .3,
          autoAlpha: 1
          delay: 1
 
@@ -74,7 +74,7 @@ class VisualizerView extends View
    # Hide the view
 
    hide: ->
-      TweenMax.to @$el.find('.wrapper'), .3,
+      TweenLite.to @$el.find('.wrapper'), .3,
          autoAlpha: 0
          delay: 0
 
@@ -87,19 +87,18 @@ class VisualizerView extends View
       @prevX = GreenProp.x @$bottlesContainer
       @prevY = GreenProp.y @$bottlesContainer
 
-      TweenMax.to @$bottlesContainer, .8,
+      TweenLite.to @$bottlesContainer, .8,
          scale: 1.3
          x: (@containerWidth * .26)
          y: @prevY + 65
          ease: Expo.easeOut
-         roundProps: ['scale', 'x', 'y']
 
 
 
    # Scale down the view close share
 
    scaleDown: ->
-      TweenMax.to @$bottlesContainer, .8,
+      TweenLite.to @$bottlesContainer, .8,
          scaleX: 1
          scaleY: 1
          x: @prevX
@@ -112,20 +111,7 @@ class VisualizerView extends View
 
    setShareViewPosition: ->
       @isShareView = true
-
-      console.log 'here!'
-
       @onResize()
-
-      return
-
-      yPos = (window.innerHeight * .5) - (@containerHeight  * .5)
-
-      TweenMax.to @$bottlesContainer, .8,
-         scaleX: 1
-         scaleY: 1
-         y: yPos
-         ease: Expo.easeInOut
 
 
 
@@ -146,20 +132,26 @@ class VisualizerView extends View
       _(@BOTTLE_NUM).times (index) =>
          $bottle = @$el.find "#bottle-#{index+1}"
 
-         TweenMax.set $bottle,
+         TweenLite.set $bottle,
             transformOrigin: 'center middle'
             scale: 1
             x: ~~(index * ((window.innerWidth * .8) / @BOTTLE_NUM))
             y: 1000
 
-         TweenMax.set $bottle.find('.bottle-bg'), scaleY: 0
+         TweenLite.set $bottle.find('.bottle-bg'), scaleY: 0
          @bottles.push $bottle
 
-      TweenMax.staggerTo @bottles, .7,
-         y: -10
-         ease: Back.easeOut
-         delay: .5
-      , .1
+
+      delay = .5
+
+      for $bottle in @bottles
+
+         TweenLite.to $bottle, .7,
+            y: -10
+            ease: Back.easeOut
+            delay: delay
+
+         delay += .1
 
 
 
@@ -181,7 +173,7 @@ class VisualizerView extends View
       _.each @bottles, ($bottle, index) =>
          xPos = ~~(index * ((window.innerWidth * .8 / @BOTTLE_NUM) ))
 
-         TweenMax.set $bottle,
+         TweenLite.set $bottle,
             transformOrigin: 'center'
             x: xPos
             ease: Expo.easeOut
@@ -196,7 +188,7 @@ class VisualizerView extends View
       xPos = (window.innerWidth  * .5) - (@containerWidth * .5)
       yPos = (window.innerHeight * .5) - (@containerHeight  * .5) - yOffset
 
-      TweenMax.to @$bottlesContainer, .6,
+      TweenLite.to @$bottlesContainer, .6,
          x: ~~xPos
          y: ~~yPos
          ease: Expo.easeOut
@@ -209,22 +201,31 @@ class VisualizerView extends View
    onBeat: (params) =>
       {patternSquareModel} = params
 
-      frame = switch patternSquareModel.velocity
+      props = patternSquareModel || {}
+
+      # Check if the
+      if _.isEmpty props
+         props =
+            velocity:   ~~(Math.random() * 4)
+            orderIndex: ~~(Math.random() * 6)
+
+      scale = switch props.velocity
          when 1 then .33 + Math.random() * .20
          when 2 then .66 + Math.random() * .20
          when 3 then .95
 
+      if scale is undefined then scale = 1
+
       tweenTime = .2
+      bottle    = @bottles[props.orderIndex].find('.bottle-bg')
 
-      bottle = @bottles[patternSquareModel.orderIndex].find('.bottle-bg')
-
-      TweenMax.to bottle, .1,
+      TweenLite.to bottle, .1,
          transformOrigin: 'center bottom'
-         scaleY: frame
+         scaleY: scale
          ease: Linear.easeNone
 
          onComplete: =>
-            TweenMax.to bottle, 1,
+            TweenLite.to bottle, 1,
                scaleY: 0
                ease: Quart.easeOut
 

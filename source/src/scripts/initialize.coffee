@@ -7,6 +7,7 @@
 
 
 attachFastClick  = require('fastclick');
+BrowserDetect    = require './utils/BrowserDetect'
 Touch            = require './utils/Touch'
 AppConfig        = require './config/AppConfig.coffee'
 KitCollection    = require './models/kits/KitCollection.coffee'
@@ -17,65 +18,87 @@ helpers          = require './helpers/handlebars-helpers'
 
 $ ->
 
-   # Initialize app-side utilities
-   Touch.translateTouchEvents()
-   attachFastClick document.body
-   Parse.initialize( "oZgOktrcDXEetGBjCGI6qqRLNbJ7j8GTDMmPyrxb", "U6b0hDT2Isb5blCVd0WU41NJ0EOFgY0Fx7orql4Q" )
-   ZeroClipboard.config({ moviePath: 'assets/swf/ZeroClipboard.swf' })
-
-   # Prevent scrolling on ios devices
-   $(document).on 'touchmove', (event) ->
-      event.preventDefault()
-
-   $body = $('body')
+   preloadManifest = [
+      { id: 'velocity-soft',    src: 'assets/images/icon-beat-soft.svg' },
+      { id: 'velocity-medium',  src: 'assets/images/icon-beat-medium.svg'},
+      { id: 'velocity-hard',    src: 'assets/images/icon-beat-hard.svg'},
+      { id: 'bottle-mask',      src: 'assets/images/bottle-mask.png'},
+      { id: 'velocity-soft',    src: 'assets/audio/coke/05___female_ahhh_01.mp3'}
+   ]
 
 
+   onPreloadComplete = =>
 
-   # Build out the kit-collection, which is the basis for all other models
-   kitCollection = new KitCollection
-      parse: true
+      # TODO: Replace with Weiden Parse account
+      Parse.initialize( "oZgOktrcDXEetGBjCGI6qqRLNbJ7j8GTDMmPyrxb", "U6b0hDT2Isb5blCVd0WU41NJ0EOFgY0Fx7orql4Q" )
 
-   kitCollection.fetch
-      async: false
-      url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+      Touch.translateTouchEvents()
+      attachFastClick document.body
+      ZeroClipboard.config({ moviePath: 'assets/swf/ZeroClipboard.swf' })
 
-   # Create the primary application model which handles state
-   appModel = new AppModel
-      'kitModel': kitCollection.at(0)
+      # Prevent scrolling on ios devices
+      $(document).on 'touchmove', (event) ->
+         event.preventDefault()
+
+      $body = $('body')
+
+
+      # Build out the kit-collection, which is the basis for all other models
+      kitCollection = new KitCollection
+         parse: true
+
+      kitCollection.fetch
+         async: false
+         url: AppConfig.returnAssetPath('data') + '/' + 'sound-data.json'
+
+      # Create the primary application model which handles state
+      appModel = new AppModel
+         'kitModel': kitCollection.at(0)
 
 
 
-   # Check current mobile status
-   if $(window).innerWidth() < AppConfig.BREAKPOINTS.desktop.min
-      appModel.set 'isMobile', true
-      $body.addClass 'mobile'
+      # Check current mobile status
+      if $(window).innerWidth() < AppConfig.BREAKPOINTS.desktop.min
+         appModel.set 'isMobile', true
+         $body.addClass 'mobile'
+      else
+         $body.addClass 'desktop'
+
+
       $body.append rotationTemplate()
-   else
-      $body.addClass 'desktop'
 
 
-   # Tell user to rotate
-   if window.innerHeight > window.innerWidth
-      $('.device-orientation').show()
-
-
-   # Create mock preloader for any image assets
-   preloadImages = ['velocity-soft', 'velocity-medium', 'velocity-hard', 'bottle-mask' ]
-   _.each preloadImages, (className) ->
-      $('<div style="visibility:hidden" />', { class: "preload #{className}"}).appendTo 'body'
+      # Tell user to rotate
+      if AppConfig.ENABLE_ROTATION_LOCK
+         if window.innerHeight > window.innerWidth
+            $('.device-orientation').show()
 
 
 
-   # Handler for audio load events, which is required for mobile (iOS) audio playback
-   onLoad = ->
-      createjs.Sound.removeEventListener 'fileload', onLoad
+      # To initialize mobile playback, a sound must be loaded
+      # and triggered by user interaction.
+      #
+      # NOTE:  Sound manifest is registered in the KitModel
+      # during data parse.
+
+      sndPath = preloadManifest[preloadManifest.length-1].src
+      createjs.Sound.registerSound sndPath, sndPath
+      createjs.Sound.alternateExtensions = ['mp3']
+      createjs.FlashPlugin.swfPath = '/assets/swf/'
+      createjs.HTMLAudioPlugin.defaultNumChannels = 30
+
+      if BrowserDetect.isIE()
+         createjs.Sound.registerPlugins([createjs.FlashPlugin])
+      else
+         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin])
+
+
 
       # Fix viewport if on Tablet
-      TweenMax.to $('body'), 0,
+      TweenLite.to $('body'), 0,
          scrollTop:  0
          scrollLeft: 0
 
-      $('body').find('.preload').remove()
 
       # Kick off app
       appController = new AppController
@@ -84,8 +107,37 @@ $ ->
 
       appController.render()
 
+      # Redirect if device is not supported
+      if appModel.get 'isMobile'
+         if BrowserDetect.unsupportedAndroidDevice()
+            window.location.hash = '#not-supported'
 
-   # To initialize mobile playback, a sound must be loaded and triggered by user interaction
-   createjs.Sound.addEventListener 'fileload', onLoad
-   sndPath = 'assets/audio/coke/05___female_ahhh_01.mp3'
-   createjs.Sound.registerSound sndPath, sndPath
+         device = BrowserDetect.deviceDetection()
+         # console.log device.osVersion
+
+         # # Build scroller to get rid of header and footer on 7.0 devices
+         # if device.osVersion is "7.1"
+         #    height = window.innerHeight
+         #    $body.height height * 2
+
+         #    TweenLite.to $body, .2,
+         #       scrollTop: height
+         #       onComplete: ->
+         #          console.log 'done!'
+
+
+
+      _.delay =>
+         ''
+         #console?.clear()
+      , 1500
+
+
+   # Preload assets
+   queue = new createjs.LoadQueue()
+   queue.installPlugin( createjs.Sound )
+   queue.on 'complete', onPreloadComplete
+   queue.loadManifest preloadManifest
+
+
+

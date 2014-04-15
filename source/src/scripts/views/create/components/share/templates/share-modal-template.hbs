@@ -19,22 +19,29 @@
 		</h1>
 
 		<div class='container-form'>
-			<div class='input-group text-input t'>
+
+			{{#if isDesktop}}
+				<div class='message'>
+					Please name your beat before sharing
+				</div>
+			{{/if}}
+
+			<div class='input-group text-input'>
 				<span class='label-input'>Title</span>
 				<input class='input-title' placeholder='title' />
 			</div>
 
-			<div class='input-group text-input n'>
+			<div class='input-group text-input name'>
 				<span class='label-input'>Name</span>
 				<input class='input-name' placeholder='name' />
 			</div>
 
-			<div class='input-group textarea'>
+			{{!-- <div class='input-group textarea'>
 				<span class='label-input'>Message</span>
 				<textarea class='input-message' placeholder='MESSAGE' />
 
 				</textarea>
-			</div>
+			</div> --}}
 
 			<div class='btn-select-service'>
 				<div class='text'>

@@ -100,7 +100,6 @@ class Sequencer extends View
    # the ticker interval
 
    remove: ->
-      console.log 'firing remove SEQUENCER'
       _.each @patternTrackViews, (track) =>
          track.remove()
 
@@ -290,7 +289,6 @@ class Sequencer extends View
          @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
 
       else
-         console.log 'clearing interval....'
          window.clearInterval @bpmInterval
          @bpmInterval = null
 
@@ -322,7 +320,7 @@ class Sequencer extends View
          if $track.find('.instrument').hasClass iconClass
             $track.show()
 
-            TweenMax.fromTo $track, .6, y: 100,
+            TweenLite.fromTo $track, .6, y: 100,
                immediateRender: true
                y: 0
                ease: Expo.easeInOut
@@ -484,11 +482,6 @@ class Sequencer extends View
 
             # User unmuting track
             else view.$el.removeClass 'mute'
-
-         # All the other tracks, remove mute if set
-         else
-            #if view.$el.hasClass 'mute'
-            #   view.$el.removeClass 'mute'
 
 
 

@@ -31,10 +31,9 @@
 
    .bg-circle
       $size: 126px
-      +border-radius( $size, $size )
 
       background: white
-      border: 4px solid $red
+      background: url("#{$images}/bpm-bg-bottlecap.svg") no-repeat
       position: absolute
       left: 26px
       top: 4px
@@ -48,6 +47,9 @@
       @extend .label
       pointer-events: none
       z-index: 2
+
+      +respond-desktop
+         color: white
 
 
 
@@ -66,7 +68,7 @@
 
 
    .bpm-value
-      color: $red
+      color: white
       font-size: 63px
       top: -4px
 
@@ -76,6 +78,7 @@
          font-size: 50px
          top: 0
          letter-spacing: 0
+         color: $red
 
 
 

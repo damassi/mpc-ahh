@@ -6,6 +6,7 @@
 ###
 
 AppEvent            = require '../../../../events/AppEvent.coffee'
+PubEvent            = require '../../../../events/PubEvent.coffee'
 PadSquareCollection = require '../../../../models/pad/PadSquareCollection.coffee'
 PadSquareModel      = require '../../../../models/pad/PadSquareModel.coffee'
 View                = require '../../../../supers/View.coffee'
@@ -77,9 +78,10 @@ class LivePad extends View
 
 
    events:
-      'touchend .btn-edit': 'onEditBtnClick'
-      'touchend .tab':      'onTabClick'
-      'touchend .btn-back': 'onBackBtnClick' # Mobile only
+      'touchend .btn-edit':   'onEditBtnClick'
+      'touchend .tab':        'onTabClick'
+      'touchstart .btn-back': 'onBackBtnPress' # Mobile only
+      'touchend .btn-back':   'onBackBtnClick' # Mobile only
 
 
 
@@ -175,6 +177,7 @@ class LivePad extends View
 
 
 
+
    # Renders out the instrument racks by iterating through
    # each of the instrument sets in the KitCollection
 
@@ -191,6 +194,26 @@ class LivePad extends View
 
 
 
+   # Clears the live pad of all assigned instruments
+
+   clearLivePad: ->
+
+      # Iterate over app pad squares
+      _.each @padSquareViews, (padSquare, index) =>
+
+         # Only modify pad squares which have a dropped instrument
+         if padSquare.model.get('currentInstrument')
+            padSquare.model.set 'dropped', false
+            padSquare.model.get('currentInstrument').set 'dropped', false
+            padSquare.model.set 'currentInstrument', null
+            padSquare.removeSoundAndClearPad()
+
+      @renderInstruments()
+      @initDragAndDrop()
+
+
+
+
 
 
    # EVENT HANDLERS
@@ -199,7 +222,7 @@ class LivePad extends View
 
 
    onKeyPress: (event) =>
-      key = event.handleObj.data
+      key   =   event.handleObj.data
       index = _.indexOf @KEYMAP, key
       @padSquareViews[index].onPress()
 
@@ -223,10 +246,21 @@ class LivePad extends View
 
 
 
+
+   # Mobile only. Add press state on btn
+   # @param {MouseEvent} event
+
+   onBackBtnPress: (event) =>
+      $(event.currentTarget).addClass 'press'
+
+
+
+
    # Mobile only. Trigger sequencer show back on CreateView
    # @param {MouseEvent} event
 
    onBackBtnClick: (event) =>
+      $(event.currentTarget).removeClass 'press'
       @appModel.set 'showSequencer', true
 
 
@@ -276,34 +310,71 @@ class LivePad extends View
             return draggableElement
 
 
-      # Silently update the position of the hidden instrument
-      $droppedInstrument.css 'position', 'absolute'
-      $droppedInstrument.show()
-
       # Set the model to null so that it can be reassigned
       padSquare.model.set 'dropped', false
       padSquare.model.set 'currentInstrument', null
 
-      position = $padSquare.position()
 
-      # Set the position before it appears
-      TweenMax.set $droppedInstrument,
-         scale: .8
-         top:  position.top  + ($droppedInstrument.height() * .5)
-         left: position.left + ($droppedInstrument.width()  * .5)
+      # If mobile or tablet, just send it back to the dock
+      if @isMobile
+
+         repeat = 0
+
+         tween = TweenLite.to padSquare.$el, .05,
+            backgroundColor: '#E41E2B'
+
+            onComplete: =>
+               tween.reverse()
+
+               if repeat is 1
+                  draggable.disable()
+
+            onReverseComplete: =>
+               if repeat < 1
+                  repeat++
+                  tween.restart()
+
+
+      # Allow the user to click and re-assign
+      else
+
+         # Silently update the position of the hidden instrument
+         $droppedInstrument.css 'position', 'absolute'
+         $droppedInstrument.show()
+         position = $padSquare.position()
+
+         # Set the position before it appears
+         TweenLite.set $droppedInstrument,
+            scale: .8
+            top:  position.top  + ($padSquare.height() * .5)
+            left: position.left + ($padSquare.width()  * .5)
+
+         # Scale it up so that the user knows they can drag
+         TweenLite.to $droppedInstrument, .2,
+            scale: 1.1
+            color: '#E41E2B'
+            ease: Expo.easeOut
+            onComplete: ->
+               TweenLite.to $droppedInstrument, .2,
+                  scale: 1
+
 
       # Renable dragging
       draggable.enable()
       draggable.update()
       draggable.startDrag event
 
-      TweenMax.to $droppedInstrument, .2,
-         scale: 1.1
-         color: '#E41E2B'
-         ease: Expo.easeOut
-         onComplete: ->
-            TweenMax.to $droppedInstrument, .2,
-               scale: 1
+
+
+
+   # Handler for beat events originating from the PadSquare.  Is
+   # passed down to the VisualizationView to trigger animation
+   # @param {Object} params
+
+   onBeat: (params) =>
+      @trigger PubEvent.BEAT, params
+
+
 
 
 
@@ -341,12 +412,12 @@ class LivePad extends View
 
                   # Prevent droppables on squares that already have instruments
                   if instrument is null or instrument is undefined
-                     TweenMax.to self.padSquareViews[i].$border, .2,
+                     TweenLite.to self.padSquareViews[i].$border, .2,
                         autoAlpha: 1
 
                # Remove if not over square
                else
-                  TweenMax.to self.padSquareViews[i].$border, .2,
+                  TweenLite.to self.padSquareViews[i].$border, .2,
                      autoAlpha: 0
 
 
@@ -377,7 +448,7 @@ class LivePad extends View
                      self.dropInstrument( $dragged, $dropped, event )
 
                      # Hide Border
-                     TweenMax.to self.padSquareViews[i].$border, .2,
+                     TweenLite.to self.padSquareViews[i].$border, .2,
                         autoAlpha: 0
 
                      break
@@ -435,7 +506,6 @@ class LivePad extends View
 
       instrumentModel.set
          'dropped': false
-         'droppedEvent': null
 
       _.defer =>
          @renderInstruments()
@@ -505,6 +575,7 @@ class LivePad extends View
             # each pad square and re-render pad squares
 
             @listenTo padSquare, AppEvent.CHANGE_DRAGGING, @onDraggingChange
+            @listenTo padSquare, PubEvent.BEAT, @onBeat
 
 
             tds.push {

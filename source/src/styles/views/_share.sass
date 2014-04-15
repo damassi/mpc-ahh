@@ -3,15 +3,35 @@
 
    z-index: 2 !important
 
+
+   .logo-coke
+      background: url("#{$images}/logo-coke-mpc.svg") no-repeat
+      width: 334px
+      height: 95px
+      position: absolute
+      top: 0
+      left: 0
+      z-index: 10
+
+      +respond-mobile
+         display: inline-block
+         margin-left: -188px
+         top: -18px
+         left: 50%
+
+
    > .wrapper
 
       +center-everywhere
+      top: 19px
       width: 600px
-      height: 570px
+      height: 530px
+      z-index: 10
 
       +respond-mobile
          height: 100%
          margin-top: 50px
+         width: 100%
 
 
 
@@ -27,7 +47,7 @@
 
          +respond-mobile
             font-size: 45px
-            height: 30px
+            height: 36px
 
 
       .name
@@ -38,7 +58,7 @@
 
          +respond-mobile
             font-size: 22px
-            height: 30px
+            height: 47px
 
 
       .message

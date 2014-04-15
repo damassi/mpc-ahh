@@ -51,6 +51,7 @@ class ShareView extends View
 
 
       @$textContainer = @$el.find '.container-text'
+      @$mainContainer = $('#container-main')
 
       @$name     = @$el.find '.name'
       @$title    = @$el.find '.title'
@@ -58,8 +59,10 @@ class ShareView extends View
       @$playBtn  = @$el.find '.btn-play'
       @$startBtn = @$el.find '.btn-start'
 
-      TweenMax.set @$textContainer, y: -300, autoAlpha: 0
-      TweenMax.set @$startBtn,      y:  300, autoAlpha: 0
+      TweenLite.set @$textContainer, y: -300,  autoAlpha: 0
+      TweenLite.set @$startBtn,      y:  300,  autoAlpha: 0
+
+      @$mainContainer.show()
 
       @createView = new CreateView
          appModel: @appModel
@@ -72,6 +75,7 @@ class ShareView extends View
 
          @$el.find('.container-btn').append @playPauseBtn.render().el
          @playPauseBtn.$el.find('.label-btn').hide()
+         TweenLite.set @playPauseBtn.$el, scale: 1, autoAlpha: 0
 
       @$el.append @createView.render().el
       @createView.$el.hide()
@@ -93,28 +97,33 @@ class ShareView extends View
 
          @$message.hide()
 
-         TweenMax.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+         TweenLite.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
             autoAlpha: 1
             y: 10
             ease: Expo.easeOut,
             delay: delay + .3
 
-         TweenMax.fromTo @$startBtn, .4, y: 1000, autoAlpha: 0,
+         TweenLite.fromTo @$startBtn, .4, y: 1000, autoAlpha: 0,
             autoAlpha: 1
-            y: 140
+            y: 160
             ease: Expo.easeOut,
             delay: delay + .3
+            onComplete: =>
+               TweenLite.to @playPauseBtn.$el, .3,
+                  autoAlpha: 1
+                  ease: Back.easeOut
+                  delay: 0
 
       else
 
 
-         TweenMax.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+         TweenLite.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
             autoAlpha: 1
             y: 0
             ease: Expo.easeOut,
             delay: delay + .3
 
-         TweenMax.fromTo @$startBtn, .4, y: 300, autoAlpha: 0,
+         TweenLite.fromTo @$startBtn, .4, y: 300, autoAlpha: 0,
             autoAlpha: 1
             y: -80
             ease: Expo.easeOut,
@@ -129,7 +138,7 @@ class ShareView extends View
 
       if @isMobile
 
-         TweenMax.to @$el, .4, autoAlpha: 0,
+         TweenLite.to @$el, .4, autoAlpha: 0,
             onComplete: =>
                if options?.remove
                   _.delay =>
@@ -139,12 +148,12 @@ class ShareView extends View
 
       else
 
-         TweenMax.to @$startBtn, .3,
+         TweenLite.to @$startBtn, .3,
             scale: 0
             autoAlpha: 0
             ease: Back.easeIn
 
-         TweenMax.to @$el, .4, autoAlpha: 0,
+         TweenLite.to @$el, .4, autoAlpha: 0,
             onComplete: =>
                if options?.remove
 
@@ -192,7 +201,7 @@ class ShareView extends View
                'sharedTrackModel': sharedTrackModel
                'shareId':          null
 
-            console.log sharedTrackModel.get 'kitType'
+            @listenTo @createView, PubEvent.BEAT, @onBeat
 
             # Import into sequencer
             @createView.sequencer.importTrack
@@ -224,9 +233,9 @@ class ShareView extends View
          @$title.html   sharedTrackModel.get 'shareTitle'
          @$message.html sharedTrackModel.get 'shareMessage'
 
-         TweenMax.set @$el, autoAlpha: 1
+         TweenLite.set @$el, autoAlpha: 1
 
-         @appModel.set 'playing', true
+         @appModel.set 'playing', (if @isMobile then false else true)
 
          @show()
 
@@ -245,6 +254,7 @@ class ShareView extends View
       @appModel.set
          'bpm':              120
          'sharedTrackModel': null
+         'showSequencer':    false
 
       window.location.hash = 'create'
 
@@ -255,7 +265,7 @@ class ShareView extends View
    # @param {MouseEvent} event
 
    onMouseOver: (event) =>
-      TweenMax.to @$startBtn, .2,
+      TweenLite.to @$startBtn, .2,
          border: '3px solid black'
          scale: 1.1
          color: 'black'
@@ -267,10 +277,17 @@ class ShareView extends View
    # @param {MouseEvent} event
 
    onMouseOut: (event) =>
-      TweenMax.to @$startBtn, .2,
+      TweenLite.to @$startBtn, .2,
          border: '3px solid white'
          scale: 1
          color: 'white'
+
+
+
+
+   onBeat: (params) =>
+      @trigger PubEvent.BEAT, params
+
 
 
 

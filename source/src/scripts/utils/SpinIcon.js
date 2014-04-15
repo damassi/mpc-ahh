@@ -34,18 +34,18 @@ var SpinIcon = function (options) {
 SpinIcon.prototype.init = function (options) {
   this.spinner = new Spinner(opts).spin(this.target);
   this.$el = $(this.spinner.el)
-  TweenMax.set( this.$el, { autoAlpha: 0 })
+  TweenLite.set( this.$el, { autoAlpha: 0 })
   this.hide()
 }
 
 SpinIcon.prototype.show = function () {
-  TweenMax.to( this.$el, .2, {
+  TweenLite.to( this.$el, .2, {
     autoAlpha: 1
   })
 }
 
 SpinIcon.prototype.hide = function () {
-  TweenMax.to( this.$el, .2, {
+  TweenLite.to( this.$el, .2, {
     autoAlpha: 0
   })
 }

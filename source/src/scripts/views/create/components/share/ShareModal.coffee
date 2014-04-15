@@ -22,10 +22,22 @@ class ShareModal extends View
    FORM_TWEEN_TIME: .3
 
 
+   # Error message to display in button if there's a problem saving the track
+   # @type {String}
+
+   ERROR_MSG: 'Error saving track'
+
+
+   # Generic share message which is posted to social media
+   # @type {String}
+
+   SHARE_MSG: 'NEED SHARE MESSAGE'
+
+
    # The container element id
    # @type {String}
 
-   className: 'container-share'
+   className: 'container-share-modal'
 
 
    # The template
@@ -47,14 +59,16 @@ class ShareModal extends View
       'touchend .btn-close':        'onCloseBtnClick'
       'click':                      'onCloseBtnClick'
       'click .wrapper':             'onWrapperClick'
+      'click .btn-tumblr':          'onTumblrBtnClick'
 
-      'keypress .input-message':    'onInputKeyPress'
-      'blur .input-name':           'onInputBlur'
+      'keypress .input-name':       'onInputKeyPress'
       'blur .input-title':          'onInputBlur'
+      'blur .input-name':           'onInputBlur'
       'blur .input-message':        'onInputBlur'
 
       # Mobile only
-      'touchend .btn-close-share':  'onCloseBtnClick'
+      'touchstart .btn-close-share':  'onCloseBtnPress'
+      #'touchend .btn-close-share':    'onCloseBtnClick'
 
 
 
@@ -67,6 +81,7 @@ class ShareModal extends View
       @$wrapper      = @$el.find '.wrapper'
       @$form         = @$el.find '.container-form'
       @$preview      = @$el.find '.container-preview'
+      @$formWrapper  = @$el.find '.form-wrapper'
       @$closeBtn     = @$el.find '.btn-close'
       @$nameInput    = @$el.find '.input-name'
       @$titleInput   = @$el.find '.input-title'
@@ -80,16 +95,21 @@ class ShareModal extends View
       @spinner.show()
       @$preloader.hide()
 
-      TweenMax.set @$el,        autoAlpha: 0
-      TweenMax.set @$preview,   autoAlpha: 0
-      TweenMax.set @$preloader, autoAlpha: 0, scale:  0
-      TweenMax.set @$closeBtn,  autoAlpha: 0, scaleX: 1.7
+      TweenLite.set @$el,        autoAlpha: 0
+      TweenLite.set @$preview,   autoAlpha: 0
+      TweenLite.set @$preloader, autoAlpha: 0, scale:  0
+      TweenLite.set @$closeBtn,  autoAlpha: 0, scaleX: 1.7
 
       if @isMobile
-         TweenMax.set @$preloader, autoAlpha: 1, scale:  0, y: -12
+         TweenLite.set @$preloader, autoAlpha: 1, scale:  0, y: -12
 
          _.each [@$nameInput, @$titleInput, @$messageInput], ($input) ->
-            $input.attr 'placeholder', ''
+            #$input.attr 'placeholder', ''
+
+         _.defer =>
+            centerY = (window.innerHeight * .5 - @$formWrapper.height()) + ($('.top-bar').height() * .5)
+
+            TweenLite.set @$formWrapper, y: centerY
 
       @
 
@@ -118,18 +138,18 @@ class ShareModal extends View
    show: ->
 
       if @isMobile
-         TweenMax.fromTo @$el, .6, y: window.innerHeight,
+         TweenLite.fromTo @$el, .6, y: window.innerHeight,
             y: 0
             autoAlpha: 1
             ease: Expo.easeInOut
             onComplete: =>
-               TweenMax.to @$closeBtn, .3,
+               TweenLite.to @$closeBtn, .3,
                   autoAlpha: 1
                   ease: Linear.easeNone
 
       else
 
-         TweenMax.fromTo @$el, @FORM_TWEEN_TIME + .1, y: 2000,
+         TweenLite.fromTo @$el, @FORM_TWEEN_TIME + .1, y: 2000,
             y: 0
             autoAlpha: 1
             ease: Expo.easeOut,
@@ -137,7 +157,7 @@ class ShareModal extends View
 
             onComplete: =>
 
-               TweenMax.to @$closeBtn, .3,
+               TweenLite.to @$closeBtn, .3,
                   autoAlpha: 1
                   ease: Linear.easeNone
 
@@ -150,7 +170,7 @@ class ShareModal extends View
       @trigger AppEvent.CLOSE_SHARE
 
       if @isMobile
-         TweenMax.to @$el, .6,
+         TweenLite.to @$el, .6,
             y: window.innerHeight
             autoAlpha: 0
             ease: Expo.easeInOut
@@ -160,10 +180,10 @@ class ShareModal extends View
 
       else
 
-         TweenMax.to @$closeBtn, .2,
+         TweenLite.to @$closeBtn, .2,
             autoAlpha: 0
 
-         TweenMax.to @$el, @FORM_TWEEN_TIME + .1,
+         TweenLite.to @$el, @FORM_TWEEN_TIME + .1,
             y: 2000
             autoAlpha: 0
             ease: Expo.easeIn
@@ -196,12 +216,13 @@ class ShareModal extends View
          event.preventDefault()
          document.activeElement.blur()
          @onInputBlur()
+         @onSelectYourServiceBtnClick()
 
 
 
 
    onInputBlur: (event) =>
-       TweenMax.to $('body'), 0,
+       TweenLite.to $('body'), 0,
          scrollTop: 0
          scrollLeft: 0
 
@@ -213,13 +234,10 @@ class ShareModal extends View
    onShareIdChange: (model) =>
       shareId = model.changed.shareId
 
-      if shareId is 'error'
-         return 'Error saving track'
-
       if shareId is null
          return
 
-      TweenMax.to @$preloader,   .2,
+      TweenLite.to @$preloader,   .2,
          autoAlpha: 0
          scale: 0
          ease: Back.easeIn
@@ -227,9 +245,18 @@ class ShareModal extends View
          onComplete: =>
             @$serviceBtn.removeClass 'no-transition'
             @$serviceBtn.attr 'style', ''
-            TweenMax.to @$serviceText, .2, autoAlpha: 1
 
-            @renderServiceOptions()
+            if shareId is 'error'
+               @$serviceText.text 'Error saving track.'
+
+               _.delay =>
+                  @hide()
+               , 2000
+
+            else
+               @renderServiceOptions()
+
+            TweenLite.to @$serviceText, .2, autoAlpha: 1
 
 
 
@@ -245,10 +272,10 @@ class ShareModal extends View
       @$preloader.show()
 
       @$serviceBtn.addClass 'no-transition'
-      TweenMax.to @$serviceBtn,  .2, backgroundColor: 'black'
-      TweenMax.to @$serviceText, .2, autoAlpha: 0
+      TweenLite.to @$serviceBtn,  .2, backgroundColor: 'black'
+      TweenLite.to @$serviceText, .2, autoAlpha: 0
 
-      TweenMax.to @$preloader,   .2,
+      TweenLite.to @$preloader,   .2,
          autoAlpha: 1
          scale: if @isMobile then .7 else 1
          ease: Back.easeOut
@@ -257,7 +284,7 @@ class ShareModal extends View
       @sharedTrackModel.set
          'shareName':      @$nameInput.val()
          'shareTitle':     @$titleInput.val()
-         'shareMessage':   @$messageInput.val()
+         'shareMessage':   @SHARE_MSG
 
       @trigger AppEvent.SAVE_TRACK
 
@@ -271,11 +298,21 @@ class ShareModal extends View
 
 
 
+   # Handler for close btn press.
+   # @param {MouseEvent} event
+
+   onCloseBtnPress: (event) =>
+      $(event.currentTarget).addClass 'press'
+      @hide()
+
+
+
+
    # Handler for close btn clicks.  Destroys the view
    # @param {MouseEvent} event
 
    onCloseBtnClick: (event) =>
-      #unless @isMobile
+      $(event.currentTarget).removeClass 'press'
       @hide()
 
 
@@ -294,19 +331,19 @@ class ShareModal extends View
          tweenTime = .2
          delay     = 1
 
-         TweenMax.fromTo $text, tweenTime, autoAlpha: 1,
+         TweenLite.fromTo $text, tweenTime, autoAlpha: 1,
             autoAlpha: 0
 
             onComplete: =>
 
                $text.html 'COPIED!'
 
-               TweenMax.fromTo $text, tweenTime, autoAlpha: 0,
+               TweenLite.fromTo $text, tweenTime, autoAlpha: 0,
                   autoAlpha: 1
                   delay: .1
 
                   onComplete: =>
-                     TweenMax.fromTo $text, tweenTime, autoAlpha: 1,
+                     TweenLite.fromTo $text, tweenTime, autoAlpha: 1,
                         autoAlpha: 0
                         delay: delay
 
@@ -315,14 +352,20 @@ class ShareModal extends View
                            $text.html btnHtml
                            $text.attr 'style', ''
 
-                           TweenMax.fromTo $text, tweenTime, autoAlpha: 0,
+                           TweenLite.fromTo $text, tweenTime, autoAlpha: 0,
                               autoAlpha: 1
                               delay: .1
 
 
 
 
+   onTumblrBtnClick: (event) =>
+      url = 'http://www.tumblr.com/share/link'
+      url += '?url=' + encodeURIComponent(@shareData.shareLink)
+      url += '&name=' +document.title
+      url += '&description=' +encodeURIComponent(@SHARE_MSG)
 
+      window.open(url, 'share', 'width=450,height=430')
 
 
 
@@ -359,9 +402,9 @@ class ShareModal extends View
          @$nameInput.attr 'placeholder', 'Please enter name'
          return false
 
-      if @$messageInput.val() is ''
-         @$messageInput.attr 'placeholder', 'Please enter message'
-         return false
+      # if @$messageInput.val() is ''
+      #    @$messageInput.attr 'placeholder', 'Please enter message'
+      #    return false
 
       return true
 
@@ -369,7 +412,7 @@ class ShareModal extends View
 
    showPreview: ->
 
-      TweenMax.to @$form, @FORM_TWEEN_TIME,
+      TweenLite.to @$form, @FORM_TWEEN_TIME,
          autoAlpha: 0
          x: -300
          ease: Expo.easeIn
@@ -382,13 +425,18 @@ class ShareModal extends View
             data = @sharedTrackModel.toJSON()
             data.isDesktop = ! @isMobile
 
-            # Render out the template
+            console.log data
+
+            # RENDER preview template and share then
+            # display
+
             @$preview.html previewTemplate data
+
 
             @$backBtn = @$preview.find '.btn-back'
             @$copyBtn = @$preview.find '.btn-copy-url'
 
-            TweenMax.fromTo @$preview, .4, autoAlpha: 0, x: 300,
+            TweenLite.fromTo @$preview, .4, autoAlpha: 0, x: 300,
                autoAlpha: 1
                x: 0
                ease: Expo.easeOut
@@ -409,7 +457,7 @@ class ShareModal extends View
       @$backBtn.off 'touchend', @onBackBtnClick
       @$copyBtn.off 'touchend', @onCopyBtnClick
 
-      TweenMax.to @$preview, @FORM_TWEEN_TIME,
+      TweenLite.to @$preview, @FORM_TWEEN_TIME,
          autoAlpha: 0
          x: 300
          ease: Expo.easeIn
@@ -419,7 +467,7 @@ class ShareModal extends View
 
             @$form.show()
 
-            TweenMax.fromTo @$form, .4, autoAlpha: 0, x: -300,
+            TweenLite.fromTo @$form, .4, autoAlpha: 0, x: -300,
                autoAlpha: 1
                x: 0
                ease: Expo.easeOut
@@ -433,16 +481,14 @@ class ShareModal extends View
 
    renderServiceOptions: =>
       shareLink = window.location.origin + '/#share/' + @appModel.get 'shareId'
-
-      @sharedTrackModel.set
-         'shareLink':      shareLink
-         'encodedUrl':     encodeURIComponent shareLink
-
+      @sharedTrackModel.set 'shareLink', shareLink
       @showPreview()
+      @shareData = @sharedTrackModel.toJSON()
       @appModel.set 'shareId', null
 
+      $.getScript '//platform.tumblr.com/v1/share.js'
+
       _.delay =>
-         console.log $(document).find '[data-share-facebook]'
          Share.init()
       , 500
 

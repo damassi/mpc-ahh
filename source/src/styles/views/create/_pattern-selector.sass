@@ -36,6 +36,7 @@
          @extend .button
          @extend .miso-bold
          +border-radius( $size, $size )
+
          +btn-hover-transition
 
          background: $white
@@ -55,8 +56,16 @@
             margin-right: 3px
 
          &.selected
+
             +btn-hover-transition
+
+            +respond-mobile
+               +delay(500ms)
+
 
             background: $red !important
             border: 2px solid $red
             color: white
+
+         &.press
+            border: 2px solid black
