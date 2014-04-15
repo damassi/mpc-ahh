@@ -128,12 +128,12 @@
         },
         {
           "label": "Can opening",
-          "src": "02___0021_props_can_beer_open _01.ogg",
+          "src": "can-open-3-1.ogg",
           "icon": "icon-kit-coke-can"
         },
         {
           "label": "Voice 3",
-          "src": "male_ahhh_05.ogg",
+          "src": "female_ahhh_03.ogg",
           "icon": "icon-kit-coke-voice3"
         },
         {
