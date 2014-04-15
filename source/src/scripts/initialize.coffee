@@ -113,24 +113,6 @@ $ ->
             window.location.hash = '#not-supported'
 
          device = BrowserDetect.deviceDetection()
-         # console.log device.osVersion
-
-         # # Build scroller to get rid of header and footer on 7.0 devices
-         # if device.osVersion is "7.1"
-         #    height = window.innerHeight
-         #    $body.height height * 2
-
-         #    TweenLite.to $body, .2,
-         #       scrollTop: height
-         #       onComplete: ->
-         #          console.log 'done!'
-
-
-
-      _.delay =>
-         ''
-         #console?.clear()
-      , 1500
 
 
    # Preload assets
