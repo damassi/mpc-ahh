@@ -1,8 +1,0 @@
---name       "Coke Teens | MPC Ahh"
---readme     README.md
---title      "MPC Ahh Documentation"
---private
---quiet
---extension  coffee
---output     ./doc
-./src
