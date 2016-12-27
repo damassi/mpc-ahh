@@ -10,7 +10,6 @@ Model     = require '../supers/Model.coffee'
 
 class SharedTrackModel extends Parse.Object
 
-  # Parse Class 'key' for saving data
   className: 'SharedTrack'
 
   defaults:
@@ -44,5 +43,6 @@ class SharedTrackModel extends Parse.Object
 
     # @type {String}
     visualization: null
+
 
 module.exports = SharedTrackModel

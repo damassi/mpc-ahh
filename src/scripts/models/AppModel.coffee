@@ -15,10 +15,7 @@ class AppModel extends Model
     'mute': null
     'kitModel': null
     'playing': null
-
     'pageFocus': true
-
-    # Share id returned from parse
     'shareId': null
     'sharedTrackModel': null
 
@@ -27,6 +24,7 @@ class AppModel extends Model
 
     'view': null
     'visualization': null
+
 
   export: ->
     json = @toJSON()

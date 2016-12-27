@@ -27,6 +27,7 @@ class KitCollection extends Collection
 
   kitId: 0
 
+
   # Parses the collection to assign paths to each individual sound
   # based upon configuration data
   # @param {Object} response
@@ -40,6 +41,7 @@ class KitCollection extends Collection
       return kit
 
     return kits
+
 
   # Iterates through the collection and returns a specific instrument
   # by matching associated id
@@ -58,6 +60,7 @@ class KitCollection extends Collection
 
     instrumentModel
 
+
   # Cycles the current drum kit back
   # @return {KitModel}
 
@@ -71,6 +74,7 @@ class KitCollection extends Collection
       @kitId = len - 1
 
     kitModel = @at @kitId
+
 
   # Cycles the current drum kit forward
   # @return {KitModel}

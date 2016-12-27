@@ -23,6 +23,7 @@ class PatternSquareModel extends Model
 
     @on AppEvent.CHANGE_VELOCITY, @onVelocityChange
 
+
   cycle: ->
     velocity = @get 'velocity'
 
@@ -34,11 +35,14 @@ class PatternSquareModel extends Model
 
     @set 'velocity', velocity
 
+
   enable: ->
     @set 'velocity', 1
 
+
   disable: ->
     @set 'velocity', 0
+
 
   onVelocityChange: (model) ->
     @set 'previousVelocity', model._previousAttributes.velocity
@@ -50,5 +54,6 @@ class PatternSquareModel extends Model
 
     else if velocity is 0
       @set 'active', false
+
 
 module.exports = PatternSquareModel

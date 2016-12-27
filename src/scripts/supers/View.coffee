@@ -15,6 +15,7 @@ class View extends Backbone.View
   initialize: (options) ->
     _.extend @, _.defaults( options = options || @defaults, @defaults || {} )
 
+
   # Renders the view with supplied template data, or checks if template is on
   # object body
   # @param  {Function|Model} templateData
@@ -40,8 +41,8 @@ class View extends Backbone.View
 
     @delegateEvents()
     @addEventListeners()
-
     @
+
 
   # Removes the view
   # @param {Object} options
@@ -51,6 +52,7 @@ class View extends Backbone.View
     @$el.remove()
     @undelegateEvents()
 
+
   # Shows the view
   # @param {Object} options
 
@@ -58,26 +60,29 @@ class View extends Backbone.View
     return
     TweenLite.set @$el, { autoAlpha: 1 }
 
+
   # Hides the view
   # @param {Object} options
 
   hide: (options) ->
-
     TweenLite.to @$el, 0,
       autoAlpha: 0
       onComplete: =>
         if options?.remove
           @remove()
 
+
   # Noop which is called on render
   # @param {Object} options
 
   addEventListeners: ->
+
 
   # Removes all registered listeners
   # @param {Object} options
 
   removeEventListeners: ->
     @stopListening()
+
 
 module.exports = View
