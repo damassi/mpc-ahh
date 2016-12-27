@@ -1,8 +1,4 @@
-MPC AHH Frontend Project (coke-teen-ahh-38h)
-================================================================
-
 Built on top of Backbone.js and CoffeeScript
-
 
 Technologies
 -----------
@@ -10,7 +6,6 @@ Technologies
 - Howler.js - Audio playback
 - Easel.js - Canvas visualization
 - Parse - Remote data storage / sharing
-
 
 Project Setup
 -------------
@@ -24,15 +19,12 @@ Project Setup
 - Then install Grunt task dependencies
  - `npm install`
 
-
-
 Development Tasks
 -----------------
 - For development: `grunt dev` or `npm start` then navigate to `http://localhost:3000` (or IP address).
 - For deploy: `grunt build`
 
 This concatinates and minifies all CoffeeScripts and SASS and moves the project into 'dist' for production deploy.
-
 
 Bower
 -----
@@ -43,7 +35,6 @@ Bower is used for client-side package management.  Packages installed via bower 
 - To install a package
  - `bower install {package name} --save`
  - `grunt bower`
-
 
 Unit Testing
 ------------
