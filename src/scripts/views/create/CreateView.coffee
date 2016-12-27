@@ -24,607 +24,521 @@ ShareModal              = require './components/share/ShareModal.coffee'
 BPMIndicator            = require './components/BPMIndicator.coffee'
 template                = require './templates/create-template.hbs'
 
-
 class CreateView extends View
 
+  # The class name for the class
+  # @type {String}
 
-   # The class name for the class
-   # @type {String}
+  className: 'container-create'
 
-   className: 'container-create'
+  # The template
+  # @type {Function}
 
+  template: template
 
-   # The template
-   # @type {Function}
 
-   template: template
+  events:
+    'touchend .btn-share': 'onShareBtnClick'
+    'touchend .btn-export': 'onExportBtnClick'
+    'touchstart .btn-clear': 'onClearBtnPress'
+    'touchend .btn-clear': 'onClearBtnClick'
+    'touchstart .btn-jam-live': 'onJamLiveBtnPress' # Mobile only
+    'touchend .btn-jam-live': 'onJamLiveBtnClick' # Mobile only
 
 
+  # Renders the view and all of the individual components.  Also checks
+  # for a `shareId` on the AppModel and hides elements appropriately
+  # @param {Object} options
 
-   events:
-      'touchend .btn-share':      'onShareBtnClick'
-      'touchend .btn-export':     'onExportBtnClick'
-      'touchstart .btn-clear':    'onClearBtnPress'
-      'touchend .btn-clear':      'onClearBtnClick'
-      'touchstart .btn-jam-live': 'onJamLiveBtnPress' # Mobile only
-      'touchend .btn-jam-live':   'onJamLiveBtnClick' # Mobile only
+  render: (options) ->
+    super options
 
+    @playPauseBtn = new PlayPauseBtn
+      appModel: @appModel
 
+    @toggle = new Toggle
+      appModel: @appModel
 
+    @bubblesView = new BubblesView
+      appModel: @appModel
 
-   # Renders the view and all of the individual components.  Also checks
-   # for a `shareId` on the AppModel and hides elements appropriately
-   # @param {Object} options
+    @$body = $('body')
 
-   render: (options) ->
-      super options
+    @$mainContainer = @$body.find '#container-main'
+    @$bottomContainer = @$body.find '#container-bottom'
+    @$wrapper = @$el.find '.wrapper'
+    @$kitSelectorContainer = @$el.find '.container-kit-selector'
+    @$toggleContainer = @$el.find '.container-toggle'
+    @$playPauseContainer = @$el.find '.container-play-pause'
+    @$sequencerContainer = @$el.find '.container-sequencer'
+    @$livePadContainer = @$el.find '.container-live-pad'
+    @$patternSelectorContainer = @$el.find '.column-2'
+    @$bpmContainer = @$el.find '.column-3'
 
-      @playPauseBtn = new PlayPauseBtn
-         appModel: @appModel
+    @$instrumentSelector = @$sequencerContainer.find '.instrument-selector'
+    @$sequencer = @$sequencerContainer.find '.sequencer'
+    @$livePad = @$sequencerContainer.find '.live-pad'
+    @$patternSelector = @$sequencerContainer.find '.pattern-selector'
+    @$bpm = @$sequencerContainer.find '.bpm'
+    @$shareBtn = @$sequencerContainer.find '.btn-share'
 
-      @toggle = new Toggle
-         appModel: @appModel
+    @$playPauseContainer.html @playPauseBtn.render().el
 
-      @bubblesView = new BubblesView
-         appModel: @appModel
+    # Fix viewport if on Tablet
+    TweenLite.to @$body, 0,
+      scrollTop: 0
+      scrollLeft: 0
 
-      @$body = $('body')
+    # No toggle on mobile
+    unless @isMobile
+      @$toggleContainer.html @toggle.render().el
 
-      @$mainContainer            = @$body.find '#container-main'
-      @$bottomContainer          = @$body.find '#container-bottom'
-      @$wrapper                  = @$el.find '.wrapper'
-      @$kitSelectorContainer     = @$el.find '.container-kit-selector'
-      @$toggleContainer          = @$el.find '.container-toggle'
-      @$playPauseContainer       = @$el.find '.container-play-pause'
-      @$sequencerContainer       = @$el.find '.container-sequencer'
-      @$livePadContainer         = @$el.find '.container-live-pad'
-      @$patternSelectorContainer = @$el.find '.column-2'
-      @$bpmContainer             = @$el.find '.column-3'
+    # Build out rows for new layout
+    if @isMobile
 
-      @$instrumentSelector     = @$sequencerContainer.find '.instrument-selector'
-      @$sequencer              = @$sequencerContainer.find '.sequencer'
-      @$livePad                = @$sequencerContainer.find '.live-pad'
-      @$patternSelector        = @$sequencerContainer.find '.pattern-selector'
-      @$bpm                    = @$sequencerContainer.find '.bpm'
-      @$shareBtn               = @$sequencerContainer.find '.btn-share'
+      # Pause btn, BPM, Share btn
+      @$row1 = @$el.find '.row-1'
 
-      @$playPauseContainer.html  @playPauseBtn.render().el
+      # Kit selector, pattern selector
+      @$row2 = @$el.find '.row-2'
 
-      # Fix viewport if on Tablet
-      TweenLite.to @$body, 0,
-         scrollTop:  0
-         scrollLeft: 0
+      # Instrument Selector, Livepad toggle
+      @$row3 = @$el.find '.row-3'
 
-      # No toggle on mobile
-      unless @isMobile
-         @$toggleContainer.html @toggle.render().el
+      # Sequencer
+      @$row4 = @$el.find '.row-4'
 
-      # Build out rows for new layout
-      if @isMobile
+      @renderInstrumentSelector()
 
-         # Pause btn, BPM, Share btn
-         @$row1 = @$el.find '.row-1'
+      _.defer =>
+        @appModel.set 'showSequencer', true
+        @instrumentSelector.instrumentViews[0].onClick()
 
-         # Kit selector, pattern selector
-         @$row2 = @$el.find '.row-2'
+    TweenLite.set @$bottomContainer, y: 300
 
-         # Instrument Selector, Livepad toggle
-         @$row3 = @$el.find '.row-3'
+    @renderKitSelector()
+    @renderSequencer()
+    @renderLivePad()
+    @renderPatternSelector()
+    @renderBPM()
 
-         # Sequencer
-         @$row4 = @$el.find '.row-4'
+    unless @isMobile or @isTablet or BrowserDetect.isIE()
+      @renderBubbles()
 
-         @renderInstrumentSelector()
+    @$kitSelector = @$el.find '.kit-selector'
 
-         _.defer =>
-            @appModel.set 'showSequencer', true
-            @instrumentSelector.instrumentViews[0].onClick()
+    @
 
 
-      TweenLite.set @$bottomContainer, y: 300
+  # Show the view and open the sequencer
 
-      @renderKitSelector()
-      @renderSequencer()
-      @renderLivePad()
-      @renderPatternSelector()
-      @renderBPM()
+  show: =>
+    @$mainContainer.show()
+    @showUI()
+    @appModel.set 'showSequencer', true
 
-      unless @isMobile or @isTablet or BrowserDetect.isIE()
-         @renderBubbles()
+    if @isMobile
+      TweenLite.to $('.top-bar'), .3, autoAlpha: 1
 
-      @$kitSelector = @$el.find '.kit-selector'
+      TweenLite.fromTo @$mainContainer, .4, y: 1000,
+        immediateRender: true
+        y: @returnMoveAmount()
+        ease: Expo.easeOut
+        delay: 1
 
-      @
 
+  # Hide the view and remove it from the DOM
 
+  hide: (options) =>
+    TweenLite.fromTo @$el, .3, autoAlpha: 1,
+      autoAlpha: 0
 
+    @kitSelector.hide()
+    @hideUI()
 
-   # Show the view and open the sequencer
+    if @isMobile
+      TweenLite.to $('.top-bar'), .3, autoAlpha: 0
 
-   show: =>
-      @$mainContainer.show()
-      @showUI()
-      @appModel.set 'showSequencer', true
-
-      if @isMobile
-         TweenLite.to $('.top-bar'), .3, autoAlpha: 1
-
-         TweenLite.fromTo @$mainContainer, .4, y: 1000,
-            immediateRender: true
-            y: @returnMoveAmount()
-            ease: Expo.easeOut
-            delay: 1
-
-
-
-
-   # Hide the view and remove it from the DOM
-
-   hide: (options) =>
-      TweenLite.fromTo @$el, .3, autoAlpha: 1,
-         autoAlpha: 0
-
-      @kitSelector.hide()
-      @hideUI()
-
-      if @isMobile
-         TweenLite.to $('.top-bar'), .3, autoAlpha: 0
-
-      if @$bottomContainer.length
-
-         TweenLite.fromTo @$bottomContainer, .4, y: 0,
-            y: 300
-            ease: Expo.easeOut
-            onComplete: =>
-
-               @appModel.set
-                  'showSequencer': null
-                  'showPad': null
-
-               if options?.remove
-                  @remove()
-
-
-
-
-   # Desktop only.  Triggered when showing / hiding view or expanding
-   # visualization on share
-
-   showUI: ->
-      @kitSelector.show()
-
-      TweenLite.fromTo @$el, .3, autoAlpha: 0,
-         autoAlpha: 1
-         delay: .3
-
-      TweenLite.fromTo @$bottomContainer, .4, y: 300,
-         autoAlpha: 1
-         y: @returnMoveAmount()
-         ease: Expo.easeOut
-         delay: .3
-
-
-
-
-   # Desktop only.  Triggered when showing / hiding view or expanding
-   # visualization on share
-
-   hideUI: ->
-      @kitSelector.hide()
-
-      TweenLite.fromTo @$el, .3, autoAlpha: 1,
-         autoAlpha: 0
-
+    if @$bottomContainer.length
       TweenLite.fromTo @$bottomContainer, .4, y: 0,
-         y: 300
-         ease: Expo.easeOut
+        y: 300
+        ease: Expo.easeOut
+        onComplete: =>
 
+          @appModel.set
+            'showSequencer': null
+            'showPad': null
 
+          if options?.remove
+            @remove()
 
 
-   # Removes the view
+  # Desktop only.  Triggered when showing / hiding view or expanding
+  # visualization on share
 
-   remove: ->
-      @playPauseBtn.remove()
-      @playPauseBtn = null
+  showUI: ->
+    @kitSelector.show()
 
-      @toggle.remove()
-      @toggle = null
+    TweenLite.fromTo @$el, .3, autoAlpha: 0,
+      autoAlpha: 1
+      delay: .3
 
-      @kitSelector.remove()
-      @kitSelector = null
+    TweenLite.fromTo @$bottomContainer, .4, y: 300,
+      autoAlpha: 1
+      y: @returnMoveAmount()
+      ease: Expo.easeOut
+      delay: .3
 
-      @sequencer.remove()
-      @sequencer = null
 
-      @livePad.remove()
-      @livePad = null
+  # Desktop only.  Triggered when showing / hiding view or expanding
+  # visualization on share
 
-      @patternSelector.remove()
-      @patternSelector = null
+  hideUI: ->
+    @kitSelector.hide()
 
-      @bpm.remove()
-      @bpm = null
+    TweenLite.fromTo @$el, .3, autoAlpha: 1,
+      autoAlpha: 0
 
-      @instrumentSelector?.remove()
-      @instrumentSelector = null
+    TweenLite.fromTo @$bottomContainer, .4, y: 0,
+      y: 300
+      ease: Expo.easeOut
 
-      @shareModal?.remove()
-      @shareModal = null
 
-      @appModel.set 'playing', false
+  # Removes the view
 
-      $('.container-kit-selector').remove()
+  remove: ->
+    @playPauseBtn.remove()
+    @playPauseBtn = null
 
-      super()
+    @toggle.remove()
+    @toggle = null
 
+    @kitSelector.remove()
+    @kitSelector = null
 
+    @sequencer.remove()
+    @sequencer = null
 
-   # Adds listeners related to exporting the track pattern
+    @livePad.remove()
+    @livePad = null
 
-   addEventListeners: ->
-      @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
+    @patternSelector.remove()
+    @patternSelector = null
 
+    @bpm.remove()
+    @bpm = null
 
+    @instrumentSelector?.remove()
+    @instrumentSelector = null
 
+    @shareModal?.remove()
+    @shareModal = null
 
-   # Removes listeners
+    @appModel.set 'playing', false
 
-   removeEventListeners: ->
-      super()
+    $('.container-kit-selector').remove()
+    super()
 
 
+  # Adds listeners related to exporting the track pattern
 
+  addEventListeners: ->
+    @listenTo @appModel, AppEvent.CHANGE_SHOW_SEQUENCER, @onShowSequencerChange
 
-   # Renders the kit selector carousel
 
-   renderKitSelector: ->
-      @kitSelector = new KitSelector
-         appModel: @appModel
-         kitCollection: @kitCollection
+  # Removes listeners
 
-      html = @kitSelector.render().el
+  removeEventListeners: ->
+    super()
 
-      if @isMobile
-         @$row2.append html
-      else
-         @$mainContainer.prepend html
 
+  # Renders the kit selector carousel
 
+  renderKitSelector: ->
+    @kitSelector = new KitSelector
+      appModel: @appModel
+      kitCollection: @kitCollection
 
+    html = @kitSelector.render().el
 
-   # Renders the instrument selector which, on desktop, does nothing, but on
-   # mobile focuses the track within the view
+    if @isMobile
+      @$row2.append html
+    else
+      @$mainContainer.prepend html
 
-   renderInstrumentSelector: ->
-      @instrumentSelector = new InstrumentSelectorPanel
-         appModel: @appModel
-         kitCollection: @kitCollection
 
-      @$row3.prepend @instrumentSelector.render().el
+  # Renders the instrument selector which, on desktop, does nothing, but on
+  # mobile focuses the track within the view
 
+  renderInstrumentSelector: ->
+    @instrumentSelector = new InstrumentSelectorPanel
+      appModel: @appModel
+      kitCollection: @kitCollection
 
+    @$row3.prepend @instrumentSelector.render().el
 
 
-   # Renders out the pattern square sequencer
+  # Renders out the pattern square sequencer
 
-   renderSequencer: ->
-      @sequencer = new Sequencer
-         appModel: @appModel
-         kitCollection: @kitCollection
-         collection: @kitCollection.at(0).get('instruments')
+  renderSequencer: ->
+    @sequencer = new Sequencer
+      appModel: @appModel
+      kitCollection: @kitCollection
+      collection: @kitCollection.at(0).get('instruments')
 
-      html = @sequencer.render().el
+    html = @sequencer.render().el
 
-      if @isMobile
-         @$row4.html html
-      else
-         @$sequencer.prepend html
+    if @isMobile
+      @$row4.html html
+    else
+      @$sequencer.prepend html
 
-      @listenTo @sequencer, PubEvent.BEAT, @onBeat
+    @listenTo @sequencer, PubEvent.BEAT, @onBeat
 
 
+  # Renders out the live pad player
 
+  renderLivePad: ->
+    @livePad = new LivePad
+      appModel: @appModel
+      kitCollection: @kitCollection
 
-   # Renders out the live pad player
+    html = @livePad.render().el
 
-   renderLivePad: ->
-      @livePad = new LivePad
-         appModel: @appModel
-         kitCollection: @kitCollection
+    if @isMobile
+      @$livePadContainer.html html
+    else
+      @$livePad.html html
 
-      html = @livePad.render().el
+    @listenTo @livePad, PubEvent.BEAT, @onBeat
 
-      if @isMobile
-         @$livePadContainer.html html
-      else
-         @$livePad.html html
 
+  # Render the pre-populated pattern selector
 
-      @listenTo @livePad, PubEvent.BEAT, @onBeat
+  renderPatternSelector: ->
+    @patternSelector = new PatternSelector
+      appModel: @appModel
+      sequencer: @sequencer
 
+    html = @patternSelector.render().el
 
+    if @isMobile
+      @$row2.append html
+    else
+      @$patternSelector.html html
 
 
-   # Render the pre-populated pattern selector
+  # Renders out the BPM interface for controlling tempo
 
-   renderPatternSelector: ->
-      @patternSelector = new PatternSelector
-         appModel: @appModel
-         sequencer: @sequencer
+  renderBPM: ->
+    @bpm = new BPMIndicator
+      appModel: @appModel
 
-      html = @patternSelector.render().el
+    html = @bpm.render().el
 
-      if @isMobile
-         @$row2.append html
-      else
-         @$patternSelector.html html
+    if @isMobile
+      @$row1.append html
+    else
+      @$bpm.html html
 
 
+  renderBubbles: ->
+    @$mainContainer.prepend Bubbles.initialize()
 
 
-   # Renders out the BPM interface for controlling tempo
+  # Renders out the share modal which then posts to Parse
 
-   renderBPM: ->
-      @bpm = new BPMIndicator
-         appModel: @appModel
+  renderShareModal: ->
+    @shareModal = new ShareModal
+      appModel: @appModel
+      sharedTrackModel: @sharedTrackModel
 
-      html = @bpm.render().el
+    if @isMobile
+      @$mainContainer.append @shareModal.render().el
 
-      if @isMobile
-         @$row1.append html
-      else
-         @$bpm.html html
+      # Slide main container up and then open share
+      TweenLite.to @$sequencerContainer, .6,
+        y: -window.innerHeight
+        ease: Expo.easeInOut
 
+    else
+      @$body.prepend @shareModal.render().el
 
+    @shareModal.show()
 
-   renderBubbles: ->
-      @$mainContainer.prepend Bubbles.initialize()
+    @listenTo @shareModal, AppEvent.SAVE_TRACK, @onSaveTrack
+    @listenTo @shareModal, AppEvent.CLOSE_SHARE, @onCloseShare
 
 
+  # Event handlers
+  # --------------
 
+  # Handler for beats which are piped down from PatternSquare to VisualizationView
+  # @param {Object} params Which consist of PatternSquareModel for handling velocity, etc
 
-   # Renders out the share modal which then posts to Parse
+  onBeat: (params) =>
+    @trigger PubEvent.BEAT, params
 
-   renderShareModal: ->
-      @shareModal = new ShareModal
-         appModel: @appModel
-         sharedTrackModel: @sharedTrackModel
+    unless @isMobile
+      Bubbles.beat()
 
-      if @isMobile
-         @$mainContainer.append @shareModal.render().el
 
-         # Slide main container up and then open share
-         TweenLite.to @$sequencerContainer, .6,
-            y: -window.innerHeight
-            ease: Expo.easeInOut
+  # Handler for saving, sharing and posting a track
 
-      else
-         @$body.prepend @shareModal.render().el
+  onSaveTrack: =>
+    @trigger AppEvent.SAVE_TRACK, sharedTrackModel: @sharedTrackModel
 
-      @shareModal.show()
 
-      @listenTo @shareModal, AppEvent.SAVE_TRACK,  @onSaveTrack
-      @listenTo @shareModal, AppEvent.CLOSE_SHARE, @onCloseShare
+  # Handler for share button clicks.  Creates the modal and prompts the user
+  # to enter info related to their creation
+  # @param {MouseEvent} event
 
+  onShareBtnClick: (event) =>
+    @trigger AppEvent.OPEN_SHARE
+    @renderShareModal()
 
 
+  # Handler for press-states on mobile
+  # @param {Event} event
 
-
-
-
-   # --------------------------------------------------------------------------------
-   # EVENT HANDLERS
-   # --------------------------------------------------------------------------------
-
-
-
-   # Handler for beats which are piped down from PatternSquare to VisualizationView
-   # @param {Object} params Which consist of PatternSquareModel for handling velocity, etc
-
-   onBeat: (params) =>
-      @trigger PubEvent.BEAT, params
-
-      unless @isMobile
-         Bubbles.beat()
-
-
-
-
-
-   # Handler for saving, sharing and posting a track
-
-   onSaveTrack: =>
-      @trigger AppEvent.SAVE_TRACK, sharedTrackModel: @sharedTrackModel
-
-
-
-
-   # Handler for share button clicks.  Creates the modal and prompts the user
-   # to enter info related to their creation
-   # @param {MouseEvent} event
-
-   onShareBtnClick: (event) =>
-      @trigger AppEvent.OPEN_SHARE
-      @renderShareModal()
-
-
-
-
-   # Handler for press-states on mobile
-   # @param {Event} event
-
-   onClearBtnPress: (event) ->
-      if @isMobile
-         $(event.currentTarget).addClass 'press'
-
-
-
-
-   # Handler for resetting the pattern track to default, blank state
-   # @param {MouseEvent|TouchEvent} event
-
-   onClearBtnClick: (event) =>
-
-      if @isMobile
-         $(event.currentTarget).removeClass 'press'
-
-      # When user is in Sequencer mode
-      if @appModel.get 'showSequencer'
-
-         @appModel.set 'sharedTrackModel', null
-
-         # Remove preset if currently selected
-         @patternSelector.$el.find('.selected').removeClass 'selected'
-         @sequencer.renderTracks()
-
-      # Fired when the user in the LivePad model
-      else
-         @livePad.clearLivePad()
-
-
-
-
-
-   # Handler for close btn event on the share modal, as dispatched from the ShareModal
-   # @param {MouseEvent} event
-
-   onCloseShare: (event) =>
-      @trigger AppEvent.CLOSE_SHARE
-      @stopListening @shareModal
-
-      if @isMobile
-         TweenLite.to @$sequencerContainer, .6,
-            y: 0
-            ease: Expo.easeInOut
-
-
-
-
-   # Handler for showing sequencer / pad.  If seq is false, then pad is shown
-   # @param {AppModel} model
-
-   onShowSequencerChange: (model) =>
-
-      # Slide the sequencer in
-      if model.changed.showSequencer
-         if @prevVolume then createjs.Sound.setVolume @prevVolume
-
-         @showSequencer()
-
-
-      # Slide the live pad in
-      else
-
-         # Ensure that volume is always up for the LivePad
-         @prevVolume = createjs.Sound.getVolume()
-         createjs.Sound.setVolume 1
-
-         @showLivePad()
-
-
-
-
-   # MOBILE ONLY.  Handler for showing the live pad from mobile view
-   # @param {TouchEvent} event
-
-   onJamLiveBtnPress: (event) =>
+  onClearBtnPress: (event) ->
+    if @isMobile
       $(event.currentTarget).addClass 'press'
 
 
+  # Handler for resetting the pattern track to default, blank state
+  # @param {MouseEvent|TouchEvent} event
 
-
-   # MOBILE ONLY.  Handler for showing the live pad from mobile view
-   # @param {TouchEvent} event
-
-   onJamLiveBtnClick: (event) =>
+  onClearBtnClick: (event) =>
+    if @isMobile
       $(event.currentTarget).removeClass 'press'
-      @appModel.set 'showSequencer', false
+
+    # When user is in Sequencer mode
+    if @appModel.get 'showSequencer'
+      @appModel.set 'sharedTrackModel', null
+
+      # Remove preset if currently selected
+      @patternSelector.$el.find('.selected').removeClass 'selected'
+      @sequencer.renderTracks()
+
+    # Fired when the user in the LivePad model
+    else
+      @livePad.clearLivePad()
+
+
+  # Handler for close btn event on the share modal, as dispatched from the ShareModal
+  # @param {MouseEvent} event
+
+  onCloseShare: (event) =>
+    @trigger AppEvent.CLOSE_SHARE
+    @stopListening @shareModal
+
+    if @isMobile
+      TweenLite.to @$sequencerContainer, .6,
+        y: 0
+        ease: Expo.easeInOut
+
+
+  # Handler for showing sequencer / pad.  If seq is false, then pad is shown
+  # @param {AppModel} model
+
+  onShowSequencerChange: (model) =>
+
+    # Slide the sequencer in
+    if model.changed.showSequencer
+      if @prevVolume then createjs.Sound.setVolume @prevVolume
+
+      @showSequencer()
+
+    # Slide the live pad in
+    else
+
+      # Ensure that volume is always up for the LivePad
+      @prevVolume = createjs.Sound.getVolume()
+      createjs.Sound.setVolume 1
+
+      @showLivePad()
+
+
+  # MOBILE ONLY.  Handler for showing the live pad from mobile view
+  # @param {TouchEvent} event
+
+  onJamLiveBtnPress: (event) =>
+    $(event.currentTarget).addClass 'press'
+
+
+  # MOBILE ONLY.  Handler for showing the live pad from mobile view
+  # @param {TouchEvent} event
+
+  onJamLiveBtnClick: (event) =>
+    $(event.currentTarget).removeClass 'press'
+    @appModel.set 'showSequencer', false
 
 
 
+  # Private
+  # -------
+
+  # Check against Coke nav playlist items
+
+  returnMoveAmount: ->
+    moveAmount = if $('.plitem').length > 0 then -30 else 0
 
 
-   # --------------------------------------------------------------------------------
-   # PRIVATE METHODS
-   # --------------------------------------------------------------------------------
+  # Swaps the live pad out with the sequencer
+
+  showSequencer: ->
+    tweenTime = .6
+
+    if @isMobile
+      TweenLite.to @$sequencerContainer, tweenTime,
+        x: 0
+        autoAlpha: 1
+        ease: Expo.easeInOut
+
+      TweenLite.to @$livePadContainer, tweenTime,
+        x: window.innerWidth
+        autoAlpha: 0
+        ease: Expo.easeInOut
+
+    else
+      TweenLite.to @$sequencer, tweenTime,
+        autoAlpha: 1
+        x: 0
+        ease: Expo.easeInOut
+
+      TweenLite.to @$livePad, tweenTime,
+        autoAlpha: 0
+        x: 2000
+        ease: Expo.easeInOut
 
 
-   # Check against Coke nav playlist items
+  # Swaps the sequencer area out with the live pad
 
-   returnMoveAmount: ->
-      moveAmount = if $('.plitem').length > 0 then -30 else 0
+  showLivePad: ->
+    tweenTime = .6
 
+    if @isMobile
+      TweenLite.to @$sequencerContainer, tweenTime,
+        autoAlpha: 0
+        x: -window.innerWidth
+        ease: Expo.easeInOut
 
+      TweenLite.fromTo @$livePadContainer, tweenTime, x: window.innerWidth,
+        autoAlpha: 1
+        x: 0
+        ease: Expo.easeInOut
 
+    else
+      TweenLite.to @$sequencer, tweenTime,
+        autoAlpha: 0
+        x: -2000
+        ease: Expo.easeInOut
 
-
-   # Swaps the live pad out with the sequencer
-
-   showSequencer: ->
-
-      tweenTime = .6
-
-      if @isMobile
-
-         TweenLite.to @$sequencerContainer, tweenTime,
-            x: 0
-            autoAlpha: 1
-            ease: Expo.easeInOut
-
-         TweenLite.to @$livePadContainer, tweenTime,
-            x: window.innerWidth
-            autoAlpha: 0
-            ease: Expo.easeInOut
-
-
-      else
-
-         TweenLite.to @$sequencer, tweenTime,
-            autoAlpha: 1
-            x: 0
-            ease: Expo.easeInOut
-
-         TweenLite.to @$livePad, tweenTime,
-            autoAlpha: 0
-            x: 2000
-            ease: Expo.easeInOut
-
-
-
-   # Swaps the sequencer area out with the live pad
-
-   showLivePad: ->
-
-      tweenTime = .6
-
-      if @isMobile
-
-         TweenLite.to @$sequencerContainer, tweenTime,
-            autoAlpha: 0
-            x: -window.innerWidth
-            ease: Expo.easeInOut
-
-         TweenLite.fromTo @$livePadContainer, tweenTime, x: window.innerWidth,
-            autoAlpha: 1
-            x: 0
-            ease: Expo.easeInOut
-
-      else
-
-         TweenLite.to @$sequencer, tweenTime,
-            autoAlpha: 0
-            x: -2000
-            ease: Expo.easeInOut
-
-
-         TweenLite.to @$livePad, tweenTime,
-            autoAlpha: 1
-            x: 0
-            ease: Expo.easeInOut
-
-
-
+      TweenLite.to @$livePad, tweenTime,
+        autoAlpha: 1
+        x: 0
+        ease: Expo.easeInOut
 
 
 module.exports = CreateView

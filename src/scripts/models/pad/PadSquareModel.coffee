@@ -7,24 +7,18 @@
 
 Model = require '../../supers/Model.coffee'
 
-
 class PadSquareModel extends Model
 
+  defaults:
+    'dragging': false
+    'keycode': null
+    'trigger': false
 
-   defaults:
-      'dragging':  false
-      'keycode':   null
-      'trigger':   false
+    # @type {InstrumentModel}
+    'currentInstrument': null
 
-      # @type {InstrumentModel}
-      'currentInstrument':  null
-
-
-   initialize: (options) ->
-      super options
-
-      @set 'id', _.uniqueId 'pad-square-'
-
-
+  initialize: (options) ->
+    super options
+    @set 'id', _.uniqueId 'pad-square-'
 
 module.exports = PadSquareModel

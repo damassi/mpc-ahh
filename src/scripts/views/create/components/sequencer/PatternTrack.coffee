@@ -13,189 +13,150 @@ PatternSquare           = require './PatternSquare.coffee'
 View                    = require '../../../../supers/View.coffee'
 template                = require './templates/pattern-track-template.hbs'
 
-
 class PatternTrack extends View
 
+  # The name of the class
+  # @type {String}
 
-   # The name of the class
-   # @type {String}
+  className: 'pattern-track'
 
-   className: 'pattern-track'
+  # The type of tag
+  # @type {String}
 
+  tagName: 'tr'
 
-   # The type of tag
-   # @type {String}
+  # The template
+  # @type {Function}
 
-   tagName: 'tr'
+  template: template
 
+  # A collection of individual view squares
+  # @type {Array}
 
-   # The template
-   # @type {Function}
+  patternSquareViews: null
 
-   template: template
+  # @type {PatternSquareCollection}
+  collection: null
 
+  # @type {InstrumentModel}
+  model: null
 
-   # A collection of individual view squares
-   # @type {Array}
+  events:
+    'touchend .instrument': 'onInstrumentBtnClick'
+    'touchend .btn-mute': 'onMuteBtnClick'
 
-   patternSquareViews: null
 
+  # Renders the view and renders out individual pattern squares
+  # @param {Object} options
 
+  render: (options) ->
+    super options
 
-   # @type {PatternSquareCollection}
-   collection: null
+    @$instrument = @$el.find '.instrument'
+    @$mute = @$el.find '.btn-mute'
 
+    @$mute.hide()
+    @renderPatternSquares()
+    @
 
 
-   # @type {InstrumentModel}
-   model: null
+  remove: ->
+    _.each @patternSquareViews, (square) =>
+      square.remove()
 
+    super()
 
 
-   events:
-      'touchend .instrument':   'onInstrumentBtnClick'
-      'touchend .btn-mute':     'onMuteBtnClick'
+  # Add listeners to the view which listen for view changes
+  # as well as changes to the collection, which should update
+  # pattern squares without re-rendering the views
 
+  addEventListeners: =>
+    @kitModel = @appModel.get('kitModel')
 
+    @listenTo @model, AppEvent.CHANGE_FOCUS, @onFocusChange
+    @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
 
-   # Renders the view and renders out individual pattern squares
-   # @param {Object} options
+  # Render out the pattern squares and push them into an array
+  # for further iteration
 
-   render: (options) ->
-      super options
+  renderPatternSquares: ->
+    @patternSquareViews = []
 
-      @$instrument = @$el.find '.instrument'
-      @$mute       = @$el.find '.btn-mute'
+    @collection = new PatternSquareCollection
 
-      @$mute.hide()
-      @renderPatternSquares()
+    _(8).times =>
+      @collection.add new PatternSquareModel { instrument: @model }
 
-      @
+    @collection.each (model) =>
 
+      model.set 'orderIndex', @orderIndex
 
+      patternSquare = new PatternSquare
+        patternSquareModel: model
 
-   remove: ->
-      _.each @patternSquareViews, (square) =>
-         square.remove()
+      @$instrument.text model.get 'label'
+      @$el.append patternSquare.render().el
+      @patternSquareViews.push patternSquare
 
-      super()
+      @listenTo patternSquare, PubEvent.BEAT, @onBeat
 
+    # Set the squares on the Instrument model to track against state
+    @model.set 'patternSquares', @collection
 
 
+  select: ->
+    @$el.addClass 'selected'
 
-   # Add listeners to the view which listen for view changes
-   # as well as changes to the collection, which should update
-   # pattern squares without re-rendering the views
 
-   addEventListeners: =>
-      @kitModel = @appModel.get('kitModel')
+  deselect: ->
+    if @$el.hasClass 'selected'
+      @$el.removeClass 'selected'
 
-      @listenTo @model,    AppEvent.CHANGE_FOCUS,      @onFocusChange
-      @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
+  # Event handlers
+  # --------------
 
+  onBeat: (params) =>
+    @trigger PubEvent.BEAT, params
 
 
-   # Render out the pattern squares and push them into an array
-   # for further iteration
+  # Handler for changes to the currently selected instrument
+  # @param {InstrumentModel} instrumentModel
 
-   renderPatternSquares: ->
-      @patternSquareViews = []
+  onInstrumentChange: (instrumentModel) =>
+    instrument = instrumentModel.changed.currentInstrument
 
-      @collection = new PatternSquareCollection
+    if instrument.cid is @model.cid
+      @select()
 
-      _(8).times =>
-         @collection.add new PatternSquareModel { instrument: @model }
+    else @deselect()
 
-      @collection.each (model) =>
 
-         model.set 'orderIndex', @orderIndex
+  # Handler for mute button clicks
+  # @param {InstrumentModel} model
 
-         patternSquare = new PatternSquare
-            patternSquareModel: model
+  onInstrumentBtnClick: (event) =>
 
-         @$instrument.text model.get 'label'
-         @$el.append patternSquare.render().el
-         @patternSquareViews.push patternSquare
+    # Off state > Focus
+    if @model.get('mute') is false and @model.get('focus') is false
 
-         @listenTo patternSquare, PubEvent.BEAT, @onBeat
+      return @model.set
+        'mute': true
 
-      # Set the squares on the Instrument model to track against state
-      @model.set 'patternSquares', @collection
 
+    # Focus state > Mute
+    if @model.get('mute')
+      return @model.set
+        'mute': false
 
 
+  # Handler for mute button clicks
+  # @param {InstrumentModel} model
 
-
-   select: ->
-      @$el.addClass 'selected'
-
-
-
-
-
-   deselect: ->
-      if @$el.hasClass 'selected'
-         @$el.removeClass 'selected'
-
-
-
-
-
-   # EVENT HANDLERS
-   # --------------------------------------------------------------------------------
-
-
-
-   onBeat: (params) =>
-      @trigger PubEvent.BEAT, params
-
-
-
-   # Handler for changes to the currently selected instrument
-   # @param {InstrumentModel} instrumentModel
-
-   onInstrumentChange: (instrumentModel) =>
-      instrument = instrumentModel.changed.currentInstrument
-
-      if instrument.cid is @model.cid
-         @select()
-
-      else @deselect()
-
-
-
-
-   # Handler for mute button clicks
-   # @param {InstrumentModel} model
-
-   onInstrumentBtnClick: (event) =>
-
-      # Off state > Focus
-      if @model.get('mute') is false and @model.get('focus') is false
-
-         return @model.set
-            'mute':  true
-
-
-      # Focus state > Mute
-      if @model.get('mute')
-
-         return @model.set
-            'mute':  false
-
-
-
-
-   # Handler for mute button clicks
-   # @param {InstrumentModel} model
-
-   onMuteBtnClick: (event) =>
-      @model.set 'mute', ! @model.get('mute')
-
-
-
+  onMuteBtnClick: (event) =>
+    @model.set 'mute', ! @model.get('mute')
 
 
 module.exports = PatternTrack

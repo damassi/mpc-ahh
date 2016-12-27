@@ -8,42 +8,32 @@
 Model                = require '../../supers/Model.coffee'
 InstrumentCollection = require '../sequencer/InstrumentCollection.coffee'
 
-
 class KitModel extends Model
 
+  defaults:
+    'label': null
+    'path': null
+    'folder': null
 
-   defaults:
-      'label':    null
-      'path':     null
-      'folder':   null
+    # @type {InstrumentCollection}
+    'instruments': null
 
-      # @type {InstrumentCollection}
-      'instruments':   null
-
-      # @type {InstrumentModel}
-      'currentInstrument': null
-
+    # @type {InstrumentModel}
+    'currentInstrument': null
 
 
-   # Format the response so that instruments gets processed
-   # by backbone via the InstrumentCollection.  Additionally,
-   # pass in the path so that absolute URL's can be used
-   # to reference sound data
-   # @param {Object} response
+  # Format the response so that instruments gets processed
+  # by backbone via the InstrumentCollection.  Additionally,
+  # pass in the path so that absolute URL's can be used
+  # to reference sound data
+  # @param {Object} response
 
-   parse: (response) ->
-      #console.log response.instruments.length
-      _.each response.instruments, (instrument, index) ->
+  parse: (response) ->
+    _.each response.instruments, (instrument, index) ->
+      instrument.id = _.uniqueId 'instrument-'
+      instrument.src = response.path + '/' + instrument.src
 
-         instrument.id = _.uniqueId 'instrument-'
-         instrument.src = response.path + '/' + instrument.src
-         #createjs.Sound.registerSound instrument.src, instrument.src
-
-      response.instruments = new InstrumentCollection response.instruments
-
-      response
-
-
-
+    response.instruments = new InstrumentCollection response.instruments
+    response
 
 module.exports = KitModel

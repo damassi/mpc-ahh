@@ -1,78 +1,150 @@
 {
   "config": {
-    "assetPath": "http://38h-test.s3-website-us-east-1.amazonaws.com/assets/audio"
+    "assetPath": "/assets/audio"
   },
 
   "kits": [
     {
-      "label": "Jazz",
-      "folder": "jazz",
+      "label": "Hip-hop",
+      "folder": "hip-hop",
       "instruments": [
         {
-          "label": "FX",
-          "src": "FX_1.mp3",
-          "icon": "icon-fx"
+          "label": "Kick Drum 1",
+          "src": "01___Kick_hard.ogg",
+          "icon": "icon-kit-hiphop-kick1"
+        },
+        {
+          "label": "Kick Drum 2",
+          "src": "02___HipHopKit_KickHard.ogg",
+          "icon": "icon-kit-hiphop-kick2"
         },
         {
           "label": "Closed HiHat",
-          "src": "HAT_1.mp3",
-          "icon": "icon-hihat-closed"
-        },
-        {
-          "label": "Kick Drum",
-          "src": "KIK_1.mp3",
-          "icon": "icon-kickdrum"
+          "src": "04___HipHopKit_Hi_HatClosedHard.ogg",
+          "icon": "icon-kit-hiphop-hihat-closed"
         },
         {
           "label": "Open HiHat",
-          "src": "OP_HAT_7.mp3",
-          "icon": "icon-hihat-open"
-        },
-        {
-          "label": "Ride",
-          "src": "RIDE_CYM.mp3",
-          "icon": "icon-ride"
+          "src": "03___HipHopKit_Hi_HatOpenHard.ogg",
+          "icon": "icon-kit-hiphop-hihat-open"
         },
         {
           "label": "Snare",
-          "src": "SN_1.mp3",
-          "icon": "icon-snare"
+          "src": "05___Snare1_hard.ogg",
+          "icon": "icon-kit-hiphop-snare"
+        },
+        {
+          "label": "Voice",
+          "src": "06___male_ahhh_01.ogg",
+          "icon": "icon-kit-hiphop-voice"
         }
       ]
     },
     {
-      "label": "Hip Hop",
-      "folder": "hip-hop",
+      "label": "Dance",
+      "folder": "dance",
       "instruments": [
         {
-          "label": "Closed HiHat",
-          "src": "HAT_2.mp3",
-          "icon": "icon-hihat-closed"
+          "label": "Kick Drum 2",
+          "src": "01___kick_soft_03_n.ogg",
+          "icon": "icon-kit-dance-kick2"
         },
         {
-          "label": "Kick Drum",
-          "src": "KIK_2.mp3",
-          "icon": "icon-kickdrum"
-        },
-        {
-          "label": "Open HiHat",
-          "src": "OP_HAT_2.mp3",
-          "icon": "icon-hihat-open"
+          "label": "Kick Drum 1",
+          "src": "02___snare_fx_06_n.ogg",
+          "icon": "icon-kit-dance-kick"
         },
         {
           "label": "Ride",
-          "src": "RIDE_CYM.mp3",
-          "icon": "icon-ride"
+          "src": "03___cymbal_splash_02_n.ogg",
+          "icon": "icon-kit-dance-ride"
         },
         {
           "label": "Snare",
-          "src": "SN_2.mp3",
-          "icon": "icon-snare"
+          "src": "04___snare_hard_04_n.ogg",
+          "icon": "icon-kit-dance-tap"
         },
         {
-          "label": "Tamborine",
-          "src": "TAMB.mp3",
-          "icon": "icon-tamborine"
+          "label": "Clap",
+          "src": "05___hand_clap.ogg",
+          "icon": "icon-kit-dance-clap"
+        },
+        {
+          "label": "Voice",
+          "src": "06___female_ahhh_01.ogg",
+          "icon": "icon-kit-coke-voice2"
+        }
+      ]
+    },
+    {
+      "label": "Rock",
+      "folder": "rock",
+      "instruments": [
+        {
+          "label": "Kick Drum 1",
+          "src": "01___BB_Kick_Hard.ogg",
+          "icon": "icon-kit-rock-kick"
+        },
+        {
+          "label": "Tom",
+          "src": "03___BB_Tom_Lo_Hard.ogg",
+          "icon": "icon-kit-rock-tom"
+        },
+        {
+          "label": "Snare",
+          "src": "02___BB_Snare_Hard.ogg",
+          "icon": "icon-kit-rock-snare"
+        },
+        {
+          "label": "Open HiHat",
+          "src": "04___h_closed_big_01_n.ogg",
+          "icon": "icon-kit-rock-hihat"
+        },
+        {
+          "label": "Ride",
+          "src": "05___cymbal_ride_01_n.ogg",
+          "icon": "icon-kit-rock-ride"
+        },
+        {
+          "label": "Voice",
+          "src": "06___coke_cowbell.ogg",
+          "icon": "icon-kit-coke-bottle"
+        }
+      ]
+    },
+    {
+      "label": "COKE",
+      "folder": "coke",
+      "instruments": [
+        {
+          "label": "Cowbell",
+          "src": "03___coke_cowbell.ogg",
+          "icon": "icon-kit-coke-bottle"
+        },
+        {
+          "label": "Twist",
+          "src": "006144285-bottle-beer-open-01.ogg",
+          "icon": "icon-kit-coke-twist"
+        },
+        {
+          "label": "Can opening",
+          "src": "can-open-3-1.ogg",
+          "icon": "icon-kit-coke-can"
+        },
+        {
+          "label": "Voice 3",
+          "src": "female_ahhh_03.ogg",
+          "icon": "icon-kit-coke-voice3"
+        },
+        {
+          "label": "Voice 2",
+          "src": "04___male_ahhh_01.ogg",
+          "icon": "icon-kit-coke-voice2"
+        },
+        {
+          "label": "Voice 1",
+          "src": "05___female_ahhh_01.ogg",
+          "icon": "icon-kit-coke-voice1"
         }
       ]
     }

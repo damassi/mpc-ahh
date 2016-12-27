@@ -5,7 +5,6 @@
 
 var Touch = {
 
-
   /**
    * Delegate touch events to mouse if not on a touch device
    */

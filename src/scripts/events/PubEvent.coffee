@@ -5,16 +5,12 @@
  * @date   3.18.14
 ###
 
-
 PubSub =
 
-   ROUTE:            'onRouteChange'
-
-   BEAT:             'onBeat'
-
-   IMPORT_TRACK:     'onImportTrack'
-   EXPORT_TRACK:     'onExportTrack'
-   SAVE_TRACK:       'onSaveTrack'
-
+  BEAT         : 'onBeat'
+  EXPORT_TRACK : 'onExportTrack'
+  IMPORT_TRACK : 'onImportTrack'
+  ROUTE        : 'onRouteChange'
+  SAVE_TRACK   : 'onSaveTrack'
 
 module.exports = PubSub

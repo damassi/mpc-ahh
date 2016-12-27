@@ -5,31 +5,22 @@
   @date   3.17.14
 ###
 
-PubSub             = require '../../utils/PubSub'
-AppEvent           = require '../../events/AppEvent.coffee'
 AppConfig          = require '../../config/AppConfig.coffee'
-PatternSquareModel = require './PatternSquareModel.coffee'
+AppEvent           = require '../../events/AppEvent.coffee'
 Collection         = require '../../supers/Collection.coffee'
 InstrumentModel    = require '../sequencer/InstrumentModel.coffee'
-
+PatternSquareModel = require './PatternSquareModel.coffee'
+PubSub             = require '../../utils/PubSub'
 
 class PatternSquareCollection extends Collection
 
-   model: InstrumentModel
+  model: InstrumentModel
 
-   initialize: (options) ->
-      super options
+  initialize: (options) ->
+    super options
 
-      #PubSub.on AppEvent.IMPORT_TRACK, @onImportTrack
-      #PubSub.on AppEvent.EXPORT_TRACK, @onExportTrack
+  onImportTrack: (params) ->
 
-
-   onImportTrack: (params) ->
-      console.log 'firing import!!'
-
-
-   onExportTrack: (params) ->
-      console.log 'firing export!!'
-
+  onExportTrack: (params) ->
 
 module.exports = PatternSquareCollection

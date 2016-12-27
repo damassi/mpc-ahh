@@ -12,94 +12,82 @@ KitModel   = require './KitModel.coffee'
 
 class KitCollection extends Collection
 
+  # Url to data for fetch
+  # @type {String}
 
-   # Url to data for fetch
-   # @type {String}
+  url: "#{AppConfig.returnAssetPath('data')}/sound-data.json"
 
-   url: "#{AppConfig.returnAssetPath('data')}/sound-data.json"
+  # Individual drumkit audio sets
+  # @type {KitModel}
 
+  model: KitModel
 
-   # Individual drumkit audio sets
-   # @type {KitModel}
+  # The current user-selected kit
+  # @type {Number}
 
-   model: KitModel
-
-
-   # The current user-selected kit
-   # @type {Number}
-
-   kitId: 0
+  kitId: 0
 
 
+  # Parses the collection to assign paths to each individual sound
+  # based upon configuration data
+  # @param {Object} response
 
-   # Parses the collection to assign paths to each individual sound
-   # based upon configuration data
-   # @param {Object} response
+  parse: (response) ->
+    assetPath = response.config.assetPath
+    kits = response.kits
 
-   parse: (response) ->
-      assetPath = response.config.assetPath
-      kits = response.kits
+    kits = _.map kits, (kit) ->
+      kit.path = assetPath + '/' + kit.folder
+      return kit
 
-      kits = _.map kits, (kit) ->
-         kit.path = assetPath + '/' + kit.folder
-         return kit
-
-      return kits
-
+    return kits
 
 
+  # Iterates through the collection and returns a specific instrument
+  # by matching associated id
+  # @param {Number} id
 
-   # Iterates through the collection and returns a specific instrument
-   # by matching associated id
-   # @param {Number} id
+  findInstrumentModel: (id) ->
+    instrumentModel = null
 
-   findInstrumentModel: (id) ->
-      instrumentModel = null
+    @each (kitModel) =>
+      kitModel.get('instruments').each (model) =>
+        if id is model.get('id')
+          instrumentModel = model
 
-      @each (kitModel) =>
-         kitModel.get('instruments').each (model) =>
-            if id is model.get('id')
-               instrumentModel = model
+    if instrumentModel is null
+      return false
 
-      if instrumentModel is null
-         return false
-
-      instrumentModel
-
+    instrumentModel
 
 
+  # Cycles the current drum kit back
+  # @return {KitModel}
 
-   # Cycles the current drum kit back
-   # @return {KitModel}
+  previousKit: ->
+    len = @length
 
-   previousKit: ->
-      len = @length
+    if @kitId > 0
+      @kitId--
 
-      if @kitId > 0
-         @kitId--
+    else
+      @kitId = len - 1
 
-      else
-         @kitId = len - 1
-
-      kitModel = @at @kitId
-
+    kitModel = @at @kitId
 
 
+  # Cycles the current drum kit forward
+  # @return {KitModel}
 
-   # Cycles the current drum kit forward
-   # @return {KitModel}
+  nextKit: ->
+    len = @length - 1
 
-   nextKit: ->
-      len = @length - 1
+    if @kitId < len
+      @kitId++
 
-      if @kitId < len
-         @kitId++
+    else
+      @kitId = 0
 
-      else
-         @kitId = 0
-
-      kitModel = @at @kitId
-
-
+    kitModel = @at @kitId
 
 module.exports = KitCollection

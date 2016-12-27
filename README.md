@@ -28,7 +28,7 @@ Project Setup
 
 Development Tasks
 -----------------
-- For development: `grunt dev` then navigate to `http://localhost:3000` (or IP address).
+- For development: `grunt dev` or `npm start` then navigate to `http://localhost:3000` (or IP address).
 - For deploy: `grunt build`
 
 This concatinates and minifies all CoffeeScripts and SASS and moves the project into 'dist' for production deploy.
