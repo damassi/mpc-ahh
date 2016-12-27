@@ -7,8 +7,6 @@
 
 Model = require '../../supers/Model.coffee'
 
-
 class LivePadModel extends Model
-
 
 module.exports = LivePadModel

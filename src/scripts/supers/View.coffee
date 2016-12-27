@@ -7,100 +7,77 @@
 
 BrowserDetect = require '../utils/BrowserDetect'
 
-
 class View extends Backbone.View
 
+  # Initializes the view
+  # @param {Object} options
 
-   # Initializes the view
-   # @param {Object} options
+  initialize: (options) ->
+    _.extend @, _.defaults( options = options || @defaults, @defaults || {} )
 
-   initialize: (options) ->
-      _.extend @, _.defaults( options = options || @defaults, @defaults || {} )
+  # Renders the view with supplied template data, or checks if template is on
+  # object body
+  # @param  {Function|Model} templateData
+  # @return {View}
 
+  render: (templateData) ->
+    templateData = templateData || {}
 
+    if @template
 
+      # If model is an instance of a backbone model, then JSONify it
+      if @model instanceof Backbone.Model
+        templateData = @model.toJSON()
 
+      # Pass in desktop to render seperate mobile conditional templates
+      templateData.isDesktop = if $('body').hasClass('desktop') then true else false
 
-   # Renders the view with supplied template data, or checks if template is on
-   # object body
-   # @param  {Function|Model} templateData
-   # @return {View}
+      @$el.html @template (templateData)
 
-   render: (templateData) ->
-      templateData = templateData || {}
+    # Add flag so view can check against stuff
+    @isMobile = if $('body').hasClass('mobile') then true else false
+    @isTablet = if BrowserDetect.deviceDetection().deviceType is 'tablet' then true else false
 
-      if @template
+    @delegateEvents()
+    @addEventListeners()
 
-         # If model is an instance of a backbone model, then JSONify it
-         if @model instanceof Backbone.Model
-            templateData = @model.toJSON()
+    @
 
-         # Pass in desktop to render seperate mobile conditional templates
-         templateData.isDesktop = if $('body').hasClass('desktop') then true else false
+  # Removes the view
+  # @param {Object} options
 
-         @$el.html @template (templateData)
+  remove: (options) ->
+    @removeEventListeners()
+    @$el.remove()
+    @undelegateEvents()
 
-      # Add flag so view can check against stuff
-      @isMobile = if $('body').hasClass('mobile') then true else false
-      @isTablet = if BrowserDetect.deviceDetection().deviceType is 'tablet' then true else false
+  # Shows the view
+  # @param {Object} options
 
-      @delegateEvents()
-      @addEventListeners()
+  show: (options) ->
+    return
+    TweenLite.set @$el, { autoAlpha: 1 }
 
-      @
+  # Hides the view
+  # @param {Object} options
 
+  hide: (options) ->
 
+    TweenLite.to @$el, 0,
+      autoAlpha: 0
+      onComplete: =>
+        if options?.remove
+          @remove()
 
+  # Noop which is called on render
+  # @param {Object} options
 
-   # Removes the view
-   # @param {Object} options
+  addEventListeners: ->
 
-   remove: (options) ->
-      @removeEventListeners()
-      @$el.remove()
-      @undelegateEvents()
+  # Removes all registered listeners
+  # @param {Object} options
 
-
-
-
-
-   # Shows the view
-   # @param {Object} options
-
-   show: (options) ->
-      return
-      TweenLite.set @$el, { autoAlpha: 1 }
-
-
-
-
-   # Hides the view
-   # @param {Object} options
-
-   hide: (options) ->
-
-      TweenLite.to @$el, 0,
-         autoAlpha: 0
-         onComplete: =>
-            if options?.remove
-               @remove()
-
-
-
-
-   # Noop which is called on render
-   # @param {Object} options
-
-   addEventListeners: ->
-
-
-
-   # Removes all registered listeners
-   # @param {Object} options
-
-   removeEventListeners: ->
-      @stopListening()
-
-
+  removeEventListeners: ->
+    @stopListening()
 
 module.exports = View

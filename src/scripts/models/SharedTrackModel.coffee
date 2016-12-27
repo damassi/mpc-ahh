@@ -8,49 +8,41 @@
 AppConfig = require '../config/AppConfig.coffee'
 Model     = require '../supers/Model.coffee'
 
-
 class SharedTrackModel extends Parse.Object
 
+  # Parse Class 'key' for saving data
+  className: 'SharedTrack'
 
-   # Parse Class 'key' for saving data
-   className: 'SharedTrack'
+  defaults:
 
+    # Kit playback properties
+    # -----------------------
 
-   defaults:
+    # @type {Number}
+    bpm: null
 
+    # @type {Object}
+    instruments: null
 
-      # Kit playback properties
+    # @type {String}
+    kitType: null
 
+    # @type {Array}
+    patternSquareGroups: null
 
-      # @type {Number}
-      bpm: null
+    # Share data related to user
+    # --------------------------
 
-      # @type {Object}
-      instruments: null
+    # @type {String}
+    shareName: null
 
-      # @type {String}
-      kitType: null
-
-      # @type {Array}
-      patternSquareGroups: null
-
-
-
-      # Share data related to user
-
-
-      # @type {String}
-      shareName: null
+    # @type {String}
+    shareTitle: null
 
       # @type {String}
-      shareTitle: null
+    shareMessage: null
 
-       # @type {String}
-      shareMessage: null
-
-      # @type {String}
-      visualization: null
-
-
+    # @type {String}
+    visualization: null
 
 module.exports = SharedTrackModel

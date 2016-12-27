@@ -8,73 +8,69 @@
 AppConfig = require '../../config/AppConfig.coffee'
 Model     = require '../../supers/Model.coffee'
 
-
 class InstrumentModel extends Model
 
+  defaults:
 
-   defaults:
+    # If active, sound can play
+    # @type {Boolean}
 
-      # If active, sound can play
-      # @type {Boolean}
-
-      'active':   null
-
-
-      # Flag to check if instrument has been dropped onto pad square
-      # @type {Boolean}
-
-      'dropped':  false
+    'active': null
 
 
-      # Cache of the original mouse drag event in order to update the
-      # drag position when dislodging in instrument from the PadSquare
-      # @type {MouseEvent}
+    # Flag to check if instrument has been dropped onto pad square
+    # @type {Boolean}
 
-      'droppedEvent': null
-
-
-      # Flag to check if audio focus is set on a particular instrument.
-      # If so, it mutes all other tracks.
-      # @type {Boolean}
-
-      'focus':    false
+    'dropped': false
 
 
-      # The icon class that represents the instrument
-      # @type {String}
+    # Cache of the original mouse drag event in order to update the
+    # drag position when dislodging in instrument from the PadSquare
+    # @type {MouseEvent}
 
-      'icon':     null
-
-
-      # The text label describing the instrument
-      # @type {String}
-
-      'label':    null
+    'droppedEvent': null
 
 
-      # Mute or unmute setting
-      # @type {Boolean}
+    # Flag to check if audio focus is set on a particular instrument.
+    # If so, it mutes all other tracks.
+    # @type {Boolean}
 
-      'mute':     false
-
-
-      # The path to the sound source
-      # @type {String}
-
-      'src':      null
+    'focus': false
 
 
-      # The volume
-      # @type {Number}
-      'volume':   null
+    # The icon class that represents the instrument
+    # @type {String}
+
+    'icon': null
 
 
-      # Collection of associated pattern squares (a track) for the
-      # Sequencer view.  Updated when the tracks are swapped out
-      # @type {PatternSquareCollection}
+    # The text label describing the instrument
+    # @type {String}
 
-      'patternSquares':    null
+    'label': null
 
 
+    # Mute or unmute setting
+    # @type {Boolean}
+
+    'mute': false
+
+
+    # The path to the sound source
+    # @type {String}
+
+    'src': null
+
+
+    # The volume
+    # @type {Number}
+    'volume': null
+
+
+    # Collection of associated pattern squares (a track) for the
+    # Sequencer view.  Updated when the tracks are swapped out
+    # @type {PatternSquareCollection}
+
+    'patternSquares': null
 
 module.exports = InstrumentModel

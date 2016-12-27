@@ -5,30 +5,21 @@
  * @date   4.13.14
 ###
 
-View          = require '../../supers/View.coffee'
-template      = require './templates/bubbles-template.hbs'
-
+View     = require '../../supers/View.coffee'
+template = require './templates/bubbles-template.hbs'
 
 class BubblesView extends View
 
+  className: 'container-bubbles'
+  template: template
 
-   className: 'container-bubbles'
+  render: (options) ->
+    super options
 
+    @startBubbles()
+    @
 
-   template: template
-
-
-   render: (options) ->
-      super options
-
-      @startBubbles()
-
-      @
-
-
-   startBubbles: ->
-      console.log 'starting!'
-
+  startBubbles: ->
 
 
 module.exports = BubblesView

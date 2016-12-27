@@ -10,137 +10,114 @@ AppEvent  = require '../../../events/AppEvent.coffee'
 View      = require '../../../supers/View.coffee'
 template  = require './templates/play-pause-template.hbs'
 
-
 class PlayPauseBtn extends View
 
+  className: 'btn-play-pause'
+  template: template
 
-   className: 'btn-play-pause'
-
-
-   template: template
-
-
-   events:
-      'mouseover .btn-play':  'onMouseOver'
-      'mouseover .btn-pause': 'onMouseOver'
-      'mouseout .btn-play':   'onMouseOut'
-      'mouseout .btn-pause':  'onMouseOut'
-      'touchend':             'onClick'
+  events:
+    'mouseover .btn-play': 'onMouseOver'
+    'mouseover .btn-pause': 'onMouseOver'
+    'mouseout .btn-play': 'onMouseOut'
+    'mouseout .btn-pause': 'onMouseOut'
+    'touchend': 'onClick'
 
 
+  # Render the view
 
-   # Render the view
+  render: (options) ->
+    super options
 
-   render: (options) ->
-      super options
+    @$playBtn = @$el.find '.btn-play'
+    @$pauseBtn = @$el.find '.btn-pause'
+    @$label = @$el.find '.label-btn'
 
-      @$playBtn  = @$el.find '.btn-play'
-      @$pauseBtn = @$el.find '.btn-pause'
-      @$label    = @$el.find '.label-btn'
-
-      TweenLite.set @$playBtn, autoAlpha: 0
-
-      @
+    TweenLite.set @$playBtn, autoAlpha: 0
+    @
 
 
+  # Add event listeners
 
-   # Add event listeners
-
-   addEventListeners: ->
-      @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayChange
-
+  addEventListeners: ->
+    @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayChange
 
 
+  # Handler for playing model change events
+  # @param {AppModel} model
 
-   # Handler for playing model change events
-   # @param {AppModel} model
+  onPlayChange: (model) =>
+    playing = model.changed.playing
 
-   onPlayChange: (model) =>
-      playing = model.changed.playing
+    if playing
+      @setPlayState()
 
-      if playing
-         @setPlayState()
-
-      else
-         @setPauseState()
-
+    else
+      @setPauseState()
 
 
+  # Handler for mouseout events
+  # @param {MouseEvent}
 
-   # Handler for mouseout events
-   # @param {MouseEvent}
+  onMouseOver: (event) =>
+    return
+    $target = $(event.currentTarget)
 
-   onMouseOver: (event) =>
-      return
-      $target = $(event.currentTarget)
-
-      TweenLite.to $target, .2,
-         color: 'black'
-
+    TweenLite.to $target, .2,
+      color: 'black'
 
 
+  # Handler for mouseout events
+  # @param {MouseEvent}
 
-   # Handler for mouseout events
-   # @param {MouseEvent}
+  onMouseOut: (event) =>
+    return
+    $target = $(event.currentTarget)
 
-   onMouseOut: (event) =>
-      return
-      $target = $(event.currentTarget)
-
-      TweenLite.to $target, .2,
-         color: '#E41E2B'
-
+    TweenLite.to $target, .2,
+      color: '#E41E2B'
 
 
+  # Handler for click events.  Fades the volume up or down and
+  # stops or starts playback
+  # @param {MouseEvent} event
+
+  onClick: (event) =>
+    doPlay = ! @appModel.get('playing')
+    volume = if doPlay is true then 1 else 0
+    obj = volume: if volume is 1 then 0 else 1
+
+    TweenLite.to obj, .4,
+      volume: volume
+
+      onUpdate: =>
+        createjs.Sound.setVolume obj.volume
+
+      onComplete: =>
+        if doPlay is false
+          @appModel.set 'playing', doPlay
+
+    if doPlay is true
+      @appModel.set 'playing', doPlay
+
+    # Set visual state immediately so there's no lag
+    else
+      @setPauseState()
 
 
-   # Handler for click events.  Fades the volume up or down and
-   # stops or starts playback
-   # @param {MouseEvent} event
+  # Set visual state of play pause btn
 
-   onClick: (event) =>
-      doPlay = ! @appModel.get('playing')
-      volume = if doPlay is true then 1 else 0
-      obj    = volume: if volume is 1 then 0 else 1
-
-      TweenLite.to obj, .4,
-         volume: volume
-
-         onUpdate: =>
-            createjs.Sound.setVolume obj.volume
-
-         onComplete: =>
-            if doPlay is false
-               @appModel.set 'playing', doPlay
-
-      if doPlay is true
-         @appModel.set 'playing', doPlay
-
-      # Set visual state immediately so there's no lag
-      else
-         @setPauseState()
+  setPlayState: ->
+    TweenLite.set @$playBtn, autoAlpha: 0
+    TweenLite.set @$pauseBtn, autoAlpha: 1
+    @$label.text 'PAUSE'
 
 
+  # Set visual state of play pause btn
 
-
-   # Set visual state of play pause btn
-
-   setPlayState: ->
-      TweenLite.set @$playBtn, autoAlpha: 0
-      TweenLite.set @$pauseBtn, autoAlpha: 1
-      @$label.text 'PAUSE'
-
-
-
-
-   # Set visual state of play pause btn
-
-   setPauseState: ->
-      TweenLite.set @$playBtn, autoAlpha: 1
-      TweenLite.set @$pauseBtn, autoAlpha: 0
-      @$label.text 'PLAY'
-
-
+  setPauseState: ->
+    TweenLite.set @$playBtn, autoAlpha: 1
+    TweenLite.set @$pauseBtn, autoAlpha: 0
+    @$label.text 'PLAY'
 
 
 module.exports = PlayPauseBtn

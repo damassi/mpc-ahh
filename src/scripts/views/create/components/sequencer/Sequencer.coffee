@@ -13,480 +13,409 @@ View         = require '../../../../supers/View.coffee'
 helpers      = require '../../../../helpers/handlebars-helpers'
 template     = require './templates/sequencer-template.hbs'
 
-
 class Sequencer extends View
 
+  # The name of the container class
+  # @type {String}
 
-   # The name of the container class
-   # @type {String}
+  id: 'container-sequencer'
 
-   id: 'container-sequencer'
+  # The template
+  # @type {Function}
 
+  template: template
 
-   # The template
-   # @type {Function}
+  # An array of all pattern tracks
+  # @type {String}
 
-   template: template
+  patternTrackViews: null
 
+  # The setInterval ticker
+  # @type {Number}
 
-   # An array of all pattern tracks
-   # @type {String}
+  bpmInterval: null
 
-   patternTrackViews: null
+  # The time in which the interval fires
+  # @type {Number}
 
+  updateIntervalTime: 200
 
-   # The setInterval ticker
-   # @type {Number}
+  # The current beat id
+  # @type {Number}
 
-   bpmInterval: null
+  currBeatCellId: -1
 
+  # TODO: Update this to make it more dynamic
+  # The number of beat cells
+  # @type {Number}
 
-   # The time in which the interval fires
-   # @type {Number}
+  numCells: 7
 
-   updateIntervalTime: 200
+  # Global application model
+  # @type {AppModel}
 
+  appModel: null
 
-   # The current beat id
-   # @type {Number}
+  # Collection of instruments
+  # @type {InstrumentCollection}
 
-   currBeatCellId: -1
+  collection: null
 
+  # Collection of instruments
+  # @type {KitCollection}
 
-   # TODO: Update this to make it more dynamic
-   # The number of beat cells
-   # @type {Number}
-
-   numCells: 7
-
-
-   # Global application model
-   # @type {AppModel}
-
-   appModel: null
-
-
-   # Collection of instruments
-   # @type {InstrumentCollection}
-
-   collection: null
+  kitCollection: null
 
 
-   # Collection of instruments
-   # @type {KitCollection}
+  # Renders the view
+  # @param {Object}
 
-   kitCollection: null
+  render: (options) ->
+    super options
 
+    @$thStepper = @$el.find 'th.stepper'
+    @$sequencer = @$el.find '.sequencer'
 
-
-
-   # Renders the view
-   # @param {Object}
-
-   render: (options) ->
-      super options
-
-      @$thStepper = @$el.find 'th.stepper'
-      @$sequencer = @$el.find '.sequencer'
-
-      $(@$thStepper[0]).addClass 'step'
-      @renderTracks()
-      @play()
-
-      @
+    $(@$thStepper[0]).addClass 'step'
+    @renderTracks()
+    @play()
+    @
 
 
-   # Removes the view from the DOM and cancels
-   # the ticker interval
+  # Removes the view from the DOM and cancels
+  # the ticker interval
 
-   remove: ->
-      _.each @patternTrackViews, (track) =>
-         track.remove()
+  remove: ->
+    _.each @patternTrackViews, (track) =>
+      track.remove()
 
+    window.clearInterval @bpmInterval
+
+    super()
+
+
+  # Add event listeners for handling instrument and playback
+  # changes.  Updates all of the views accordingly
+
+  addEventListeners: ->
+    @listenTo @appModel, AppEvent.CHANGE_BPM, @onBPMChange
+    @listenTo @appModel, AppEvent.CHANGE_PLAYING, @onPlayingChange
+    @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
+
+    @listenTo @appModel.get('kitModel'), AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
+
+    @listenTo @collection, AppEvent.CHANGE_FOCUS, @onFocusChange
+    @listenTo @collection, AppEvent.CHANGE_MUTE, @onMuteChange
+
+    PubSub.on AppEvent.IMPORT_TRACK, @importTrack
+
+
+  removeEventListeners: ->
+    PubSub.off AppEvent.IMPORT_TRACK
+    PubSub.off AppEvent.EXPORT_TRACK
+
+    super()
+
+
+  # Renders out each individual track.
+  # TODO: Need to update so that all of the beat squares aren't
+  # blown away by the re-render
+
+  renderTracks: =>
+    @$el.find('.pattern-track').remove()
+
+    @patternTrackViews = []
+
+    @collection.each (model, index) =>
+
+      patternTrack = new PatternTrack
+        appModel: @appModel
+        collection: model.get 'patternSquares'
+        model: model
+        orderIndex: index
+
+      @patternTrackViews.push patternTrack
+      @$sequencer.append patternTrack.render().el
+
+      @listenTo patternTrack, PubEvent.BEAT, @onBeat
+
+
+  # Update the ticker time, and advances the beat
+
+  updateTime: =>
+    #console.log 'BEAT!'
+    @$thStepper.removeClass 'step'
+    @$sequencer.find('td').removeClass 'step'
+    @currBeatCellId = if @currBeatCellId < @numCells then @currBeatCellId += 1 else @currBeatCellId = 0
+    $(@$thStepper[@currBeatCellId]).addClass 'step'
+
+    @playAudio()
+
+
+  # Converts milliseconds to BPM
+
+  convertBPM: ->
+    return 200
+
+
+  # Start playback of sequencer
+
+  play: ->
+    @appModel.set 'playing', true
+
+
+  # Pauses sequencer playback
+
+  pause: ->
+    @appModel.set 'playing', false
+
+
+  # Mutes the sequencer
+
+  mute: ->
+    @appModel.set 'mute', true
+
+
+  # Unmutes the sequencer
+
+  unmute: ->
+    @appModel.set 'mute', false
+
+
+  # Plays audio of each track currently enabled and on
+
+  playAudio: ->
+    focusedInstrument = @collection.findWhere { focus: true }
+
+    # Check if there's a focused track and only
+    # play audio from there
+
+    if focusedInstrument
+      if focusedInstrument.get('mute') isnt true
+        focusedInstrument.get('patternSquares').each (patternSquare, index) =>
+          @playPatternSquareAudio( patternSquare, index )
+
+      return
+
+    # If nothing is focused, then check against
+    # the entire matrix
+
+    @collection.each (instrument) =>
+      if instrument.get('mute') isnt true
+        instrument.get('patternSquares').each (patternSquare, index) =>
+          @playPatternSquareAudio( patternSquare, index )
+
+
+  # Plays the audio on an individual PatterSquare if tempo index
+  # is the same as the index within the collection
+  # @param {PatternSquare} patternSquare
+  # @param {Number} index
+
+  playPatternSquareAudio: (patternSquare, index) ->
+    if @currBeatCellId is index
+      if patternSquare.get 'active'
+        patternSquare.set 'trigger', true
+
+
+  # Event handlers
+  # --------------
+
+  onBeat: (params) =>
+    @trigger PubEvent.BEAT, params
+
+
+  # Handler for BPM tempo changes
+  # @param {AppModel} model
+
+  onBPMChange: (model) =>
+    window.clearInterval @bpmInterval
+    @updateIntervalTime = model.changed.bpm
+
+    if @appModel.get('playing')
+      @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
+
+
+  # Handler for playback changes.  If paused, it stops playback and
+  # clears the interval.  If playing, it resets it
+  # @param {AppModel} model
+
+  onPlayingChange: (model) =>
+    playing = model.changed.playing
+
+    if playing
+      @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
+
+    else
       window.clearInterval @bpmInterval
+      @bpmInterval = null
 
-      super()
 
+  # Handler for mute and unmute changes
+  # @param {AppModel} model
 
+  onMuteChange: (model) =>
 
-   # Add event listeners for handling instrument and playback
-   # changes.  Updates all of the views accordingly
 
-   addEventListeners: ->
-      @listenTo @appModel,   AppEvent.CHANGE_BPM,     @onBPMChange
-      @listenTo @appModel,   AppEvent.CHANGE_PLAYING, @onPlayingChange
-      @listenTo @appModel,   AppEvent.CHANGE_KIT,     @onKitChange
+  # MOBILE ONLY.  Swaps out the currently visible pattern track with the one
+  # corresponding to the selected instrument
+  # @param {InstrumentModel} model
 
-      @listenTo @appModel.get('kitModel'), AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
+  onInstrumentChange: (model) =>
+    selectedInstrument = model.changed.currentInstrument
+    iconClass = selectedInstrument.get 'icon'
+    $patternTracks = @$el.find '.pattern-track'
 
-      @listenTo @collection, AppEvent.CHANGE_FOCUS,   @onFocusChange
-      @listenTo @collection, AppEvent.CHANGE_MUTE,    @onMuteChange
+    $patternTracks.each ->
+      $track = $(this)
 
-      PubSub.on AppEvent.IMPORT_TRACK, @importTrack
+      # Found the proper track, show it
+      if $track.find('.instrument').hasClass iconClass
+        $track.show()
 
+        TweenLite.fromTo $track, .6, y: 100,
+          immediateRender: true
+          y: 0
+          ease: Expo.easeInOut
 
-
-
-   removeEventListeners: ->
-      PubSub.off AppEvent.IMPORT_TRACK
-      PubSub.off AppEvent.EXPORT_TRACK
-
-      super()
-
-
-
-   # Renders out each individual track.
-   # TODO: Need to update so that all of the beat squares aren't
-   # blown away by the re-render
-
-   renderTracks: =>
-      @$el.find('.pattern-track').remove()
-
-      @patternTrackViews = []
-
-      @collection.each (model, index) =>
-
-         patternTrack = new PatternTrack
-            appModel: @appModel
-            collection: model.get 'patternSquares'
-            model: model
-            orderIndex: index
-
-         @patternTrackViews.push patternTrack
-         @$sequencer.append patternTrack.render().el
-
-         @listenTo patternTrack, PubEvent.BEAT, @onBeat
-
-
-
-
-   # Update the ticker time, and advances the beat
-
-   updateTime: =>
-      #console.log 'BEAT!'
-      @$thStepper.removeClass 'step'
-      @$sequencer.find('td').removeClass 'step'
-      @currBeatCellId = if @currBeatCellId < @numCells then @currBeatCellId += 1 else @currBeatCellId = 0
-      $(@$thStepper[@currBeatCellId]).addClass 'step'
-
-      @playAudio()
-
-
-
-
-   # Converts milliseconds to BPM
-
-   convertBPM: ->
-      return 200
-
-
-
-   # Start playback of sequencer
-
-   play: ->
-      @appModel.set 'playing', true
-
-
-
-
-   # Pauses sequencer playback
-
-   pause: ->
-      @appModel.set 'playing', false
-
-
-
-
-   # Mutes the sequencer
-
-   mute: ->
-      @appModel.set 'mute', true
-
-
-
-
-   # Unmutes the sequencer
-
-   unmute: ->
-       @appModel.set 'mute', false
-
-
-
-
-
-   # Plays audio of each track currently enabled and on
-
-   playAudio: ->
-      focusedInstrument =  @collection.findWhere { focus: true }
-
-      # Check if there's a focused track and only
-      # play audio from there
-
-      if focusedInstrument
-         if focusedInstrument.get('mute') isnt true
-            focusedInstrument.get('patternSquares').each (patternSquare, index) =>
-               @playPatternSquareAudio( patternSquare, index )
-
-         return
-
-
-      # If nothing is focused, then check against
-      # the entire matrix
-
-      @collection.each (instrument) =>
-         if instrument.get('mute') isnt true
-            instrument.get('patternSquares').each (patternSquare, index) =>
-               @playPatternSquareAudio( patternSquare, index )
-
-
-
-
-   # Plays the audio on an individual PatterSquare if tempo index
-   # is the same as the index within the collection
-   # @param {PatternSquare} patternSquare
-   # @param {Number} index
-
-   playPatternSquareAudio: (patternSquare, index) ->
-      if @currBeatCellId is index
-         if patternSquare.get 'active'
-            patternSquare.set 'trigger', true
-
-
-
-
-   # EVENT HANDLERS
-   # --------------------------------------------------------------------------------
-
-
-
-   onBeat: (params) =>
-      @trigger PubEvent.BEAT, params
-
-
-
-
-   # Handler for BPM tempo changes
-   # @param {AppModel} model
-
-   onBPMChange: (model) =>
-      window.clearInterval @bpmInterval
-      @updateIntervalTime = model.changed.bpm
-
-      if @appModel.get('playing')
-         @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
-
-
-
-
-   # Handler for playback changes.  If paused, it stops playback and
-   # clears the interval.  If playing, it resets it
-   # @param {AppModel} model
-
-   onPlayingChange: (model) =>
-      playing = model.changed.playing
-
-      if playing
-         @bpmInterval = window.setInterval @updateTime, @updateIntervalTime
-
+      # Hide old track
       else
-         window.clearInterval @bpmInterval
-         @bpmInterval = null
+        $track.hide()
 
 
+  # Handler for kit changes, as set from the KitSelector
+  # @param {KitModel} model
 
+  onKitChange: (model) =>
+    @removeEventListeners()
+    @collection = model.changed.kitModel.get('instruments')
+    @renderTracks()
 
-   # Handler for mute and unmute changes
-   # @param {AppModel} model
+    # Export old pattern squares so the users pattern isn't blown away
+    # when kit changes occur
 
-   onMuteChange: (model) =>
+    oldInstrumentCollection = model._previousAttributes.kitModel.get('instruments')
+    oldPatternSquares = oldInstrumentCollection.exportPatternSquares()
 
+    # Update the new collection with old pattern square data
+    # and trigger UI updates on each square
 
+    @collection.each (instrumentModel, index) ->
+      oldCollection = oldPatternSquares[index]
+      newCollection = instrumentModel.get 'patternSquares'
 
+      # Update track / instrument level properties like volume / mute / focus
+      oldProps = oldInstrumentCollection.at(index)
 
+      unless oldProps is undefined
+        oldProps = oldProps.toJSON()
 
-   # MOBILE ONLY.  Swaps out the currently visible pattern track with the one
-   # corresponding to the selected instrument
-   # @param {InstrumentModel} model
+        instrumentModel.set
+          volume: oldProps.volume
+          active: oldProps.active
+          mute: null
+          focus: null
 
-   onInstrumentChange: (model) =>
-      selectedInstrument = model.changed.currentInstrument
-      iconClass = selectedInstrument.get 'icon'
-      $patternTracks = @$el.find '.pattern-track'
+        # Reset visually tied props to trigger ui update
+        instrumentModel.set
+          mute: oldProps.mute
+          focus: oldProps.focus
 
-      $patternTracks.each ->
-         $track = $(this)
+      # Check for inconsistancies between number of instruments
+      unless oldCollection is undefined
+        newCollection.each (patternSquare, index) ->
+          oldPatternSquare = oldCollection.at index
+          oldPatternSquare = oldPatternSquare.toJSON()
+          oldPatternSquare.trigger = false
 
-         # Found the proper track, show it
-         if $track.find('.instrument').hasClass iconClass
-            $track.show()
+          patternSquare.set oldPatternSquare
 
-            TweenLite.fromTo $track, .6, y: 100,
-               immediateRender: true
-               y: 0
-               ease: Expo.easeInOut
+    @addEventListeners()
 
-         # Hide old track
-         else
-            $track.hide()
 
+  importTrack: (params) =>
+    {callback, patternSquareGroups, instruments, kitType} = params
 
+    @appModel.set 'kitModel', @kitCollection.findWhere( label: kitType )
+    @renderTracks()
 
+    # Iterate over each view and set saved properties
+    _.each @patternTrackViews, (patternTrackView, iterator) ->
+      instrumentModel = patternTrackView.model
 
+      instrumentModel.set
+        mute: null
+        focus: null
 
+      # Update props to trigger UI updates
+      instrumentModel.set
+        mute: instruments[iterator].mute
+        focus: instruments[iterator].focus
 
+      # Update each individual pattern square with settings
+      patternTrackView.collection.each (patternModel, index) ->
+        squareData = patternSquareGroups[iterator][index]
+        squareData.trigger = false
 
-   # Handler for kit changes, as set from the KitSelector
-   # @param {KitModel} model
+        patternModel.set squareData
 
-   onKitChange: (model) =>
-      @removeEventListeners()
-      @collection = model.changed.kitModel.get('instruments')
-      @renderTracks()
+    if callback then callback()
 
-      # Export old pattern squares so the users pattern isn't blown away
-      # when kit changes occur
 
-      oldInstrumentCollection = model._previousAttributes.kitModel.get('instruments')
-      oldPatternSquares = oldInstrumentCollection.exportPatternSquares()
+  # Handler for focus change events.  Iterates over all of the models within
+  # the InstrumentCollection and toggles their focus to off if the changed
+  # model's focus is set to true.
+  # @param {InstrumentModel} model
 
+  onFocusChange: (model) =>
+    doFocus = model.changed.focus
+    selectedIndex = @collection.indexOf model
 
-      # Update the new collection with old pattern square data
-      # and trigger UI updates on each square
+    @collection.each (instrumentModel, index) =>
 
-      @collection.each (instrumentModel, index) ->
-         oldCollection = oldPatternSquares[index]
-         newCollection = instrumentModel.get 'patternSquares'
+      # Unset audio focus on other tracks
+      if model.changed.focus is true
+        if model.cid isnt instrumentModel.cid
+          instrumentModel.set 'focus', false, {trigger: false }
 
-         # Update track / instrument level properties like volume / mute / focus
-         oldProps = oldInstrumentCollection.at(index)
+    @collection.each (instrumentModel, index) =>
 
-         unless oldProps is undefined
+      # Update view representation for focus state
+      view = @patternTrackViews[index]
 
-            oldProps = oldProps.toJSON()
+      # Found instrument model
+      if model is instrumentModel
 
-            instrumentModel.set
-               volume: oldProps.volume
-               active: oldProps.active
-               mute:   null
-               focus:  null
+        # Add focus
+        if doFocus is true
+          view.$el.removeClass('defocused')
 
-            # Reset visually tied props to trigger ui update
-            instrumentModel.set
-               mute:   oldProps.mute
-               focus:  oldProps.focus
+      # All the other tracks, remove focus if set
+      else
 
-         # Check for inconsistancies between number of instruments
-         unless oldCollection is undefined
+        # Add defocused state
+        if doFocus is true
+          view.$el.addClass('defocused')
 
-            newCollection.each (patternSquare, index) ->
-               oldPatternSquare = oldCollection.at index
-               oldPatternSquare = oldPatternSquare.toJSON()
-               oldPatternSquare.trigger = false
+        # Remove defocused state
+        else
+          view.$el.removeClass('defocused')
 
-               patternSquare.set oldPatternSquare
 
+  onMuteChange: (model) =>
+    selectedIndex = @collection.indexOf model
 
-      @addEventListeners()
+    @collection.each (instrumentModel, index) =>
+      view = @patternTrackViews[index]
 
+      # Found instrument model
+      if selectedIndex is index
 
+        # Add mute
+        if model.changed.mute is true
+          view.$el.addClass 'mute'
 
-
-   importTrack: (params) =>
-      {callback, patternSquareGroups, instruments, kitType} = params
-
-      @appModel.set 'kitModel', @kitCollection.findWhere( label: kitType )
-
-      @renderTracks()
-
-      # Iterate over each view and set saved properties
-      _.each @patternTrackViews, (patternTrackView, iterator) ->
-         instrumentModel = patternTrackView.model
-
-         instrumentModel.set
-            mute:  null
-            focus: null
-
-         # Update props to trigger UI updates
-         instrumentModel.set
-            mute:  instruments[iterator].mute
-            focus: instruments[iterator].focus
-
-         # Update each individual pattern square with settings
-         patternTrackView.collection.each (patternModel, index) ->
-            squareData = patternSquareGroups[iterator][index]
-            squareData.trigger = false
-
-            patternModel.set squareData
-
-      if callback then callback()
-
-
-
-
-   # Handler for focus change events.  Iterates over all of the models within
-   # the InstrumentCollection and toggles their focus to off if the changed
-   # model's focus is set to true.
-   # @param {InstrumentModel} model
-
-   onFocusChange: (model) =>
-      doFocus = model.changed.focus
-      selectedIndex = @collection.indexOf model
-
-      @collection.each (instrumentModel, index) =>
-
-         # Unset audio focus on other tracks
-         if model.changed.focus is true
-            if model.cid isnt instrumentModel.cid
-               instrumentModel.set 'focus', false, {trigger: false }
-
-
-      @collection.each (instrumentModel, index) =>
-
-         # Update view representation for focus state
-         view = @patternTrackViews[index]
-
-         # Found instrument model
-         if model is instrumentModel
-
-            # Add focus
-            if doFocus is true
-               view.$el.removeClass('defocused')
-
-
-         # All the other tracks, remove focus if set
-         else
-
-            # Add defocused state
-            if doFocus is true
-               view.$el.addClass('defocused')
-
-            # Remove defocused state
-            else
-               view.$el.removeClass('defocused')
-
-
-
-
-   onMuteChange: (model) =>
-      selectedIndex = @collection.indexOf model
-
-      @collection.each (instrumentModel, index) =>
-         view = @patternTrackViews[index]
-
-         # Found instrument model
-         if selectedIndex is index
-
-            # Add mute
-            if model.changed.mute is true
-               view.$el.addClass 'mute'
-
-            # User unmuting track
-            else view.$el.removeClass 'mute'
-
-
-
-
-
+        # User unmuting track
+        else view.$el.removeClass 'mute'
 
 
 module.exports = Sequencer

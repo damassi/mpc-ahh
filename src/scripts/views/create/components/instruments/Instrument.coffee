@@ -6,57 +6,43 @@
  * @date   3.18.14
 ###
 
-
-AppEvent    = require '../../../../events/AppEvent.coffee'
-View        = require '../../../../supers/View.coffee'
-template    = require './templates/instrument-template.hbs'
-
+AppEvent = require '../../../../events/AppEvent.coffee'
+View     = require '../../../../supers/View.coffee'
+template = require './templates/instrument-template.hbs'
 
 class Instrument extends View
 
+  # The view class
+  # @type {String}
 
-   # The view class
-   # @type {String}
+  className: 'instrument'
 
-   className: 'instrument'
+  # View template
+  # @type {Function}
 
+  template: template
 
-   # View template
-   # @type {Function}
+  # Ref to the InstrumentModel
+  # @type {InstrumentModel}
 
-   template: template
+  model: null
 
+  # Ref to the parent kit
+  # @type {KitModel}
 
-   # Ref to the InstrumentModel
-   # @type {InstrumentModel}
-
-   model: null
-
-
-   # Ref to the parent kit
-   # @type {KitModel}
-
-   kitModel: null
+  kitModel: null
 
 
+  events:
+    'touchend': 'onClick'
 
 
-   events:
-      'touchend': 'onClick'
+  # Handler for click events.  Updates the current instrument model, which
+  # InstrumentSelectorPanel listens to, and adds a selected state
+  # @param {Event}
 
-
-
-
-   # Handler for click events.  Updates the current instrument model, which
-   # InstrumentSelectorPanel listens to, and adds a selected state
-   # @param {Event}
-
-   onClick: (event) ->
-      @kitModel.set 'currentInstrument', @model
-      @$el.addClass 'selected'
-
-
-
-
+  onClick: (event) ->
+    @kitModel.set 'currentInstrument', @model
+    @$el.addClass 'selected'
 
 module.exports = Instrument

@@ -14,281 +14,237 @@ Sequencer        = require '../create/components/sequencer/Sequencer.coffee'
 View             = require '../../supers/View.coffee'
 template         = require './templates/share-template.hbs'
 
-
 class ShareView extends View
 
+  # @type {String}
 
-   # @type {String}
+  className: 'container-share'
 
-   className: 'container-share'
+  # The template
+  # @type {Function}
 
+  template: template
 
-   # The template
-   # @type {Function}
+  # "Hidden" view which allows for playback of shared audio
+  # @type {CreateView}
 
-   template: template
+  createView: null
 
-
-   # "Hidden" view which allows for playback of shared audio
-   # @type {CreateView}
-
-   createView: null
-
-
-
-   events:
-      'mouseover .btn-start':  'onMouseOver'
-      'mouseout  .btn-start':  'onMouseOut'
-      'touchend  .btn-start':  'onStartBtnClick'
+  events:
+    'mouseover .btn-start': 'onMouseOver'
+    'mouseout  .btn-start': 'onMouseOut'
+    'touchend  .btn-start': 'onStartBtnClick'
 
 
+  # Renders the view
+  # @param {Object} options
 
-   # Renders the view
-   # @param {Object} options
+  render: (options) ->
+    super options
 
-   render: (options) ->
-      super options
+    @$textContainer = @$el.find '.container-text'
+    @$mainContainer = $('#container-main')
 
+    @$name = @$el.find '.name'
+    @$title = @$el.find '.title'
+    @$message = @$el.find '.message'
+    @$playBtn = @$el.find '.btn-play'
+    @$startBtn = @$el.find '.btn-start'
 
-      @$textContainer = @$el.find '.container-text'
-      @$mainContainer = $('#container-main')
+    TweenLite.set @$textContainer, y: -300, autoAlpha: 0
+    TweenLite.set @$startBtn, y: 300, autoAlpha: 0
 
-      @$name     = @$el.find '.name'
-      @$title    = @$el.find '.title'
-      @$message  = @$el.find '.message'
-      @$playBtn  = @$el.find '.btn-play'
-      @$startBtn = @$el.find '.btn-start'
+    @$mainContainer.show()
 
-      TweenLite.set @$textContainer, y: -300,  autoAlpha: 0
-      TweenLite.set @$startBtn,      y:  300,  autoAlpha: 0
+    @createView = new CreateView
+      appModel: @appModel
+      sharedTrackModel: @sharedTrackModel
+      kitCollection: @kitCollection
 
-      @$mainContainer.show()
+    if @isMobile
+      @playPauseBtn = new PlayPauseBtn
+        appModel: @appModel
 
-      @createView = new CreateView
-         appModel: @appModel
-         sharedTrackModel: @sharedTrackModel
-         kitCollection: @kitCollection
+      @$el.find('.container-btn').append @playPauseBtn.render().el
+      @playPauseBtn.$el.find('.label-btn').hide()
+      TweenLite.set @playPauseBtn.$el, scale: 1, autoAlpha: 0
 
-      if @isMobile
-         @playPauseBtn = new PlayPauseBtn
-            appModel: @appModel
+    @$el.append @createView.render().el
+    @createView.$el.hide()
+    @createView.kitSelector.remove()
 
-         @$el.find('.container-btn').append @playPauseBtn.render().el
-         @playPauseBtn.$el.find('.label-btn').hide()
-         TweenLite.set @playPauseBtn.$el, scale: 1, autoAlpha: 0
+    @importTrack @appModel.get('shareId')
 
-      @$el.append @createView.render().el
-      @createView.$el.hide()
-      @createView.kitSelector.remove()
-
-      @importTrack @appModel.get('shareId')
-
-      @
+    @
 
 
+  # Show the view, and hide the message if on mobile
 
+  show: ->
+    delay = .5
 
-   # Show the view, and hide the message if on mobile
+    if @isMobile
+      @$message.hide()
 
-   show: ->
-      delay = .5
+      TweenLite.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+        autoAlpha: 1
+        y: 10
+        ease: Expo.easeOut,
+        delay: delay + .3
 
-      if @isMobile
-
-         @$message.hide()
-
-         TweenLite.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+      TweenLite.fromTo @$startBtn, .4, y: 1000, autoAlpha: 0,
+        autoAlpha: 1
+        y: 160
+        ease: Expo.easeOut,
+        delay: delay + .3
+        onComplete: =>
+          TweenLite.to @playPauseBtn.$el, .3,
             autoAlpha: 1
-            y: 10
-            ease: Expo.easeOut,
-            delay: delay + .3
+            ease: Back.easeOut
+            delay: 0
 
-         TweenLite.fromTo @$startBtn, .4, y: 1000, autoAlpha: 0,
-            autoAlpha: 1
-            y: 160
-            ease: Expo.easeOut,
-            delay: delay + .3
-            onComplete: =>
-               TweenLite.to @playPauseBtn.$el, .3,
-                  autoAlpha: 1
-                  ease: Back.easeOut
-                  delay: 0
+    else
+      TweenLite.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
+        autoAlpha: 1
+        y: 0
+        ease: Expo.easeOut,
+        delay: delay + .3
 
-      else
+      TweenLite.fromTo @$startBtn, .4, y: 300, autoAlpha: 0,
+        autoAlpha: 1
+        y: -80
+        ease: Expo.easeOut,
+        delay: delay + .3
 
 
-         TweenLite.fromTo @$textContainer, .4, y: -300, autoAlpha: 0,
-            autoAlpha: 1
-            y: 0
-            ease: Expo.easeOut,
-            delay: delay + .3
+  # Hide the view
 
-         TweenLite.fromTo @$startBtn, .4, y: 300, autoAlpha: 0,
-            autoAlpha: 1
-            y: -80
-            ease: Expo.easeOut,
-            delay: delay + .3
+  hide: (options) ->
+    if @isMobile
+      TweenLite.to @$el, .4, autoAlpha: 0,
+        onComplete: =>
+          if options?.remove
+            _.delay =>
+              @remove()
+            , 300
 
+    else
+      TweenLite.to @$startBtn, .3,
+        scale: 0
+        autoAlpha: 0
+        ease: Back.easeIn
 
+      TweenLite.to @$el, .4, autoAlpha: 0,
+        onComplete: =>
+          if options?.remove
+            _.delay =>
+              @remove()
+            , 300
 
 
-   # Hide the view
+  # Adds listeners related to sharing tracks.  When changed, the view
+  # is populated with the users shared data
 
-   hide: (options) ->
+  addEventListeners: ->
+    @listenTo @appModel, 'change:sharedTrackModel', @onSharedTrackModelChange
 
-      if @isMobile
 
-         TweenLite.to @$el, .4, autoAlpha: 0,
-            onComplete: =>
-               if options?.remove
-                  _.delay =>
-                     @remove()
-                  , 300
+  # Import the shared track by requesting the data from parse
+  # Once imported
 
+  importTrack: (shareId, callback) =>
+    query = new Parse.Query SharedTrackModel
 
-      else
+    # Create request to fetch data from the Parse DB
+    query.get shareId,
+      error: (object, error) =>
+        console.error object, error
 
-         TweenLite.to @$startBtn, .3,
-            scale: 0
-            autoAlpha: 0
-            ease: Back.easeIn
+      # Handler for success events.  Returns the saved model which is then
+      # dispatched, via PubSub, to the Sequencer view for playback and render
+      # @param {SharedTrackModel}
 
-         TweenLite.to @$el, .4, autoAlpha: 0,
-            onComplete: =>
-               if options?.remove
+      success: (sharedTrackModel) =>
+        console.log JSON.stringify sharedTrackModel.toJSON()
 
-                  _.delay =>
-                     @remove()
-                  , 300
+        @appModel.set
+          'bpm': sharedTrackModel.get 'bpm'
+          'sharedTrackModel': sharedTrackModel
+          'shareId': null
 
+        @listenTo @createView, PubEvent.BEAT, @onBeat
 
+        # Import into sequencer
+        @createView.sequencer.importTrack
+          kitType: sharedTrackModel.get 'kitType'
+          instruments: sharedTrackModel.get 'instruments'
+          patternSquareGroups: sharedTrackModel.get 'patternSquareGroups'
 
+          # Handler for callbacks once the track has been imported and
+          # rendered.  Displays the Share view and begins playback
+          # @param {Object} response
 
-   # Adds listeners related to sharing tracks.  When changed, the view
-   # is populated with the users shared data
+          callback: (response) ->
 
-   addEventListeners: ->
-      @listenTo @appModel, 'change:sharedTrackModel', @onSharedTrackModelChange
 
+  # Handler for when the Parse data is returned from the service
+  # @param {SharedTrackModel} model
 
+  onSharedTrackModelChange: (model) =>
+    sharedTrackModel = model.changed.sharedTrackModel
 
+    # Check against resets
+    unless sharedTrackModel is null
 
+      @$name.html sharedTrackModel.get 'shareName'
+      @$title.html sharedTrackModel.get 'shareTitle'
+      @$message.html sharedTrackModel.get 'shareMessage'
 
-   # Import the shared track by requesting the data from parse
-   # Once imported
+      TweenLite.set @$el, autoAlpha: 1
 
-   importTrack: (shareId, callback) =>
+      @appModel.set 'playing', (if @isMobile then false else true)
+      @show()
 
-      query = new Parse.Query SharedTrackModel
 
-      # Create request to fetch data from the Parse DB
-      query.get shareId,
+  # Handler for start button clicks, which sends the user to the CreateView.
+  # Resets the AppModel to its default state
+  # @param {MouseEvent} event
 
-         error: (object, error) =>
-            console.error object, error
+  onStartBtnClick: (event) ->
+    @removeEventListeners()
+    @createView.remove()
+    $('.container-kit-selector').remove()
 
+    @appModel.set
+      'bpm': 120
+      'sharedTrackModel': null
+      'showSequencer': false
 
-         # Handler for success events.  Returns the saved model which is then
-         # dispatched, via PubSub, to the Sequencer view for playback and render
-         # @param {SharedTrackModel}
+    window.location.hash = 'create'
 
-         success: (sharedTrackModel) =>
 
-            console.log JSON.stringify sharedTrackModel.toJSON()
+  # Handler for mouse events on desktop
+  # @param {MouseEvent} event
 
-            @appModel.set
-               'bpm':              sharedTrackModel.get 'bpm'
-               'sharedTrackModel': sharedTrackModel
-               'shareId':          null
+  onMouseOver: (event) =>
+    TweenLite.to @$startBtn, .2,
+      border: '3px solid black'
+      scale: 1.1
+      color: 'black'
 
-            @listenTo @createView, PubEvent.BEAT, @onBeat
 
-            # Import into sequencer
-            @createView.sequencer.importTrack
+  # Handler for mouse events on desktop
+  # @param {MouseEvent} event
 
-               kitType:             sharedTrackModel.get 'kitType'
-               instruments:         sharedTrackModel.get 'instruments'
-               patternSquareGroups: sharedTrackModel.get 'patternSquareGroups'
+  onMouseOut: (event) =>
+    TweenLite.to @$startBtn, .2,
+      border: '3px solid white'
+      scale: 1
+      color: 'white'
 
 
-               # Handler for callbacks once the track has been imported and
-               # rendered.  Displays the Share view and begins playback
-               # @param {Object} response
-
-               callback: (response) ->
-
-
-
-
-   # Handler for when the Parse data is returned from the service
-   # @param {SharedTrackModel} model
-
-   onSharedTrackModelChange: (model) =>
-      sharedTrackModel = model.changed.sharedTrackModel
-
-      # Check against resets
-      unless sharedTrackModel is null
-
-         @$name.html    sharedTrackModel.get 'shareName'
-         @$title.html   sharedTrackModel.get 'shareTitle'
-         @$message.html sharedTrackModel.get 'shareMessage'
-
-         TweenLite.set @$el, autoAlpha: 1
-
-         @appModel.set 'playing', (if @isMobile then false else true)
-
-         @show()
-
-
-
-
-   # Handler for start button clicks, which sends the user to the CreateView.
-   # Resets the AppModel to its default state
-   # @param {MouseEvent} event
-
-   onStartBtnClick: (event) ->
-      @removeEventListeners()
-      @createView.remove()
-      $('.container-kit-selector').remove()
-
-      @appModel.set
-         'bpm':              120
-         'sharedTrackModel': null
-         'showSequencer':    false
-
-      window.location.hash = 'create'
-
-
-
-
-   # Handler for mouse events on desktop
-   # @param {MouseEvent} event
-
-   onMouseOver: (event) =>
-      TweenLite.to @$startBtn, .2,
-         border: '3px solid black'
-         scale: 1.1
-         color: 'black'
-
-
-
-
-   # Handler for mouse events on desktop
-   # @param {MouseEvent} event
-
-   onMouseOut: (event) =>
-      TweenLite.to @$startBtn, .2,
-         border: '3px solid white'
-         scale: 1
-         color: 'white'
-
-
-
-
-   onBeat: (params) =>
-      @trigger PubEvent.BEAT, params
-
-
+  onBeat: (params) =>
+    @trigger PubEvent.BEAT, params
 
 
 module.exports = ShareView

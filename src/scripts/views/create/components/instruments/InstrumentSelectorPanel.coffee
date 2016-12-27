@@ -5,142 +5,111 @@
  * @date   3.18.14
 ###
 
-AppEvent    = require '../../../../events/AppEvent.coffee'
-View        = require '../../../../supers/View.coffee'
-Instrument  = require './Instrument.coffee'
-template    = require './templates/instrument-panel-template.hbs'
-
+AppEvent   = require '../../../../events/AppEvent.coffee'
+View       = require '../../../../supers/View.coffee'
+Instrument = require './Instrument.coffee'
+template   = require './templates/instrument-panel-template.hbs'
 
 class InstrumentSelectorPanel extends View
 
+  # View template
+  # @type {Function}
 
-   # View template
-   # @type {Function}
+  template: template
 
-   template: template
+  # Ref to the application model
+  # @type {AppModel}
 
+  appModel: null
 
-   # Ref to the application model
-   # @type {AppModel}
+  # Ref to kit collection
+  # @type {KitModel}
 
-   appModel: null
+  kitCollection: null
 
+  # Ref to the currently selected kit
+  # @type {KitModel}
 
-   # Ref to kit collection
-   # @type {KitModel}
+  kitModel: null
 
-   kitCollection: null
+  # Ref to instrument views
+  # @type {Array}
 
+  instrumentViews: null
 
-   # Ref to the currently selected kit
-   # @type {KitModel}
+  # Initializes the instrument selector and sets a local ref
+  # to the current kit model for easy access
+  # @param {Object} options
 
-   kitModel: null
+  initialize: (options) ->
+    super options
 
+    @kitModel = @appModel.get('kitModel')
 
-   # Ref to instrument views
-   # @type {Array}
 
-   instrumentViews: null
+  # Renders the view as well as the associated kit instruments
+  # @param {Object} options
 
+  render: (options) ->
+    super options
 
+    @$container = @$el.find '.instruments'
+    @renderInstruments()
+    @
 
 
-   # Initializes the instrument selector and sets a local ref
-   # to the current kit model for easy access
-   # @param {Object} options
+  # Renders each individual kit model into an Instrument
 
-   initialize: (options) ->
-      super options
+  renderInstruments: ->
+    @instrumentViews = []
 
-      @kitModel = @appModel.get('kitModel')
+    @kitModel.get('instruments').each (model) =>
+      instrument = new Instrument
+        kitModel: @kitModel
+        model: model
 
+      @$container.append instrument.render().el
+      @instrumentViews.push instrument
 
 
+  # Adds event listeners related to kit changes
 
-   # Renders the view as well as the associated kit instruments
-   # @param {Object} options
+  addEventListeners: ->
+    @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
+    @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
 
-   render: (options) ->
-      super options
 
-      @$container = @$el.find '.instruments'
+  # Removes event listeners
 
-      @renderInstruments()
+  removeEventListeners: ->
+    @stopListening()
 
-      @
 
+  # Event Listeners
+  # ---------------
 
+  # Handler for kit change events.  Cleans up the view and re-renders
+  # the instruments to the DOM
+  # @param {KitModel} model
 
+  onKitChange: (model) =>
+    @removeEventListeners()
 
-   # Renders each individual kit model into an Instrument
+    @kitModel = model.changed.kitModel
 
-   renderInstruments: ->
-      @instrumentViews = []
+    _.each @instrumentViews, (instrument) ->
+      instrument.remove()
 
-      @kitModel.get('instruments').each (model) =>
-         instrument = new Instrument
-            kitModel: @kitModel
-            model: model
+    @renderInstruments()
+    @addEventListeners()
 
-         @$container.append instrument.render().el
-         @instrumentViews.push instrument
 
+  onInstrumentChange: (model) =>
+    @$container.find('.instrument').removeClass 'selected'
 
 
-
-   # Adds event listeners related to kit changes
-
-   addEventListeners: ->
-      @listenTo @appModel, AppEvent.CHANGE_KIT, @onKitChange
-      @listenTo @kitModel, AppEvent.CHANGE_INSTRUMENT, @onInstrumentChange
-
-
-
-   # Removes event listeners
-
-   removeEventListeners: ->
-      @stopListening()
-
-
-
-
-
-   # EVENT LISTENERS
-   # --------------------------------------------------------------------------------
-
-
-
-   # Handler for kit change events.  Cleans up the view and re-renders
-   # the instruments to the DOM
-   # @param {KitModel} model
-
-   onKitChange: (model) =>
-      @removeEventListeners()
-
-      @kitModel = model.changed.kitModel
-
-      _.each @instrumentViews, (instrument) ->
-         instrument.remove()
-
-      @renderInstruments()
-      @addEventListeners()
-
-
-
-
-   onInstrumentChange: (model) =>
-      @$container.find('.instrument').removeClass 'selected'
-
-
-
-
-
-   onTestClick: (event) ->
-      @appModel.set 'kitModel', @kitCollection.nextKit()
-
-
-
+  onTestClick: (event) ->
+    @appModel.set 'kitModel', @kitCollection.nextKit()
 
 
 module.exports = InstrumentSelectorPanel

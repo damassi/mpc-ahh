@@ -4,9 +4,7 @@
  * @author Charlie
  */
 
-
 var Bubbles = {
-
 
   /**
    * window reference
@@ -38,10 +36,7 @@ var Bubbles = {
    */
   sizeClasses : [ 'small', 'medium', 'big' ],
 
-
-
   bubbles: null,
-
 
   /**
    * Initializes Bubbles
@@ -90,10 +85,8 @@ var Bubbles = {
                 'opacity' : opacity
               });
 
-    //create next bubble
     setTimeout($.proxy(this.createBubble, this), this._randomNumber(100, 300));
     this.animateFlake($bubble);
-    ///this.flakes.push($bubble)
   },
 
   /**
@@ -108,33 +101,15 @@ var Bubbles = {
     //make it fall
     TweenLite.to($bubble, duration, {
       'y'        : -this.winHeight * 1.1,
-      //'x'        : right,
       'ease'     : 'Linear.easeNone',
-      //remove from DOM on complete
       onComplete : function () {
         $bubble.remove();
-        //self.flakes = _.without($bubble)
       }
     });
   },
 
 
-  beat: function() {
-    // $flake = _.sample(this.flakes)
-
-    // TweenLite.to( $flake, .2, {
-    //   scale: 2,
-    //   ease: Back.easeOut,
-    //   delay: 2,
-    //   onComplete: function() {
-    //     TweenLite.to( $flake, .2, {
-    //       scale: 1,
-    //       ease: Back.easeOut
-    //     })
-    //   }
-    // })
-  },
-
+  beat: function() {},
 
   /**
    * Generates random number

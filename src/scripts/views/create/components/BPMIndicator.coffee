@@ -10,203 +10,170 @@ AppEvent  = require '../../../events/AppEvent.coffee'
 View      = require '../../../supers/View.coffee'
 template  = require './templates/bpm-template.hbs'
 
-
 class BPMIndicator extends View
 
+  # Animation rotation time for bottlecap
+  # @type {Number}
 
-   # Animation rotation time for bottlecap
-   # @type {Number}
+  ROTATE_TWEEN_TIME: .4
 
-   ROTATE_TWEEN_TIME: .4
+  # Class name of container
+  # @type {String}
 
+  className: 'container-bpm'
 
-   # Class name of container
-   # @type {String}
+  # Ref to the main AppModel
+  # @type {AppModel}
 
-   className: 'container-bpm'
+  appModel: null
 
+  # View template
+  # @type {Function}
 
-   # Ref to the main AppModel
-   # @type {AppModel}
+  template: template
 
-   appModel: null
+  # The setInterval update interval for increasing and
+  # decreasing BPM on press / touch
+  # @type {Number}
 
+  intervalUpdateTime: 70
 
-   # View template
-   # @type {Function}
+  # The setInterval updater
+  # @type {SetInterval}
 
-   template: template
+  updateInterval: null
 
+  # The amount to increase the BPM by on each tick
+  # @type {Number}
 
-   # The setInterval update interval for increasing and
-   # decreasing BPM on press / touch
-   # @type {Number}
+  bpmIncreaseAmount: 10
 
-   intervalUpdateTime: 70
+  # The current bpm before its set on the model.  Used to buffer
+  # updates and to provide for smooth animation
+  # @type {Number}
 
-
-   # The setInterval updater
-   # @type {SetInterval}
-
-   updateInterval: null
-
-
-   # The amount to increase the BPM by on each tick
-   # @type {Number}
-
-   bpmIncreaseAmount: 10
-
-
-   # The current bpm before its set on the model.  Used to buffer
-   # updates and to provide for smooth animation
-   # @type {Number}
-
-   currBPM: null
+  currBPM: null
 
 
+  events:
+    'touchstart .btn-increase': 'onIncreaseBtnDown'
+    'touchstart .btn-decrease': 'onDecreaseBtnDown'
+    'touchend   .btn-increase': 'onBtnUp'
+    'touchend   .btn-decrease': 'onBtnUp'
+    'touchend   .wrapper': 'onBtnUp'
+    'mouseup    .wrapper': 'onBtnUp'
 
 
-   events:
-      'touchstart .btn-increase': 'onIncreaseBtnDown'
-      'touchstart .btn-decrease': 'onDecreaseBtnDown'
-      'touchend   .btn-increase': 'onBtnUp'
-      'touchend   .btn-decrease': 'onBtnUp'
-      'touchend   .wrapper':      'onBtnUp'
-      'mouseup    .wrapper':      'onBtnUp'
+  # Render the view and update the kit if not already
+  # set via a previous session
+  # @param {Object} options
+
+  render: (options) ->
+    super options
+
+    @$bpmLabel = @$el.find '.bpm-value'
+    @increaseBtn = @$el.find '.btn-increase'
+    @decreaseBtn = @$el.find '.btn-decrease'
+    @$bgCircle = @$el.find '.bg-circle'
+
+    @currBPM = @appModel.get('bpm')
+    @$bpmLabel.text @currBPM
+
+    unless @isMobile
+      TweenLite.set @$bgCircle, rotation: 0
+
+    @
 
 
+  # Add event listeners for handing changes related to
+  # switching BPM
+
+  addEventListeners: ->
+    @listenTo @appModel, AppEvent.CHANGE_BPM, @onBPMChange
 
 
-   # Render the view and update the kit if not already
-   # set via a previous session
-   # @param {Object} options
+  # Sets an interval to increase the BPM monitor.  Clears
+  # when the user releases the mouse
 
-   render: (options) ->
-      super options
+  increaseBPM: ->
+    clearInterval @updateInterval
 
-      @$bpmLabel   = @$el.find '.bpm-value'
-      @increaseBtn = @$el.find '.btn-increase'
-      @decreaseBtn = @$el.find '.btn-decrease'
-      @$bgCircle   = @$el.find '.bg-circle'
+    @updateInterval = setInterval =>
+      bpm = @currBPM
 
-      @currBPM = @appModel.get('bpm')
+      if bpm < AppConfig.BPM_MAX
+        bpm += @bpmIncreaseAmount
+
+      else
+        bpm = AppConfig.BPM_MAX
+
+      @currBPM = bpm
       @$bpmLabel.text @currBPM
 
       unless @isMobile
-         TweenLite.set @$bgCircle, rotation: 0
+        TweenLite.to @$bgCircle, @ROTATE_TWEEN_TIME, rotation: GreenProp.rotation(@$bgCircle) + 90
 
-      @
-
-
-
-   # Add event listeners for handing changes related to
-   # switching BPM
-
-   addEventListeners: ->
-      @listenTo @appModel, AppEvent.CHANGE_BPM, @onBPMChange
+    , @intervalUpdateTime
 
 
+  # Sets an interval to decrease the BPM monitor.  Clears
+  # when the user releases the mouse
+
+  decreaseBPM: ->
+    clearInterval @updateInterval
+
+    @updateInterval = setInterval =>
+      bpm = @currBPM
+
+      if bpm > 1
+        bpm -= @bpmIncreaseAmount
+
+      else
+        bpm = 1
+
+      @currBPM = bpm
+      @$bpmLabel.text @currBPM
+
+      unless @isMobile
+        TweenLite.to @$bgCircle, @ROTATE_TWEEN_TIME, rotation: GreenProp.rotation(@$bgCircle) - 90
+
+    , @intervalUpdateTime
 
 
-   # Sets an interval to increase the BPM monitor.  Clears
-   # when the user releases the mouse
+  # Event handlers
+  # --------------
 
-   increaseBPM: ->
-      clearInterval @updateInterval
+  # Handler for left button clicks.  Updates the collection and
+  # sets a new kitModel on the main AppModel
+  # @param {Event}
 
-      @updateInterval = setInterval =>
-         bpm = @currBPM
-
-         if bpm < AppConfig.BPM_MAX
-            bpm += @bpmIncreaseAmount
-
-         else
-            bpm = AppConfig.BPM_MAX
-
-         @currBPM = bpm
-         @$bpmLabel.text @currBPM
-
-         unless @isMobile
-            TweenLite.to @$bgCircle, @ROTATE_TWEEN_TIME, rotation: GreenProp.rotation(@$bgCircle) + 90
-
-      , @intervalUpdateTime
+  onIncreaseBtnDown: (event) =>
+    @increaseBPM()
 
 
+  # Handler for left button clicks.  Updates the collection and
+  # sets a new kitModel on the main AppModel
+  # @param {Event}
+
+  onDecreaseBtnDown: (event) ->
+    @decreaseBPM()
 
 
-   # Sets an interval to decrease the BPM monitor.  Clears
-   # when the user releases the mouse
+  # Handler for mouse / touchup events.  Clears the interval
+  # @param {Event}
 
-   decreaseBPM: ->
-      clearInterval @updateInterval
+  onBtnUp: (event) ->
+    clearInterval @updateInterval
+    @updateInterval = null
 
-      @updateInterval = setInterval =>
-         bpm = @currBPM
-
-         if bpm > 1
-            bpm -= @bpmIncreaseAmount
-
-         else
-            bpm = 1
-
-         @currBPM = bpm
-         @$bpmLabel.text @currBPM
-
-         unless @isMobile
-            TweenLite.to @$bgCircle, @ROTATE_TWEEN_TIME, rotation: GreenProp.rotation(@$bgCircle) - 90
-
-      , @intervalUpdateTime
+    @appModel.set 'bpm', (Math.floor(60000 / @currBPM) * .5)
 
 
+  # Handler for kit change events.  Updates the label on the
+  # kit selector
 
-
-
-   # EVENT HANDLERS
-   # --------------------------------------------------------------------------------
-
-
-
-   # Handler for left button clicks.  Updates the collection and
-   # sets a new kitModel on the main AppModel
-   # @param {Event}
-
-   onIncreaseBtnDown: (event) =>
-      @increaseBPM()
-
-
-
-
-   # Handler for left button clicks.  Updates the collection and
-   # sets a new kitModel on the main AppModel
-   # @param {Event}
-
-   onDecreaseBtnDown: (event) ->
-      @decreaseBPM()
-
-
-
-
-
-   # Handler for mouse / touchup events.  Clears the interval
-   # @param {Event}
-
-   onBtnUp: (event) ->
-      clearInterval @updateInterval
-      @updateInterval = null
-
-      @appModel.set 'bpm', (Math.floor(60000 / @currBPM) * .5)
-
-
-
-
-   # Handler for kit change events.  Updates the label on the
-   # kit selector
-
-   onBPMChange: (model) ->
-      bpm = model.changed.bpm
-
-
-
+  onBPMChange: (model) ->
+    bpm = model.changed.bpm
 
 
 module.exports = BPMIndicator

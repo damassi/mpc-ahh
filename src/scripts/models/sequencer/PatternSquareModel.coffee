@@ -9,62 +9,46 @@ AppEvent  = require '../../events/AppEvent.coffee'
 AppConfig = require '../../config/AppConfig.coffee'
 Model     = require '../../supers/Model.coffee'
 
-
 class PatternSquareModel extends Model
 
+  defaults:
+    'active': false
+    'instrument': null
+    'previousVelocity': 0
+    'trigger': null
+    'velocity': 0
 
-   defaults:
-      'active':           false
-      'instrument':       null
-      'previousVelocity': 0
-      'trigger':          null
-      'velocity':         0
+  initialize: (options) ->
+    super options
 
+    @on AppEvent.CHANGE_VELOCITY, @onVelocityChange
 
+  cycle: ->
+    velocity = @get 'velocity'
 
-   initialize: (options) ->
-      super options
+    if velocity < AppConfig.VELOCITY_MAX
+      velocity++
 
-      @on AppEvent.CHANGE_VELOCITY, @onVelocityChange
+    else
+      velocity = 0
 
+    @set 'velocity', velocity
 
+  enable: ->
+    @set 'velocity', 1
 
-   cycle: ->
-      velocity = @get 'velocity'
+  disable: ->
+    @set 'velocity', 0
 
-      if velocity < AppConfig.VELOCITY_MAX
-         velocity++
+  onVelocityChange: (model) ->
+    @set 'previousVelocity', model._previousAttributes.velocity
 
-      else
-         velocity = 0
+    velocity = model.changed.velocity
 
-      @set 'velocity', velocity
+    if velocity > 0
+      @set 'active', true
 
-
-
-   enable: ->
-      @set 'velocity', 1
-
-
-
-
-   disable: ->
-      @set 'velocity', 0
-
-
-
-   onVelocityChange: (model) ->
-      @set 'previousVelocity', model._previousAttributes.velocity
-
-      velocity = model.changed.velocity
-
-      if velocity > 0
-         @set 'active', true
-
-      else if velocity is 0
-         @set 'active', false
-
-
-
+    else if velocity is 0
+      @set 'active', false
 
 module.exports = PatternSquareModel
