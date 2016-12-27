@@ -41,8 +41,6 @@ class AppRouter extends Backbone.Router
 
 
   shareRoute: (shareId) ->
-    console.log shareId
-
     @appModel.set
       'view': @appController.shareView
       'shareId': shareId

@@ -5,7 +5,7 @@
   @date   3.19.14
 ###
 
-AppConfig =
+module.exports =
 
   # The path to application assets
   # @type {Number}
@@ -69,5 +69,3 @@ AppConfig =
   returnTestAssetPath: (assetType) ->
     path = window.location.pathname + @ASSETS.path + '/' + @ASSETS[assetType]
     path
-
-module.exports = AppConfig
